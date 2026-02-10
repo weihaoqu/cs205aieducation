@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS205 Research Instruments Guide — Pre/Post Concept Test & Surveys</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f8fafc; color: #1e293b; line-height: 1.7;
+    max-width: 900px; margin: 0 auto; padding: 40px 24px 80px;
+  }
+  h1 { font-size: 2em; margin-bottom: 8px; color: #0f172a; }
+  h2 { font-size: 1.5em; margin-top: 48px; margin-bottom: 16px; color: #1e40af; border-bottom: 2px solid #dbeafe; padding-bottom: 8px; }
+  h3 { font-size: 1.2em; margin-top: 28px; margin-bottom: 12px; color: #1e3a8a; }
+  h4 { font-size: 1.05em; margin-top: 20px; margin-bottom: 8px; color: #334155; }
+  p { margin-bottom: 12px; }
+  .subtitle { color: #64748b; font-size: 1.1em; margin-bottom: 32px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.8em; font-weight: 600; }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-green { background: #d1fae5; color: #065f46; }
+  .badge-yellow { background: #fef3c7; color: #92400e; }
+  .badge-red { background: #fee2e2; color: #991b1b; }
+
+  .card {
+    background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 20px 24px; margin: 16px 0; box-shadow: 0 1px 3px #0000000d;
+  }
+  .card.highlight { border-left: 4px solid #3b82f6; }
+  .card.warn { border-left: 4px solid #f59e0b; background: #fffbeb; }
+  .card.success { border-left: 4px solid #10b981; }
+
+  .question-box {
+    background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 20px 24px; margin: 12px 0; position: relative;
+  }
+  .question-box .q-num {
+    position: absolute; top: -10px; left: 16px; background: #3b82f6; color: white;
+    padding: 2px 10px; border-radius: 10px; font-size: 0.8em; font-weight: 600;
+  }
+  .question-box .q-topic {
+    position: absolute; top: -10px; right: 16px; background: #e2e8f0; color: #475569;
+    padding: 2px 10px; border-radius: 10px; font-size: 0.75em;
+  }
+  .question-box .q-text { font-weight: 600; margin-bottom: 12px; padding-top: 8px; }
+  .question-box .options { padding-left: 20px; }
+  .question-box .options li { margin-bottom: 6px; }
+  .question-box .answer { color: #059669; font-weight: 600; margin-top: 8px; font-size: 0.9em; }
+  .question-box .rationale { color: #64748b; font-size: 0.9em; margin-top: 4px; font-style: italic; }
+
+  .likert-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.95em; }
+  .likert-table th { background: #f1f5f9; padding: 10px 12px; text-align: left; font-weight: 600; border-bottom: 2px solid #e2e8f0; }
+  .likert-table td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; }
+  .likert-table tr:hover { background: #f8fafc; }
+  .likert-scale { display: flex; gap: 8px; justify-content: center; }
+  .likert-scale span {
+    width: 28px; height: 28px; border: 2px solid #cbd5e1; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 0.75em; color: #94a3b8;
+  }
+  .construct-label {
+    display: inline-block; padding: 2px 8px; border-radius: 6px;
+    font-size: 0.75em; font-weight: 600; margin-left: 8px;
+  }
+  .construct-eng { background: #dbeafe; color: #1e40af; }
+  .construct-se { background: #d1fae5; color: #065f46; }
+  .construct-ai { background: #fef3c7; color: #92400e; }
+
+  ul, ol { padding-left: 24px; margin-bottom: 12px; }
+  li { margin-bottom: 6px; }
+  code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+  .toc { background: #f1f5f9; border-radius: 10px; padding: 20px 24px; margin: 24px 0; }
+  .toc a { color: #2563eb; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .toc li { margin-bottom: 8px; }
+  .print-note { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 16px; margin: 24px 0; color: #1e40af; font-size: 0.95em; }
+
+  @media print {
+    body { max-width: 100%; padding: 20px; }
+    .card, .question-box { break-inside: avoid; }
+    .print-note { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<h1>CS 205 Research Instruments Guide</h1>
+<p class="subtitle">Pre/Post Concept Test & Survey Instruments for the AI-Assisted Teaching Study<br>
+<span class="badge badge-yellow">Share with Rolf for review and coordination</span></p>
+
+<div class="print-note">
+  This document is designed to be shared. Print it or send the HTML file directly to Rolf and any collaborators for review.
+</div>
+
+<div class="toc">
+  <strong>Contents</strong>
+  <ol>
+    <li><a href="#part1">Part 1: Pre/Post Concept Test (both sections)</a></li>
+    <li><a href="#part2">Part 2: Pre-Survey (both sections ideally)</a></li>
+    <li><a href="#part3">Part 3: Post-Survey (both sections ideally)</a></li>
+    <li><a href="#part4">Part 4: Administration Guide</a></li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="part1">Part 1: Pre/Post Concept Test</h2>
+<!-- ============================================================ -->
+
+<div class="card highlight">
+  <h3 style="margin-top: 0;">Purpose</h3>
+  <p>Measure <strong>conceptual understanding</strong> of data structures and algorithms at the start and end of the semester. The same test is given twice (pre and post) to both sections. This lets us calculate <strong>normalized learning gains</strong> and control for any baseline differences between sections.</p>
+  <p><strong>Format:</strong> 20 multiple-choice questions, ~25 minutes. No code writing — pure conceptual reasoning.</p>
+  <p><strong>Key principle:</strong> Questions should test <em>understanding</em>, not memorization. Students who memorized a definition but can't apply it should get the question wrong.</p>
+</div>
+
+<div class="card warn">
+  <h3 style="margin-top: 0;">Important Notes for Rolf</h3>
+  <ul>
+    <li>Both sections take the <strong>identical</strong> test — same questions, same order</li>
+    <li>The pre-test is given <strong>before</strong> students learn the material — low scores are expected and fine</li>
+    <li>The pre-test is <strong>not graded</strong> — it's purely for research baseline</li>
+    <li>The post-test uses the <strong>same questions</strong> — learning gain = post score minus pre score</li>
+    <li>Please review these sample questions and suggest changes — your expertise on what's appropriate for our students is essential</li>
+  </ul>
+</div>
+
+<h3>Concept Test Design: 20 Questions Across 7 Topic Areas</h3>
+
+<table class="likert-table">
+  <thead>
+    <tr><th>Topic Area</th><th># Questions</th><th>What It Tests</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Algorithm Analysis (Big-O)</td><td>3</td><td>Reasoning about time/space complexity, growth rates</td></tr>
+    <tr><td>Linear Structures (arrays, linked lists, stacks, queues)</td><td>4</td><td>Operation costs, choosing the right structure, tracing operations</td></tr>
+    <tr><td>Recursion</td><td>2</td><td>Tracing recursive calls, understanding base cases</td></tr>
+    <tr><td>Trees (BST, heaps)</td><td>4</td><td>Traversals, insertion/deletion effects, heap properties</td></tr>
+    <tr><td>Hash Tables</td><td>2</td><td>Collision resolution, load factor, when to use hashing</td></tr>
+    <tr><td>Graphs</td><td>3</td><td>Traversal strategies, shortest paths, representation tradeoffs</td></tr>
+    <tr><td>Sorting</td><td>2</td><td>Algorithm behavior, stability, best/worst cases</td></tr>
+  </tbody>
+</table>
+
+<h3>Sample Questions (20 Items)</h3>
+<p>Below are ready-to-use questions. Each includes the answer and a rationale explaining <em>why</em> the correct answer is correct and why distractors are tempting.</p>
+
+<!-- Q1 -->
+<div class="question-box">
+  <span class="q-num">Q1</span><span class="q-topic">Big-O</span>
+  <div class="q-text">What is the time complexity of the following code fragment?</div>
+  <pre style="background:#f1f5f9; padding:12px; border-radius:6px; font-size:0.9em; margin-bottom:12px;">for (int i = 1; i < n; i = i * 2) {
+    System.out.println(i);
+}</pre>
+  <ol class="options" type="A">
+    <li>O(n)</li>
+    <li>O(n log n)</li>
+    <li>O(log n)</li>
+    <li>O(n&sup2;)</li>
+  </ol>
+  <p class="answer">Answer: C — O(log n)</p>
+  <p class="rationale">The loop variable doubles each iteration (i = i * 2), so it takes log&#8322;(n) iterations to reach n. Distractor A is tempting because students often assume all single loops are O(n).</p>
+</div>
+
+<!-- Q2 -->
+<div class="question-box">
+  <span class="q-num">Q2</span><span class="q-topic">Big-O</span>
+  <div class="q-text">Consider two algorithms: Algorithm A runs in O(n&sup2;) time and Algorithm B runs in O(n log n) time. For which input sizes is Algorithm A <em>guaranteed</em> to be slower than Algorithm B?</div>
+  <ol class="options" type="A">
+    <li>For all input sizes n &gt; 0</li>
+    <li>For sufficiently large n (beyond some threshold)</li>
+    <li>Only when n &gt; 1000</li>
+    <li>Never — Big-O doesn't predict actual running time</li>
+  </ol>
+  <p class="answer">Answer: B</p>
+  <p class="rationale">Big-O describes asymptotic behavior — it guarantees the relationship holds for sufficiently large n, but not for all n (constant factors matter for small inputs). Distractor D is partially true but overstates the case.</p>
+</div>
+
+<!-- Q3 -->
+<div class="question-box">
+  <span class="q-num">Q3</span><span class="q-topic">Big-O</span>
+  <div class="q-text">What is the time complexity of searching for a value in a <strong>sorted</strong> array of n elements using the most efficient algorithm?</div>
+  <ol class="options" type="A">
+    <li>O(1)</li>
+    <li>O(log n)</li>
+    <li>O(n)</li>
+    <li>O(n log n)</li>
+  </ol>
+  <p class="answer">Answer: B — O(log n)</p>
+  <p class="rationale">Binary search on a sorted array runs in O(log n). Distractor C (linear search) ignores that the array is sorted. Distractor A would only apply to direct index access.</p>
+</div>
+
+<!-- Q4 -->
+<div class="question-box">
+  <span class="q-num">Q4</span><span class="q-topic">Linear Structures</span>
+  <div class="q-text">You need a data structure that supports efficient insertion at the <em>front</em> and removal from the <em>front</em>. Which is the best choice?</div>
+  <ol class="options" type="A">
+    <li>ArrayList (dynamic array)</li>
+    <li>Singly linked list with head pointer</li>
+    <li>Sorted array</li>
+    <li>Binary search tree</li>
+  </ol>
+  <p class="answer">Answer: B</p>
+  <p class="rationale">A singly linked list with a head pointer supports O(1) insert and remove at the front. An ArrayList requires O(n) shifting for front insertions. This tests whether students understand the cost tradeoffs, not just definitions.</p>
+</div>
+
+<!-- Q5 -->
+<div class="question-box">
+  <span class="q-num">Q5</span><span class="q-topic">Linear Structures</span>
+  <div class="q-text">What happens when you push elements 1, 2, 3, 4, 5 onto a stack (in that order) and then pop three times? What value is on top of the stack?</div>
+  <ol class="options" type="A">
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+    <li>4</li>
+  </ol>
+  <p class="answer">Answer: B</p>
+  <p class="rationale">Stack is LIFO. After pushing 1-5, the stack top-to-bottom is 5,4,3,2,1. Three pops remove 5, 4, 3. Top is now 2. Tests basic LIFO understanding through tracing.</p>
+</div>
+
+<!-- Q6 -->
+<div class="question-box">
+  <span class="q-num">Q6</span><span class="q-topic">Linear Structures</span>
+  <div class="q-text">In a circular queue implemented with an array of size 5, the front index is 3 and the rear index is 1. How many elements are currently in the queue?</div>
+  <ol class="options" type="A">
+    <li>2</li>
+    <li>3</li>
+    <li>4</li>
+    <li>5</li>
+  </ol>
+  <p class="answer">Answer: B — 3 elements</p>
+  <p class="rationale">Elements are at indices 3, 4, 0 (wrapping around). Count = (1 - 3 + 5) % 5 = 3. This is a common point of confusion for students learning circular arrays.</p>
+</div>
+
+<!-- Q7 -->
+<div class="question-box">
+  <span class="q-num">Q7</span><span class="q-topic">Linear Structures</span>
+  <div class="q-text">Which operation is O(n) for a singly linked list but O(1) for a doubly linked list (both with head and tail pointers)?</div>
+  <ol class="options" type="A">
+    <li>Insert at front</li>
+    <li>Insert at back</li>
+    <li>Remove from back</li>
+    <li>Access the first element</li>
+  </ol>
+  <p class="answer">Answer: C</p>
+  <p class="rationale">Removing from the back of a singly linked list requires traversing to the second-to-last node (O(n)), since there's no previous pointer. A doubly linked list can follow tail.prev in O(1). Both A, B, and D are O(1) for both structures with head+tail pointers.</p>
+</div>
+
+<!-- Q8 -->
+<div class="question-box">
+  <span class="q-num">Q8</span><span class="q-topic">Recursion</span>
+  <div class="q-text">What does the following method return when called with mystery(5)?</div>
+  <pre style="background:#f1f5f9; padding:12px; border-radius:6px; font-size:0.9em; margin-bottom:12px;">int mystery(int n) {
+    if (n <= 1) return 1;
+    return n * mystery(n - 1);
+}</pre>
+  <ol class="options" type="A">
+    <li>5</li>
+    <li>15</li>
+    <li>120</li>
+    <li>25</li>
+  </ol>
+  <p class="answer">Answer: C — 120</p>
+  <p class="rationale">This computes n! (factorial). 5! = 5 &times; 4 &times; 3 &times; 2 &times; 1 = 120. Tests ability to trace recursion. Distractor B (15) might come from adding instead of multiplying.</p>
+</div>
+
+<!-- Q9 -->
+<div class="question-box">
+  <span class="q-num">Q9</span><span class="q-topic">Recursion</span>
+  <div class="q-text">A recursive method has no base case. What happens when it is called?</div>
+  <ol class="options" type="A">
+    <li>It returns 0</li>
+    <li>It runs forever without any error</li>
+    <li>It causes a StackOverflowError</li>
+    <li>The compiler rejects it</li>
+  </ol>
+  <p class="answer">Answer: C</p>
+  <p class="rationale">Each recursive call adds a frame to the call stack. Without a base case, calls never stop, and the stack eventually overflows. Distractor B is wrong because the stack is finite. Distractor D is wrong because missing a base case is a runtime error, not a compile error.</p>
+</div>
+
+<!-- Q10 -->
+<div class="question-box">
+  <span class="q-num">Q10</span><span class="q-topic">Trees</span>
+  <div class="q-text">What is the in-order traversal of this binary search tree?</div>
+  <pre style="background:#f1f5f9; padding:12px; border-radius:6px; font-size:0.9em; margin-bottom:12px;">        8
+       / \
+      3   10
+     / \    \
+    1   6    14</pre>
+  <ol class="options" type="A">
+    <li>8, 3, 1, 6, 10, 14</li>
+    <li>1, 3, 6, 8, 10, 14</li>
+    <li>1, 6, 3, 14, 10, 8</li>
+    <li>8, 3, 10, 1, 6, 14</li>
+  </ol>
+  <p class="answer">Answer: B — 1, 3, 6, 8, 10, 14</p>
+  <p class="rationale">In-order traversal of a BST visits nodes in sorted order (left, root, right). Distractor A is pre-order. Distractor D is level-order. This tests both traversal knowledge and BST properties.</p>
+</div>
+
+<!-- Q11 -->
+<div class="question-box">
+  <span class="q-num">Q11</span><span class="q-topic">Trees</span>
+  <div class="q-text">You insert the value 5 into the BST shown above. Where does it go?</div>
+  <ol class="options" type="A">
+    <li>Left child of 6</li>
+    <li>Right child of 6</li>
+    <li>Left child of 8</li>
+    <li>Right child of 3</li>
+  </ol>
+  <p class="answer">Answer: A — Left child of 6</p>
+  <p class="rationale">5 < 8 (go left to 3), 5 > 3 (go right to 6), 5 < 6 (go left — empty slot). Tests BST insertion logic by tracing the path.</p>
+</div>
+
+<!-- Q12 -->
+<div class="question-box">
+  <span class="q-num">Q12</span><span class="q-topic">Trees</span>
+  <div class="q-text">What is the <strong>maximum</strong> number of nodes in a binary tree of height h?</div>
+  <ol class="options" type="A">
+    <li>h + 1</li>
+    <li>2h</li>
+    <li>2<sup>h+1</sup> - 1</li>
+    <li>2<sup>h</sup></li>
+  </ol>
+  <p class="answer">Answer: C — 2<sup>h+1</sup> - 1</p>
+  <p class="rationale">A complete binary tree of height h has 2<sup>h+1</sup> - 1 nodes (assuming height of root = 0). Distractor A is the minimum for a "stick" tree. Tests understanding of tree structure bounds.</p>
+</div>
+
+<!-- Q13 -->
+<div class="question-box">
+  <span class="q-num">Q13</span><span class="q-topic">Trees / Heaps</span>
+  <div class="q-text">Which property distinguishes a min-heap from a binary search tree?</div>
+  <ol class="options" type="A">
+    <li>In a min-heap, every node is smaller than its children; in a BST, left child < parent < right child</li>
+    <li>A min-heap is always balanced; a BST is always balanced</li>
+    <li>A min-heap supports O(1) search; a BST supports O(log n) search</li>
+    <li>They are the same data structure with different names</li>
+  </ol>
+  <p class="answer">Answer: A</p>
+  <p class="rationale">The heap property (parent &le; children) is different from the BST property (left < parent < right). Distractor B is wrong — BSTs are not always balanced. Distractor C is wrong — heap search is O(n). Tests understanding of structural vs. ordering properties.</p>
+</div>
+
+<!-- Q14 -->
+<div class="question-box">
+  <span class="q-num">Q14</span><span class="q-topic">Hash Tables</span>
+  <div class="q-text">A hash table with 10 slots uses the hash function h(k) = k % 10. Keys 12, 22, and 32 are inserted. With <strong>chaining</strong>, how many keys are stored at index 2?</div>
+  <ol class="options" type="A">
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+    <li>0</li>
+  </ol>
+  <p class="answer">Answer: C — 3</p>
+  <p class="rationale">12 % 10 = 2, 22 % 10 = 2, 32 % 10 = 2. All three hash to index 2. With chaining, they form a linked list at that slot. Tests collision understanding.</p>
+</div>
+
+<!-- Q15 -->
+<div class="question-box">
+  <span class="q-num">Q15</span><span class="q-topic">Hash Tables</span>
+  <div class="q-text">The average-case time complexity for search in a hash table with a good hash function and low load factor is:</div>
+  <ol class="options" type="A">
+    <li>O(1)</li>
+    <li>O(log n)</li>
+    <li>O(n)</li>
+    <li>O(n log n)</li>
+  </ol>
+  <p class="answer">Answer: A — O(1)</p>
+  <p class="rationale">With a good hash function and low load factor, collisions are rare, giving average O(1) lookup. The question specifies "average-case" and "good hash function" to be precise. Distractor C is the worst case (all keys in one bucket).</p>
+</div>
+
+<!-- Q16 -->
+<div class="question-box">
+  <span class="q-num">Q16</span><span class="q-topic">Graphs</span>
+  <div class="q-text">Which traversal algorithm would you use to find the <strong>shortest path</strong> (fewest edges) from node A to node B in an unweighted graph?</div>
+  <ol class="options" type="A">
+    <li>Depth-First Search (DFS)</li>
+    <li>Breadth-First Search (BFS)</li>
+    <li>Either DFS or BFS — both find shortest paths</li>
+    <li>Neither — you need Dijkstra's algorithm</li>
+  </ol>
+  <p class="answer">Answer: B — BFS</p>
+  <p class="rationale">BFS explores nodes level by level, so the first time it reaches a node, that's the shortest path (in an unweighted graph). DFS may find a path, but not necessarily the shortest. Dijkstra is for weighted graphs. This is a critical conceptual distinction.</p>
+</div>
+
+<!-- Q17 -->
+<div class="question-box">
+  <span class="q-num">Q17</span><span class="q-topic">Graphs</span>
+  <div class="q-text">An undirected graph has 6 vertices and 15 edges. What kind of graph is this?</div>
+  <ol class="options" type="A">
+    <li>A sparse graph</li>
+    <li>A complete graph</li>
+    <li>A tree</li>
+    <li>An impossible graph</li>
+  </ol>
+  <p class="answer">Answer: B — A complete graph</p>
+  <p class="rationale">A complete undirected graph with n vertices has n(n-1)/2 edges = 6&times;5/2 = 15. A tree with 6 vertices would have exactly 5 edges. Tests knowledge of graph properties and formulas.</p>
+</div>
+
+<!-- Q18 -->
+<div class="question-box">
+  <span class="q-num">Q18</span><span class="q-topic">Graphs</span>
+  <div class="q-text">For a graph with V vertices and E edges, what is the space complexity of an adjacency matrix representation?</div>
+  <ol class="options" type="A">
+    <li>O(V)</li>
+    <li>O(E)</li>
+    <li>O(V&sup2;)</li>
+    <li>O(V + E)</li>
+  </ol>
+  <p class="answer">Answer: C — O(V&sup2;)</p>
+  <p class="rationale">An adjacency matrix is a V &times; V 2D array, regardless of how many edges exist. O(V + E) is the space for an adjacency list. Tests understanding of representation tradeoffs.</p>
+</div>
+
+<!-- Q19 -->
+<div class="question-box">
+  <span class="q-num">Q19</span><span class="q-topic">Sorting</span>
+  <div class="q-text">Which sorting algorithm has a worst-case time complexity of O(n log n)?</div>
+  <ol class="options" type="A">
+    <li>QuickSort</li>
+    <li>MergeSort</li>
+    <li>Bubble Sort</li>
+    <li>Insertion Sort</li>
+  </ol>
+  <p class="answer">Answer: B — MergeSort</p>
+  <p class="rationale">MergeSort is O(n log n) in all cases (best, average, worst). QuickSort's worst case is O(n&sup2;) — a critical distinction that students often miss. Bubble Sort and Insertion Sort are O(n&sup2;) worst case.</p>
+</div>
+
+<!-- Q20 -->
+<div class="question-box">
+  <span class="q-num">Q20</span><span class="q-topic">Sorting</span>
+  <div class="q-text">You have an array that is <strong>almost sorted</strong> — only a few elements are out of place. Which algorithm would perform best?</div>
+  <ol class="options" type="A">
+    <li>MergeSort</li>
+    <li>QuickSort (random pivot)</li>
+    <li>Insertion Sort</li>
+    <li>Selection Sort</li>
+  </ol>
+  <p class="answer">Answer: C — Insertion Sort</p>
+  <p class="rationale">Insertion Sort runs in O(n) on nearly-sorted data because almost no shifting is needed. MergeSort and QuickSort still do O(n log n) regardless. This tests understanding of best-case behavior, not just worst-case.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="part2">Part 2: Pre-Survey</h2>
+<!-- ============================================================ -->
+
+<div class="card highlight">
+  <h3 style="margin-top: 0;">Purpose</h3>
+  <p>Measure students' <strong>baseline</strong> engagement, self-efficacy, and AI perceptions <em>before</em> the semester's instruction takes effect. Administered in <strong>both sections</strong> in the first few weeks.</p>
+  <p><strong>Format:</strong> 24 Likert-scale items + 4 demographic questions. ~8 minutes to complete.</p>
+  <p><strong>Scale:</strong> 1 = Strongly Disagree, 2 = Disagree, 3 = Neutral, 4 = Agree, 5 = Strongly Agree</p>
+</div>
+
+<h3>Section A: Demographics (4 items)</h3>
+<div class="card">
+  <p><strong>D1.</strong> What is your major? <span style="color: #64748b;">[CS / CE / IS / Math / Other: ___]</span></p>
+  <p><strong>D2.</strong> What grade did you receive in the prerequisite programming course? <span style="color: #64748b;">[A / B / C / D / Other: ___]</span></p>
+  <p><strong>D3.</strong> How many programming courses have you taken before this one? <span style="color: #64748b;">[0 / 1 / 2 / 3+]</span></p>
+  <p><strong>D4.</strong> How often have you used AI tools (ChatGPT, Claude, Copilot, etc.) for coursework before this class? <span style="color: #64748b;">[Never / A few times / Monthly / Weekly / Daily]</span></p>
+</div>
+
+<h3>Section B: Engagement & Motivation (8 items)</h3>
+<p style="color: #64748b; font-size: 0.9em;">Adapted from the Student Course Engagement Questionnaire (Handelsman et al., 2005)</p>
+
+<table class="likert-table">
+  <thead>
+    <tr>
+      <th style="width: 50px;">#</th>
+      <th>Statement</th>
+      <th style="width: 180px; text-align: center;">SD &nbsp; D &nbsp; N &nbsp; A &nbsp; SA</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>E1</td><td>I look forward to attending this class.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>E2</td><td>I actively participate in class discussions and activities.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>E3</td><td>I find the topics in this course interesting.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>E4</td><td>I put effort into understanding the material, not just passing.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>E5</td><td>I feel motivated to study for this course outside of class.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>E6</td><td>When I don't understand something, I seek help (office hours, peers, online).</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>E7</td><td>I pay attention during the entire lecture, not just parts of it.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>E8</td><td>I connect what I learn in this class to real-world applications.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+  </tbody>
+</table>
+
+<h3>Section C: Self-Efficacy in Data Structures (8 items)</h3>
+<p style="color: #64748b; font-size: 0.9em;">Adapted from the Computer Science Self-Efficacy Scale (Ramalingam & Wiedenbeck, 1998)</p>
+
+<table class="likert-table">
+  <thead>
+    <tr>
+      <th style="width: 50px;">#</th>
+      <th>Statement: "I am confident that I can..."</th>
+      <th style="width: 180px; text-align: center;">SD &nbsp; D &nbsp; N &nbsp; A &nbsp; SA</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>S1</td><td>...understand the difference between arrays and linked lists and when to use each.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>S2</td><td>...analyze the time complexity (Big-O) of a simple algorithm.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>S3</td><td>...implement a stack or queue in Java.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>S4</td><td>...trace through a recursive method and predict its output.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>S5</td><td>...explain how a binary search tree insertion works.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>S6</td><td>...choose the appropriate data structure for a given problem.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>S7</td><td>...debug a program that uses data structures like trees or hash tables.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>S8</td><td>...succeed in this course overall.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+  </tbody>
+</table>
+
+<h3>Section D: Perceptions of AI in Learning (8 items)</h3>
+<p style="color: #64748b; font-size: 0.9em;">Custom items informed by recent AI-in-education literature (Kasneci et al., 2023; Wang et al., 2023)</p>
+
+<table class="likert-table">
+  <thead>
+    <tr>
+      <th style="width: 50px;">#</th>
+      <th>Statement</th>
+      <th style="width: 180px; text-align: center;">SD &nbsp; D &nbsp; N &nbsp; A &nbsp; SA</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>A1</td><td>AI tools (like ChatGPT) can help me learn course material more effectively.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>A2</td><td>I trust the accuracy of explanations provided by AI tools.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>A3</td><td>Using AI tools for learning feels like cheating.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>A4</td><td>I would prefer a class that integrates AI tools into instruction over one that does not.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>A5</td><td>AI tools can replace the need for human tutors or teaching assistants.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>A6</td><td>I worry that relying on AI tools will prevent me from truly learning the material.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>A7</td><td>I feel comfortable using AI tools as part of my study routine.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>A8</td><td>AI will play an important role in how computer science is taught in the future.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+  </tbody>
+</table>
+
+<div class="card success">
+  <h3 style="margin-top: 0;">Scoring Notes</h3>
+  <ul>
+    <li><strong>Items A3 and A6 are reverse-coded</strong> — higher scores on these items indicate <em>less</em> positive AI perceptions. Reverse them before computing construct averages.</li>
+    <li>Compute a <strong>mean score per construct</strong> (Engagement, Self-Efficacy, AI Perceptions) for each student.</li>
+    <li>Report <strong>Cronbach's alpha</strong> for each construct to demonstrate internal consistency.</li>
+  </ul>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="part3">Part 3: Post-Survey</h2>
+<!-- ============================================================ -->
+
+<div class="card highlight">
+  <h3 style="margin-top: 0;">Structure</h3>
+  <p>The post-survey repeats <strong>all 24 items</strong> from the pre-survey (Sections B, C, D) — this enables pre-post comparison on each construct. Additionally, it includes a short <strong>Section E</strong> with experience-specific questions.</p>
+  <p>Demographics (Section A) are <strong>not</strong> repeated.</p>
+</div>
+
+<h3>Section E: Course Experience (Post-Only, 6 items)</h3>
+<p style="color: #64748b; font-size: 0.9em;">These items appear only on the post-survey. For the treatment section, items P3-P6 ask about the web app. For the control section, replace those items with P3c-P6c below.</p>
+
+<table class="likert-table">
+  <thead>
+    <tr>
+      <th style="width: 50px;">#</th>
+      <th>Statement (Treatment Section)</th>
+      <th style="width: 180px; text-align: center;">SD &nbsp; D &nbsp; N &nbsp; A &nbsp; SA</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>P1</td><td>This course helped me grow as a computer scientist.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>P2</td><td>I would recommend this course to other students.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>P3</td><td>The animations in the web app helped me understand data structure operations.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>P4</td><td>The interactive exercises in the web app helped me learn actively during lectures.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>P5</td><td>The AI hints helped me work through problems I was stuck on.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>P6</td><td>I wish I could use this web app outside of class for self-study.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+  </tbody>
+</table>
+
+<h4>Control Section Variants (replace P3-P6):</h4>
+<table class="likert-table">
+  <tbody>
+    <tr><td style="width: 50px;">P3c</td><td>The lecture examples helped me understand data structure operations.</td><td style="width: 180px;"><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>P4c</td><td>I felt actively engaged during lectures (not just passively listening).</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>P5c</td><td>When I was stuck on a problem, I had access to helpful resources.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+    <tr><td>P6c</td><td>I wish the course had more interactive or technology-enhanced learning tools.</td><td><div class="likert-scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></td></tr>
+  </tbody>
+</table>
+
+<h3>Open-Ended Questions (Post-Only, Both Sections)</h3>
+<div class="card">
+  <p><strong>O1.</strong> What aspect of this course helped you learn the most? Why?</p>
+  <p><strong>O2.</strong> What would you change about how this course is taught?</p>
+  <p><strong>O3.</strong> <em>(Treatment section only)</em> Describe a specific moment when the AI hints helped you (or didn't help you) understand something.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="part4">Part 4: Administration Guide</h2>
+<!-- ============================================================ -->
+
+<div class="card highlight">
+  <h3 style="margin-top: 0;">Checklist for Both Instructors</h3>
+  <table class="likert-table">
+    <thead>
+      <tr><th>When</th><th>What</th><th>Who Administers</th><th>Duration</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>ASAP (this week!)</strong></td><td>Pre-Test (concept test, 20 MCQs)</td><td>Both instructors, in class</td><td>~25 min</td></tr>
+      <tr><td><strong>ASAP (this week!)</strong></td><td>Pre-Survey (demographics + 24 Likert items)</td><td>Both instructors, in class</td><td>~8 min</td></tr>
+      <tr><td>Week 8-9</td><td>Optional mid-semester pulse (E1-E8 only)</td><td>Both instructors</td><td>~3 min</td></tr>
+      <tr><td>Week 14-15</td><td>Post-Test (same 20 MCQs)</td><td>Both instructors, in class</td><td>~25 min</td></tr>
+      <tr><td>Week 14-15</td><td>Post-Survey (24 repeated + 6 new + 3 open)</td><td>Both instructors, in class</td><td>~12 min</td></tr>
+      <tr><td>Week 16</td><td>Interviews (treatment section only)</td><td>PI (or trained RA)</td><td>20-30 min each</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card warn">
+  <h3 style="margin-top: 0;">Tips for High Response Rates</h3>
+  <ul>
+    <li><strong>Administer during class time</strong> — don't ask students to do it at home</li>
+    <li><strong>Explain the purpose</strong> — "This helps us improve the course for future students"</li>
+    <li><strong>Emphasize anonymity</strong> — "Your responses won't affect your grade. Your instructor won't see individual responses."</li>
+    <li><strong>Keep it short</strong> — pre-test + pre-survey together should take &lt; 35 minutes of one class period</li>
+    <li><strong>Use a unique anonymous ID</strong> — have each student create a code (e.g., last 4 digits of phone + birth month) so you can match pre/post without using names</li>
+  </ul>
+</div>
+
+<div class="card success">
+  <h3 style="margin-top: 0;">For Rolf Specifically</h3>
+  <ul>
+    <li>Your section takes the <strong>same pre-test and pre-survey</strong> — no extra prep needed beyond distributing the forms</li>
+    <li>The post-survey has <strong>slightly different wording</strong> for items P3-P6 (asking about your lectures instead of the web app)</li>
+    <li>You do <strong>not</strong> need to do interviews — those are only for the treatment section</li>
+    <li>Please review the 20 concept test questions above — flag any that don't fit your coverage or that you think are unfair</li>
+    <li>If you want to add or remove questions, let's discuss so both sections use the identical test</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3 style="margin-top: 0;">Recommended Tools for Administration</h3>
+  <ul>
+    <li><strong>Concept test:</strong> Paper-based in class (avoids tech issues) or Google Forms / Qualtrics</li>
+    <li><strong>Survey:</strong> Qualtrics (if your institution has a license) or Google Forms</li>
+    <li><strong>Anonymous ID matching:</strong> Ask students to create a self-generated ID on both pre and post surveys</li>
+    <li><strong>Interview recording:</strong> Zoom (with consent) or a voice recorder app</li>
+  </ul>
+</div>
+
+<p style="margin-top: 40px; text-align: center; color: #94a3b8; font-size: 0.9em;">
+  Generated for CS 205 AI Education Research Study — Spring 2026<br>
+  Share this document with all collaborators. Last updated: February 2026.
+</p>
+
+</body>
+</html>

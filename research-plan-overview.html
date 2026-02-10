@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS205 AI Education Research Plan</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; overflow: hidden; }
+
+  /* Slide container */
+  .slide-deck { width: 100vw; height: 100vh; position: relative; }
+  .slide {
+    display: none; position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%; padding: 60px 80px;
+    flex-direction: column; justify-content: center;
+  }
+  .slide.active { display: flex; }
+
+  /* Navigation */
+  .nav {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 12px; z-index: 100; align-items: center;
+  }
+  .nav button {
+    background: #334155; border: 1px solid #475569; color: #e2e8f0;
+    padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 16px;
+    transition: all 0.2s;
+  }
+  .nav button:hover { background: #475569; }
+  .nav button:disabled { opacity: 0.3; cursor: default; }
+  .nav .counter { color: #94a3b8; font-size: 14px; min-width: 60px; text-align: center; }
+
+  /* Progress bar */
+  .progress { position: fixed; top: 0; left: 0; height: 3px; background: #3b82f6; transition: width 0.3s; z-index: 100; }
+
+  /* Typography */
+  h1 { font-size: 2.8em; font-weight: 700; margin-bottom: 20px; line-height: 1.2; }
+  h2 { font-size: 2em; font-weight: 600; margin-bottom: 24px; color: #60a5fa; }
+  h3 { font-size: 1.4em; font-weight: 600; margin-bottom: 16px; color: #93c5fd; }
+  p, li { font-size: 1.15em; line-height: 1.7; color: #cbd5e1; }
+  .subtitle { font-size: 1.3em; color: #94a3b8; margin-bottom: 40px; }
+  .highlight { color: #fbbf24; font-weight: 600; }
+  .blue { color: #60a5fa; }
+  .green { color: #34d399; }
+  .red { color: #f87171; }
+  .purple { color: #a78bfa; }
+
+  /* Layout helpers */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; margin-top: 20px; }
+  .card {
+    background: #1e293b; border: 1px solid #334155; border-radius: 12px;
+    padding: 24px; margin-bottom: 16px;
+  }
+  .card.accent { border-left: 4px solid #3b82f6; }
+  .card.warn { border-left: 4px solid #f59e0b; }
+  .card.success { border-left: 4px solid #10b981; }
+  .card.danger { border-left: 4px solid #ef4444; }
+
+  ul { padding-left: 24px; }
+  li { margin-bottom: 8px; }
+
+  /* Diagram styles */
+  .diagram {
+    background: #1e293b; border: 1px solid #334155; border-radius: 12px;
+    padding: 30px; font-family: 'Courier New', monospace; font-size: 0.95em;
+    line-height: 1.5; white-space: pre; overflow-x: auto; color: #e2e8f0;
+    margin: 20px 0;
+  }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  th { background: #1e293b; color: #60a5fa; text-align: left; padding: 12px 16px; font-size: 1em; }
+  td { padding: 12px 16px; border-bottom: 1px solid #1e293b; font-size: 1em; color: #cbd5e1; }
+  tr:hover td { background: #1e293b40; }
+
+  /* Tags */
+  .tag {
+    display: inline-block; padding: 4px 12px; border-radius: 20px;
+    font-size: 0.85em; font-weight: 600; margin: 2px 4px;
+  }
+  .tag.blue { background: #1e3a5f; color: #60a5fa; }
+  .tag.green { background: #064e3b; color: #34d399; }
+  .tag.yellow { background: #422006; color: #fbbf24; }
+  .tag.red { background: #450a0a; color: #f87171; }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 30px; margin-top: 16px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 8px; top: 0; bottom: 0;
+    width: 2px; background: #334155;
+  }
+  .timeline-item { position: relative; margin-bottom: 20px; }
+  .timeline-item::before {
+    content: ''; position: absolute; left: -26px; top: 6px;
+    width: 12px; height: 12px; border-radius: 50%; background: #3b82f6;
+  }
+  .timeline-item.done::before { background: #10b981; }
+  .timeline-item.urgent::before { background: #ef4444; animation: pulse 1.5s infinite; }
+  .timeline-item.future::before { background: #475569; }
+  @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 #ef444480; } 50% { box-shadow: 0 0 0 8px #ef444400; } }
+
+  /* Flow arrow */
+  .flow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
+  .flow-box {
+    background: #1e293b; border: 1px solid #475569; border-radius: 8px;
+    padding: 12px 20px; font-size: 1em; text-align: center;
+  }
+  .flow-arrow { color: #475569; font-size: 1.5em; }
+
+  .big-number { font-size: 3em; font-weight: 700; color: #3b82f6; }
+  .vs-badge {
+    display: inline-block; background: #7c3aed; color: white; padding: 6px 16px;
+    border-radius: 20px; font-weight: 700; font-size: 1.1em;
+  }
+
+  /* Key insight box */
+  .insight {
+    background: linear-gradient(135deg, #1e3a5f, #1e293b); border: 1px solid #3b82f6;
+    border-radius: 12px; padding: 24px; margin: 20px 0;
+  }
+  .insight h3 { color: #60a5fa; margin-bottom: 8px; }
+
+  kbd {
+    background: #334155; border: 1px solid #475569; border-radius: 4px;
+    padding: 2px 8px; font-size: 0.9em;
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="slide-deck" id="deck">
+
+  <!-- SLIDE 1: Title -->
+  <div class="slide active">
+    <h1>CS 205: AI-Assisted Teaching<br>Research Plan</h1>
+    <p class="subtitle">A quasi-experimental study comparing AI-integrated vs. traditional instruction in Data Structures & Algorithms</p>
+    <div style="margin-top: 40px;">
+      <span class="tag blue">Spring 2026</span>
+      <span class="tag green">IRB Approved</span>
+      <span class="tag yellow">Study In Progress</span>
+    </div>
+    <p style="margin-top: 40px; color: #64748b;">Use <kbd>&larr;</kbd> <kbd>&rarr;</kbd> arrow keys or buttons below to navigate</p>
+  </div>
+
+  <!-- SLIDE 2: The Big Picture -->
+  <div class="slide">
+    <h2>The Big Picture: What Are We Studying?</h2>
+    <div class="diagram" style="font-size: 0.85em;">
+ YOUR SECTION                              ROLF'S SECTION
+ ┌──────────────────────────┐              ┌──────────────────────────┐
+ │                          │              │                          │
+ │  Custom Web App          │              │  Traditional Lectures    │
+ │  ┌────────────────────┐  │              │                          │
+ │  │ Animations         │  │              │  - Slides & whiteboard   │
+ │  │ Interactive Exercises│ │              │  - Live coding           │
+ │  │ AI Hints & Guidance │  │     VS      │  - Textbook              │
+ │  └────────────────────┘  │              │  - Standard office hours  │
+ │                          │              │                          │
+ │  &lt; 50 students           │              │  &lt; 50 students           │
+ └─────────────┬────────────┘              └─────────────┬────────────┘
+               │                                         │
+               └──────────────┬──────────────────────────┘
+                              │
+                   ┌──────────▼──────────┐
+                   │   SAME Assessments  │
+                   │   SAME Quizzes      │
+                   │   SAME Exams        │
+                   └─────────────────────┘
+    </div>
+    <div class="insight">
+      <h3>Why this matters</h3>
+      <p>By sharing identical assessments, we can directly compare learning outcomes. The only systematic difference is the teaching approach — your AI-enhanced web app vs. Rolf's traditional methods.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Three Research Questions -->
+  <div class="slide">
+    <h2>Three Research Questions</h2>
+    <div class="three-col">
+      <div class="card accent">
+        <h3>RQ1: Learning Outcomes</h3>
+        <p>Does the AI-integrated approach improve student <span class="highlight">performance</span> on shared assessments?</p>
+        <p style="margin-top: 12px; font-size: 0.9em; color: #94a3b8;"><strong>Measured by:</strong> Quiz/exam scores, pre-post concept test gains</p>
+      </div>
+      <div class="card accent">
+        <h3>RQ2: Student Experience</h3>
+        <p>How does it affect <span class="highlight">engagement</span>, <span class="highlight">self-efficacy</span>, and <span class="highlight">AI perceptions</span>?</p>
+        <p style="margin-top: 12px; font-size: 0.9em; color: #94a3b8;"><strong>Measured by:</strong> Surveys (3 constructs) + end-of-term interviews</p>
+      </div>
+      <div class="card accent">
+        <h3>RQ3: AI-Specific Impact</h3>
+        <p>Can we <span class="highlight">isolate the AI component's</span> contribution from the rest of the app?</p>
+        <p style="margin-top: 12px; font-size: 0.9em; color: #94a3b8;"><strong>Measured by:</strong> Within-section AI on/off toggle + app analytics</p>
+      </div>
+    </div>
+    <div class="insight">
+      <h3>Why three questions, not just one?</h3>
+      <p>RQ1 alone ("do scores go up?") is weak — many things could explain score differences. RQ2 adds the student perspective. RQ3 is the methodological innovation: by toggling AI on/off within YOUR section, we isolate AI's specific effect under the same instructor, same app, same students.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: The Intervention -->
+  <div class="slide">
+    <h2>Your Intervention: The Web App</h2>
+    <p style="margin-bottom: 20px;">Built with Claude Code, used <strong>during lectures only</strong> (you project it in class).</p>
+    <div class="three-col">
+      <div class="card" style="border-top: 3px solid #3b82f6;">
+        <h3 style="color: #3b82f6;">Animations</h3>
+        <p>Step-by-step visualizations of DS operations</p>
+        <p style="margin-top: 8px; font-size: 0.9em; color: #64748b;">Tree rotations, graph traversals, sorting traces...</p>
+        <p style="margin-top: 12px;"><span class="tag blue">Visual Learning</span></p>
+      </div>
+      <div class="card" style="border-top: 3px solid #10b981;">
+        <h3 style="color: #10b981;">Interactive Exercises</h3>
+        <p>Students follow along with hands-on problems during class</p>
+        <p style="margin-top: 8px; font-size: 0.9em; color: #64748b;">Active learning, not passive viewing</p>
+        <p style="margin-top: 12px;"><span class="tag green">Active Learning</span></p>
+      </div>
+      <div class="card" style="border-top: 3px solid #f59e0b;">
+        <h3 style="color: #f59e0b;">AI Hints</h3>
+        <p>Step-by-step guidance that nudges students toward the answer</p>
+        <p style="margin-top: 8px; font-size: 0.9em; color: #64748b;">Guides without giving away answers</p>
+        <p style="margin-top: 12px;"><span class="tag yellow">AI-Powered</span></p>
+      </div>
+    </div>
+    <div class="insight">
+      <h3>Why build a custom app instead of just using ChatGPT?</h3>
+      <p>A purpose-built tool is a much stronger research contribution. Generic chatbots are unpredictable and hard to replicate. Your app provides <strong>controlled, reproducible</strong> AI interactions, <strong>full analytics</strong> on every hint request, and a <strong>feature toggle</strong> for the study. Reviewers will value this over "we told students to use ChatGPT."</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: The Key Innovation — AI Isolation -->
+  <div class="slide">
+    <h2>The Key Innovation: Isolating AI's Impact</h2>
+    <p style="margin-bottom: 16px;">The biggest threat to this study: <span class="red">your app bundles 3 things together</span>. If scores improve, is it the animations? The interactivity? Or the AI hints?</p>
+    <div class="diagram" style="font-size: 0.85em;">
+ YOUR SECTION — Within-Section Toggle Design
+ ┌─────────────────────────────────────────────────────────────────┐
+ │                                                                 │
+ │   Topic 1: Arrays        ──── AI HINTS ON  ──── Track scores   │
+ │   Topic 2: Linked Lists  ──── AI HINTS OFF ──── Track scores   │
+ │   Topic 3: Stacks/Queues ──── AI HINTS ON  ──── Track scores   │
+ │   Topic 4: Trees         ──── AI HINTS OFF ──── Track scores   │
+ │   Topic 5: Hash Tables   ──── AI HINTS ON  ──── Track scores   │
+ │   Topic 6: Graphs        ──── AI HINTS OFF ──── Track scores   │
+ │   ...                                                           │
+ │                                                                 │
+ │   Same students. Same instructor. Same app (animations +        │
+ │   interactives always on). ONLY difference = AI hints.          │
+ └─────────────────────────────────────────────────────────────────┘
+
+ Compare AI-ON topic scores vs AI-OFF topic scores
+ ──────────────────────────────────────────────────
+        → This isolates the AI hint effect!
+    </div>
+    <div class="two-col">
+      <div class="card success">
+        <h3>Between-Section Comparison</h3>
+        <p>Your full section vs. Rolf's section</p>
+        <p style="color: #94a3b8; margin-top: 8px;">Answers: "Does the whole app+AI approach beat traditional?"</p>
+      </div>
+      <div class="card warn">
+        <h3>Within-Section Comparison</h3>
+        <p>AI-on topics vs. AI-off topics (your section only)</p>
+        <p style="color: #94a3b8; margin-top: 8px;">Answers: "Do the AI hints specifically add value?"</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: Data Collection -->
+  <div class="slide">
+    <h2>What Data Are We Collecting?</h2>
+    <div class="two-col">
+      <div>
+        <h3>Quantitative (Numbers)</h3>
+        <div class="card accent">
+          <strong>Pre/Post Concept Test</strong>
+          <p style="font-size: 0.95em;">15-20 MCQs on DS concepts. Measures learning gains from start to end of semester. Both sections.</p>
+        </div>
+        <div class="card accent">
+          <strong>Shared Assessments (3-5)</strong>
+          <p style="font-size: 0.95em;">Quizzes, assignments, exams — identical across sections. The primary outcome measure.</p>
+        </div>
+        <div class="card accent">
+          <strong>Surveys (3 Constructs)</strong>
+          <p style="font-size: 0.95em;">Engagement, self-efficacy, AI perceptions. Likert scales, pre + post semester.</p>
+        </div>
+        <div class="card accent">
+          <strong>App Analytics</strong>
+          <p style="font-size: 0.95em;">Every click logged: hints requested, time on task, exercise completion, AI-on/off condition.</p>
+        </div>
+      </div>
+      <div>
+        <h3>Qualitative (Stories)</h3>
+        <div class="card accent">
+          <strong>End-of-Term Interviews</strong>
+          <p style="font-size: 0.95em;">8-12 students, semi-structured, 20-30 min each. Captures lived experience with the app and AI hints.</p>
+        </div>
+        <div style="margin-top: 24px;">
+          <h3>Why Both?</h3>
+          <p>Numbers tell you <em>what</em> happened. Interviews tell you <em>why</em>.</p>
+          <p style="margin-top: 12px;">If AI-on topics show higher scores, interviews explain: "The hints helped me see where I was stuck." If no score difference, interviews might reveal: "The hints were helpful but I would've figured it out anyway."</p>
+          <p style="margin-top: 12px;">This <span class="highlight">mixed-methods</span> approach is what top CS education venues expect.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: Analysis Plan -->
+  <div class="slide">
+    <h2>How We'll Analyze the Data</h2>
+    <p style="margin-bottom: 12px;">With &lt; 50 students per group, <span class="highlight">effect sizes matter more than p-values</span>.</p>
+    <table>
+      <thead>
+        <tr><th>Comparison</th><th>Statistical Method</th><th>Why This Method</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Your section vs. Rolf's (scores)</td>
+          <td>Mann-Whitney U + Cohen's d</td>
+          <td>Non-parametric; works with small N and non-normal data</td>
+        </tr>
+        <tr>
+          <td>Controlling for baseline</td>
+          <td>ANCOVA (pre-test as covariate)</td>
+          <td>Adjusts for any starting differences between sections</td>
+        </tr>
+        <tr>
+          <td>AI-on vs. AI-off topics</td>
+          <td>Paired Wilcoxon / paired t-test</td>
+          <td>Same students in both conditions = more statistical power</td>
+        </tr>
+        <tr>
+          <td>Learning gains</td>
+          <td>Normalized gain (Hake)</td>
+          <td>Standard in education research; accounts for ceiling effects</td>
+        </tr>
+        <tr>
+          <td>Hint usage &rarr; performance</td>
+          <td>Correlation / regression</td>
+          <td>Exploratory: does more AI hint usage predict better scores?</td>
+        </tr>
+        <tr>
+          <td>Interviews</td>
+          <td>Thematic analysis (Braun & Clarke)</td>
+          <td>Standard qualitative method; produces rich, credible themes</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="insight">
+      <h3>Why Bayesian analysis too?</h3>
+      <p>With small samples, traditional tests often say "not significant" even when there IS an effect. Bayesian analysis lets you say "the data provide <em>moderate evidence</em> for an effect of size X" — much more useful for a pilot study. It's increasingly accepted at SIGCSE.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Risks & Mitigations -->
+  <div class="slide">
+    <h2>Three Big Risks (and How We Handle Them)</h2>
+    <div class="three-col">
+      <div class="card danger">
+        <h3><span class="red">Risk 1: Small Sample</span></h3>
+        <p>&lt; 50 per group may not reach statistical significance.</p>
+        <div style="margin-top: 16px; border-top: 1px solid #334155; padding-top: 12px;">
+          <h3 style="color: #34d399;">Mitigations</h3>
+          <ul>
+            <li>Report effect sizes (Cohen's d), not just p-values</li>
+            <li>Use Bayesian analysis</li>
+            <li>Within-section design = paired data = more power</li>
+            <li>Frame as "case study with quantitative evidence"</li>
+            <li>Plan a replication semester</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card danger">
+        <h3><span class="red">Risk 2: Instructor Confound</span></h3>
+        <p>Both are experienced, effective instructors — but different teaching styles could still influence results.</p>
+        <div style="margin-top: 16px; border-top: 1px solid #334155; padding-top: 12px;">
+          <h3 style="color: #34d399;">Mitigations</h3>
+          <ul>
+            <li>Document both instructors' experience and teaching styles</li>
+            <li>Both instructors are experienced — this is a strength, not a weakness</li>
+            <li><strong>Within-section AI toggle</strong> = same instructor for both conditions</li>
+            <li>Shared assessments ensure identical standards</li>
+            <li>Collect teaching evaluations from both sections for context</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card danger">
+        <h3><span class="red">Risk 3: Compliance</span></h3>
+        <p>Students skip surveys, don't engage, or give shallow answers.</p>
+        <div style="margin-top: 16px; border-top: 1px solid #334155; padding-top: 12px;">
+          <h3 style="color: #34d399;">Mitigations</h3>
+          <ul>
+            <li>Keep surveys &lt; 10 minutes</li>
+            <li>Administer during class time</li>
+            <li>Small incentives (extra credit)</li>
+            <li>App engagement is controlled by you (lecture tool)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="insight">
+      <h3>The within-section design is your secret weapon</h3>
+      <p>It addresses both Risk 1 (more power from paired data) AND Risk 2 (same instructor controls the confound). This is why reviewers will take this study seriously despite the small N.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: Timeline -->
+  <div class="slide">
+    <h2>Timeline: Spring 2026 &rarr; SIGCSE 2027</h2>
+    <div class="two-col">
+      <div>
+        <h3>Semester (Jan &ndash; May 2026)</h3>
+        <div class="timeline">
+          <div class="timeline-item done">
+            <strong>Weeks 1-3 (Jan)</strong><br>
+            <span style="color: #94a3b8;">Semester start, initial lectures</span>
+          </div>
+          <div class="timeline-item urgent">
+            <strong>Week 4-5 (NOW!) </strong><span class="tag red">URGENT</span><br>
+            <span style="color: #fbbf24;">Administer pre-test & pre-survey if not done.<br>Implement AI feature toggle in app.</span>
+          </div>
+          <div class="timeline-item future">
+            <strong>Weeks 6-9 (Feb-Mar)</strong><br>
+            <span style="color: #94a3b8;">First assessment + midterm. AI toggle active.</span>
+          </div>
+          <div class="timeline-item future">
+            <strong>Weeks 10-15 (Mar-Apr)</strong><br>
+            <span style="color: #94a3b8;">Continue data collection. Final exam. Post-test & post-survey.</span>
+          </div>
+          <div class="timeline-item future">
+            <strong>Week 16 (May)</strong><br>
+            <span style="color: #94a3b8;">Conduct 8-12 student interviews.</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3>Post-Semester (May &ndash; Aug 2026)</h3>
+        <div class="timeline">
+          <div class="timeline-item future">
+            <strong>May &ndash; June</strong><br>
+            <span style="color: #94a3b8;">Data cleaning, statistical analysis, qualitative coding</span>
+          </div>
+          <div class="timeline-item future">
+            <strong>July</strong><br>
+            <span style="color: #94a3b8;">Draft paper, iterate with Rolf</span>
+          </div>
+          <div class="timeline-item future">
+            <strong>August</strong> <span class="tag blue">TARGET</span><br>
+            <span style="color: #94a3b8;">Submit to SIGCSE 2027</span>
+          </div>
+        </div>
+        <div class="card warn" style="margin-top: 24px;">
+          <h3>Why SIGCSE?</h3>
+          <p style="font-size: 0.95em;">Premier CS education venue. Your study's strengths — shared assessments, custom tool, mixed methods, AI isolation design — align perfectly with what SIGCSE reviewers value.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: What Makes This Study Strong -->
+  <div class="slide">
+    <h2>What Makes This Study Stand Out</h2>
+    <p style="margin-bottom: 24px;">Most "AI in education" studies have major weaknesses. Here's how yours avoids them:</p>
+    <table>
+      <thead>
+        <tr><th>Common Weakness</th><th>How Your Study Avoids It</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="red">"We just let students use ChatGPT"</span></td>
+          <td><span class="green">Purpose-built app with controlled AI features and full logging</span></td>
+        </tr>
+        <tr>
+          <td><span class="red">Different exams for each group</span></td>
+          <td><span class="green">Identical shared assessments designed collaboratively</span></td>
+        </tr>
+        <tr>
+          <td><span class="red">Can't tell if AI or other factors caused the effect</span></td>
+          <td><span class="green">Within-section AI toggle isolates the AI component</span></td>
+        </tr>
+        <tr>
+          <td><span class="red">Only test scores, no student voice</span></td>
+          <td><span class="green">Mixed methods: scores + surveys + interviews + analytics</span></td>
+        </tr>
+        <tr>
+          <td><span class="red">No baseline measurement</span></td>
+          <td><span class="green">Pre/post concept test + pre-survey establishes baselines</span></td>
+        </tr>
+        <tr>
+          <td><span class="red">"Results not significant" with small N</span></td>
+          <td><span class="green">Effect sizes + Bayesian analysis + paired within-section design</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="insight">
+      <h3>The narrative for reviewers</h3>
+      <p>"We built a purpose-built educational AI tool for data structures, ran a controlled comparison with shared assessments, and used a novel within-section toggle to isolate AI's specific contribution — something most studies can't do."</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: Immediate Action Items -->
+  <div class="slide">
+    <h2>What You Need to Do This Week</h2>
+    <div class="two-col">
+      <div>
+        <div class="card danger" style="border: 2px solid #ef4444;">
+          <h3><span class="red">Priority 1: Pre-Test</span></h3>
+          <p>If the pre-test/pre-survey hasn't been administered yet, do it <strong>this week</strong>. Every day you wait weakens the baseline data.</p>
+          <p style="margin-top: 8px; color: #94a3b8;">Create 15-20 MCQs covering key DS concepts. Have Rolf review them. Administer in both sections during class.</p>
+        </div>
+        <div class="card warn">
+          <h3><span class="highlight">Priority 2: AI Toggle</span></h3>
+          <p>Add a per-topic on/off switch for AI hints in the web app. This is the technical prerequisite for the within-section design.</p>
+          <p style="margin-top: 8px; color: #94a3b8;">Also ensure all interactions are being logged with the AI condition flag.</p>
+        </div>
+      </div>
+      <div>
+        <div class="card accent">
+          <h3>Priority 3: Topic Assignment</h3>
+          <p>Decide which topics are AI-on and which are AI-off. Balance by difficulty. Example:</p>
+          <ul style="margin-top: 8px;">
+            <li><span class="green">AI-ON:</span> Arrays, Stacks/Queues, Hash Tables, Sorting</li>
+            <li><span class="red">AI-OFF:</span> Linked Lists, Trees, Heaps, Graphs</li>
+          </ul>
+        </div>
+        <div class="card accent">
+          <h3>Priority 4: Coordinate with Rolf</h3>
+          <p>Confirm the shared assessment schedule. Ask if he'll administer the same surveys in his section (would greatly strengthen the paper).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: Open Questions -->
+  <div class="slide">
+    <h2>Open Questions to Resolve</h2>
+    <div class="two-col">
+      <div>
+        <div class="card warn">
+          <h3>1. Pre-test status?</h3>
+          <p>Has it been given yet? If not, this is urgent.</p>
+        </div>
+        <div class="card warn">
+          <h3>2. AI toggle feasibility?</h3>
+          <p>How much engineering work to add the per-topic toggle?</p>
+        </div>
+        <div class="card warn">
+          <h3>3. Which topics AI-on/off?</h3>
+          <p>Need to balance difficulty, timing, and content coverage.</p>
+        </div>
+        <div class="card warn">
+          <h3>4. Rolf's survey participation?</h3>
+          <p>Will he give the same surveys? Having control-group survey data is very valuable.</p>
+        </div>
+      </div>
+      <div>
+        <div class="card warn">
+          <h3>5. Incentives approved?</h3>
+          <p>Has IRB approved extra credit or gift cards for survey/interview participation?</p>
+        </div>
+        <div class="card warn">
+          <h3>6. Concept test authoring?</h3>
+          <p>Who writes the pre/post concept test? What's the review process?</p>
+        </div>
+        <div class="card warn">
+          <h3>7. Interview logistics?</h3>
+          <p>Who conducts the interviews? Are they trained in qualitative methods?</p>
+        </div>
+        <div class="card" style="border: 1px solid #3b82f6; margin-top: 16px;">
+          <h3 style="color: #60a5fa;">Full spec available at:</h3>
+          <p style="font-family: monospace; color: #94a3b8;">cs205aieducation/spec.md</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="nav">
+  <button id="prevBtn" onclick="changeSlide(-1)">&larr; Prev</button>
+  <span class="counter" id="counter">1 / 12</span>
+  <button id="nextBtn" onclick="changeSlide(1)">Next &rarr;</button>
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+
+  function showSlide(n) {
+    slides.forEach(s => s.classList.remove('active'));
+    slides[n].classList.add('active');
+    document.getElementById('counter').textContent = `${n + 1} / ${total}`;
+    document.getElementById('prevBtn').disabled = n === 0;
+    document.getElementById('nextBtn').disabled = n === total - 1;
+    document.getElementById('progress').style.width = `${((n + 1) / total) * 100}%`;
+  }
+
+  function changeSlide(dir) {
+    current = Math.max(0, Math.min(total - 1, current + dir));
+    showSlide(current);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
+  });
+
+  showSlide(0);
+</script>
+
+</body>
+</html>
