@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS205 Study Logistics — Who Does What</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; overflow: hidden; }
+
+  .slide-deck { width: 100vw; height: 100vh; position: relative; }
+  .slide {
+    display: none; position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%; padding: 50px 70px;
+    flex-direction: column; justify-content: center;
+    overflow-y: auto;
+  }
+  .slide.active { display: flex; }
+
+  .nav {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 12px; z-index: 100; align-items: center;
+  }
+  .nav button {
+    background: #334155; border: 1px solid #475569; color: #e2e8f0;
+    padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 16px;
+    transition: all 0.2s;
+  }
+  .nav button:hover { background: #475569; }
+  .nav button:disabled { opacity: 0.3; cursor: default; }
+  .nav .counter { color: #94a3b8; font-size: 14px; min-width: 60px; text-align: center; }
+
+  .progress { position: fixed; top: 0; left: 0; height: 3px; background: #3b82f6; transition: width 0.3s; z-index: 100; }
+
+  h1 { font-size: 2.5em; font-weight: 700; margin-bottom: 16px; line-height: 1.2; }
+  h2 { font-size: 1.9em; font-weight: 600; margin-bottom: 20px; color: #60a5fa; }
+  h3 { font-size: 1.3em; font-weight: 600; margin-bottom: 12px; color: #93c5fd; }
+  p, li { font-size: 1.1em; line-height: 1.7; color: #cbd5e1; }
+  .subtitle { font-size: 1.2em; color: #94a3b8; margin-bottom: 32px; }
+  .highlight { color: #fbbf24; font-weight: 600; }
+  .blue { color: #60a5fa; }
+  .green { color: #34d399; }
+  .red { color: #f87171; }
+  .purple { color: #a78bfa; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 16px; }
+  .card {
+    background: #1e293b; border: 1px solid #334155; border-radius: 12px;
+    padding: 22px; margin-bottom: 14px;
+  }
+  .card.accent { border-left: 4px solid #3b82f6; }
+  .card.warn { border-left: 4px solid #f59e0b; }
+  .card.success { border-left: 4px solid #10b981; }
+  .card.you { border-left: 4px solid #8b5cf6; }
+  .card.rolf { border-left: 4px solid #f59e0b; }
+  .card.both { border-left: 4px solid #3b82f6; }
+
+  ul { padding-left: 22px; }
+  li { margin-bottom: 6px; }
+
+  .diagram {
+    background: #1e293b; border: 1px solid #334155; border-radius: 12px;
+    padding: 24px; font-family: 'Courier New', monospace; font-size: 0.88em;
+    line-height: 1.5; white-space: pre; overflow-x: auto; color: #e2e8f0;
+    margin: 16px 0;
+  }
+
+  .insight {
+    background: linear-gradient(135deg, #1e3a5f, #1e293b); border: 1px solid #3b82f6;
+    border-radius: 12px; padding: 20px; margin: 16px 0;
+  }
+  .insight h3 { color: #60a5fa; margin-bottom: 8px; }
+
+  .tag {
+    display: inline-block; padding: 4px 12px; border-radius: 20px;
+    font-size: 0.85em; font-weight: 600; margin: 2px 4px;
+  }
+  .tag.blue { background: #1e3a5f; color: #60a5fa; }
+  .tag.green { background: #064e3b; color: #34d399; }
+  .tag.yellow { background: #422006; color: #fbbf24; }
+  .tag.purple { background: #3b1f6e; color: #a78bfa; }
+  .tag.red { background: #450a0a; color: #f87171; }
+
+  .persona {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+  }
+  .persona-icon {
+    width: 48px; height: 48px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; font-size: 1.4em; flex-shrink: 0;
+  }
+  .persona-you .persona-icon { background: #3b1f6e; }
+  .persona-rolf .persona-icon { background: #422006; }
+  .persona-both .persona-icon { background: #1e3a5f; }
+
+  .step-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 50%; background: #3b82f6;
+    color: white; font-weight: 700; font-size: 0.95em; margin-right: 10px;
+    flex-shrink: 0;
+  }
+  .step { display: flex; align-items: flex-start; margin-bottom: 16px; }
+  .step-content { flex: 1; }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  th { background: #1e293b; color: #60a5fa; text-align: left; padding: 10px 14px; font-size: 0.95em; }
+  td { padding: 10px 14px; border-bottom: 1px solid #1e293b; font-size: 0.95em; color: #cbd5e1; }
+
+  kbd {
+    background: #334155; border: 1px solid #475569; border-radius: 4px;
+    padding: 2px 8px; font-size: 0.9em;
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="slide-deck" id="deck">
+
+  <!-- ═══════ SLIDE 1: Title ═══════ -->
+  <div class="slide active">
+    <h1>Who Does What?</h1>
+    <p class="subtitle">A practical logistics guide for you, Rolf, and the crossover RCT</p>
+    <div style="margin-top: 32px;">
+      <span class="tag purple">Your Section</span>
+      <span class="tag yellow">Rolf's Section</span>
+      <span class="tag blue">Both</span>
+    </div>
+    <div class="insight" style="margin-top: 32px;">
+      <h3>What this deck covers</h3>
+      <p>This is the "how do we actually do this" guide. Not research theory &mdash; just the practical steps, week by week, for both instructors.</p>
+    </div>
+    <p style="margin-top: 24px; color: #64748b;">Use <kbd>&larr;</kbd> <kbd>&rarr;</kbd> to navigate &bull; 10 slides</p>
+  </div>
+
+  <!-- ═══════ SLIDE 2: The Two Classrooms ═══════ -->
+  <div class="slide">
+    <h2>The Two Classrooms, Side by Side</h2>
+    <p style="margin-bottom: 12px;">First, the big picture of how each class runs day-to-day:</p>
+    <div class="diagram">
+ YOUR CLASS (Treatment)                    ROLF'S CLASS (Control)
+ ════════════════════════                  ════════════════════════
+
+ Students open your web app                Rolf lectures with slides,
+ on their phones/laptops.                  whiteboard, and live coding.
+                                           Students take notes.
+ You project the app too.
+ You walk through:                         Rolf walks through:
+   ┌──────────────────────┐                  ┌──────────────────────┐
+   │  Animations          │ ← SAME for all   │  Slide examples      │
+   │  Interactive exercises│ ← SAME for all   │  Whiteboard diagrams │
+   │                      │                  │  Live coding         │
+   │  AI Hints button     │ ← DIFFERENT      │  (no AI anything)    │
+   │  (some students see  │   per student!   │                      │
+   │   it, some don't)    │                  │                      │
+   └──────────────────────┘                  └──────────────────────┘
+                │                                      │
+                └──────────────┬───────────────────────┘
+                               │
+                    SAME quizzes, assignments, exams
+    </div>
+    <div class="insight">
+      <h3>Key point</h3>
+      <p>Your web app's <strong>animations and exercises</strong> are visible to ALL your students equally. The <strong>only</strong> thing that differs between students is whether the "AI Hint" button appears when they're doing exercises on their own device.</p>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 3: How Crossover RCT Works In Your Class ═══════ -->
+  <div class="slide">
+    <h2>How the Crossover RCT Works in Your Class</h2>
+    <p style="margin-bottom: 8px;">This is the part that matters most. Let's walk through exactly what happens:</p>
+    <div class="diagram" style="font-size: 0.82em;">
+ BEFORE THE SEMESTER STARTS:
+ ───────────────────────────
+ Your app randomly assigns each student to Group X or Group Y.
+ (Students don't know which group they're in. They just log in.)
+
+ DURING EACH TOPIC:
+ ──────────────────
+ Say you're teaching "Binary Search Trees" today.
+
+ You project the app → Everyone sees the SAME animation of BST insertion.
+ You walk through it  → Everyone follows along on their devices.
+ You say "try the exercise" →
+
+   ┌──────────────────────────────┐    ┌──────────────────────────────┐
+   │  Alice's phone (Group X)     │    │  Bob's phone (Group Y)       │
+   │                              │    │                              │
+   │  Exercise: Insert 7 into     │    │  Exercise: Insert 7 into     │
+   │  this BST...                 │    │  this BST...                 │
+   │                              │    │                              │
+   │  [  Need a hint?  ]  ← YES  │    │                     ← NO     │
+   │                              │    │  (no hint button shown)      │
+   │  Hint: "Compare 7 to the    │    │                              │
+   │   root. Is it larger or     │    │  She works through it on     │
+   │   smaller? Go that way."    │    │  her own or asks a neighbor  │
+   └──────────────────────────────┘    └──────────────────────────────┘
+
+ NEXT TOPIC (e.g., Hash Tables):
+ ────────────────────────────────
+ Groups SWAP — now Bob gets hints, Alice doesn't.
+ This is the "crossover" part.
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 4: What Students Experience ═══════ -->
+  <div class="slide">
+    <h2>What Students Actually Experience</h2>
+    <p style="margin-bottom: 16px;">Students don't know about groups. Here's what it feels like from their perspective:</p>
+    <div class="two-col">
+      <div>
+        <div class="card you">
+          <h3 style="color: #a78bfa;">Student's View (Group X, BST Topic)</h3>
+          <p>"I opened the app, did the BST exercise, and there was a hint button. I clicked it and it gave me a nudge about comparing to the root. Helpful!"</p>
+        </div>
+        <div class="card" style="border-left: 4px solid #475569;">
+          <h3 style="color: #94a3b8;">Same Student (Group X, Hash Tables Topic)</h3>
+          <p>"I did the hash table exercise. No hint button this time. I worked through it myself and asked my neighbor when I got stuck."</p>
+        </div>
+        <div class="insight">
+          <h3>Why students won't notice the pattern</h3>
+          <ul>
+            <li>Hint buttons feel like a <em>feature</em>, not an experiment</li>
+            <li>Some exercises are harder &mdash; "maybe hints are only for hard ones"</li>
+            <li>Students focus on the exercise, not on UI differences</li>
+            <li>They have no way to compare their screen to someone else's</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="card accent">
+          <h3>What's the SAME for everyone</h3>
+          <ul>
+            <li>Your projected screen (animations, demos)</li>
+            <li>The exercises themselves (same problems)</li>
+            <li>Your verbal explanations and teaching</li>
+            <li>Office hours, TAs, textbook access</li>
+            <li>All quizzes, assignments, and exams</li>
+          </ul>
+        </div>
+        <div class="card warn">
+          <h3>What's DIFFERENT (the only variable)</h3>
+          <ul>
+            <li>Whether the "AI Hint" button appears on their personal device during exercises</li>
+            <li>This alternates by topic &mdash; everyone gets hints on ~half the topics</li>
+          </ul>
+        </div>
+        <div class="card success">
+          <h3>Why this is fair</h3>
+          <p>Every student gets AI hints on exactly half the topics. No one is disadvantaged. The groups just get hints on <em>different</em> topics.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 5: What YOU Do ═══════ -->
+  <div class="slide">
+    <h2>What YOU Do <span class="tag purple">Your Section</span></h2>
+
+    <div class="step">
+      <span class="step-num">1</span>
+      <div class="step-content">
+        <h3>Before Semester: Set Up the App</h3>
+        <p>Add a group assignment feature: when a student first logs in, the app randomly assigns them to Group X or Y (stored in their profile). Build the per-topic hint toggle so the app checks: <code>if (student.group matches this topic's hint-on group) → show hint button</code>.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">2</span>
+      <div class="step-content">
+        <h3>Week 2-3: Administer Pre-Test + Pre-Survey</h3>
+        <p>Give students the <code>pretest.html</code> web app during class. ~30 minutes. They pick their section, create their anonymous ID, take the quiz, fill out the survey. Data goes to Google Sheets automatically.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">3</span>
+      <div class="step-content">
+        <h3>Every Class: Teach Normally</h3>
+        <p>This is the easy part. You teach using your web app exactly as you already planned. Project the animations, walk through examples, have students do exercises on their devices. <strong>You don't need to do anything special</strong> &mdash; the app handles which students see hints automatically.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">4</span>
+      <div class="step-content">
+        <h3>Throughout: Let the App Log Everything</h3>
+        <p>The app silently logs: hint requests, time on task, exercise completion, group assignment. You just teach. The data collects itself.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">5</span>
+      <div class="step-content">
+        <h3>Week 14-15: Post-Test + Post-Survey + Interviews</h3>
+        <p>Repeat the concept test and survey. Conduct 8-12 interviews with selected students (mix of both groups).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 6: What ROLF Does ═══════ -->
+  <div class="slide">
+    <h2>What ROLF Does <span class="tag yellow">Rolf's Section</span></h2>
+    <p style="margin-bottom: 16px;">Rolf's job is simple &mdash; he teaches his way and helps with shared assessments:</p>
+
+    <div class="step">
+      <span class="step-num">1</span>
+      <div class="step-content">
+        <h3>Teach Normally</h3>
+        <p>Rolf teaches his section however he usually does &mdash; slides, whiteboard, live coding, textbook. <strong>No web app, no AI, nothing changes</strong> about his teaching. That's the whole point of a control group.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">2</span>
+      <div class="step-content">
+        <h3>Week 2-3: Give Pre-Test + Pre-Survey</h3>
+        <p>Rolf gives the same <code>pretest.html</code> to his students during class. They select "Section B (Prof. Rolf's section)." Same quiz, same survey, same Google Sheet. ~30 min of class time.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">3</span>
+      <div class="step-content">
+        <h3>Throughout: Use the Shared Assessments</h3>
+        <p>Both sections take the same quizzes, assignments, and exams. Rolf helps design these (or reviews yours) to make sure they're fair for both teaching styles. This is the main collaboration point.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">4</span>
+      <div class="step-content">
+        <h3>Week 14-15: Give Post-Test + Post-Survey</h3>
+        <p>Same concept test again, plus the post-survey (which has slightly different wording for his section &mdash; asks about "lecture examples" instead of "web app").</p>
+      </div>
+    </div>
+
+    <div class="insight">
+      <h3>Rolf doesn't need to know about Groups X and Y</h3>
+      <p>The crossover RCT happens entirely within YOUR section. Rolf just needs to know: "give the same tests, use the same assessments." The randomization and hint toggling are invisible to him.</p>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 7: How You Collaborate ═══════ -->
+  <div class="slide">
+    <h2>How You Collaborate <span class="tag blue">Both</span></h2>
+    <p style="margin-bottom: 16px;">There are exactly 4 things you and Rolf need to coordinate on:</p>
+
+    <div class="two-col">
+      <div>
+        <div class="card both">
+          <h3>1. Shared Assessments</h3>
+          <p>Design quizzes, assignments, and exams <strong>together</strong>. Both sections must take identical versions. This is the most important collaboration.</p>
+          <p style="color: #94a3b8; margin-top: 8px;"><strong>How:</strong> One of you drafts, the other reviews. Meet 2-3 times during the semester to align.</p>
+        </div>
+        <div class="card both">
+          <h3>2. Pre/Post Tests</h3>
+          <p>Both administer the same <code>pretest.html</code> in weeks 2-3 and the same post-test in weeks 14-15. Data goes to the same Google Sheet.</p>
+          <p style="color: #94a3b8; margin-top: 8px;"><strong>How:</strong> Share the URL. Rolf opens it in class, students do it on their phones.</p>
+        </div>
+      </div>
+      <div>
+        <div class="card both">
+          <h3>3. Topic Coverage Alignment</h3>
+          <p>Both sections should cover the same topics in roughly the same order. The comparison only works if students in both sections learn the same material.</p>
+          <p style="color: #94a3b8; margin-top: 8px;"><strong>How:</strong> Share syllabi at semester start. They don't need to be identical &mdash; just cover the same major topics.</p>
+        </div>
+        <div class="card both">
+          <h3>4. Data Sharing</h3>
+          <p>Both instructors have edit access to the Google Sheet with pre/post test responses. Share assessment scores at semester end for analysis.</p>
+          <p style="color: #94a3b8; margin-top: 8px;"><strong>How:</strong> Google Sheet is shared. Assessment scores can be exported from your LMS.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <h3>What you DON'T need to coordinate on</h3>
+      <p>Teaching style, lecture format, homework policies, grading curves, office hours &mdash; these can all be different. The study is designed to work despite these differences. The shared assessments are the equalizer.</p>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 8: The Complete Timeline ═══════ -->
+  <div class="slide">
+    <h2>Week-by-Week: Who Does What</h2>
+    <table>
+      <thead>
+        <tr><th>When</th><th><span class="purple">You Do</span></th><th><span class="highlight">Rolf Does</span></th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Before Week 1</strong></td>
+          <td>Build group assignment + hint toggle in app. Decide which topics are AI-on for Group X vs Y.</td>
+          <td>Nothing</td>
+        </tr>
+        <tr>
+          <td><strong>Week 1</strong></td>
+          <td>Share syllabi. Agree on shared assessment schedule.</td>
+          <td>Share syllabi. Review assessment plan.</td>
+        </tr>
+        <tr>
+          <td><strong>Week 2-3</strong> <span class="tag red">NOW</span></td>
+          <td>Give pre-test + pre-survey in class (pretest.html)</td>
+          <td>Give same pre-test + pre-survey in class</td>
+        </tr>
+        <tr>
+          <td><strong>Weeks 4-13</strong></td>
+          <td>Teach with web app. App auto-toggles hints per student per topic. Log data.</td>
+          <td>Teach normally (slides, whiteboard, coding). No web app.</td>
+        </tr>
+        <tr>
+          <td><strong>~Week 6, 10</strong></td>
+          <td colspan="2" style="text-align:center;">Both give same shared quiz/assignment/exam. Compare scores later.</td>
+        </tr>
+        <tr>
+          <td><strong>Week 14-15</strong></td>
+          <td>Give post-test + post-survey (treatment version)</td>
+          <td>Give post-test + post-survey (control version)</td>
+        </tr>
+        <tr>
+          <td><strong>Week 16</strong></td>
+          <td>Conduct 8-12 student interviews</td>
+          <td>Nothing</td>
+        </tr>
+        <tr>
+          <td><strong>Summer</strong></td>
+          <td colspan="2" style="text-align:center;">Analyze data together. Write paper together. Submit to SIGCSE 2027.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═══════ SLIDE 9: The Hint Toggle ═══════ -->
+  <div class="slide">
+    <h2>How the Hint Toggle Actually Works</h2>
+    <p style="margin-bottom: 12px;">The technical implementation in your web app:</p>
+    <div class="diagram" style="font-size: 0.82em;">
+ STEP 1: SETUP (before semester)
+ ────────────────────────────────
+ Define the topic schedule and group assignment:
+
+   topics = [
+     { name: "Arrays",       hintGroup: "X" },  ← Group X gets hints
+     { name: "LinkedLists",  hintGroup: "Y" },  ← Group Y gets hints
+     { name: "Stacks",       hintGroup: "X" },  ← alternates...
+     { name: "Trees",        hintGroup: "Y" },
+     { name: "HashTables",   hintGroup: "X" },
+     { name: "Graphs",       hintGroup: "Y" },
+   ]
+
+ STEP 2: STUDENT LOGS IN
+ ────────────────────────
+ First login → app randomly assigns: student.group = "X" or "Y"
+ (stored in database, never changes)
+
+ STEP 3: DURING AN EXERCISE
+ ───────────────────────────
+ App checks:
+   currentTopic.hintGroup === student.group ?
+     → YES: Show "Need a hint?" button
+     → NO:  Don't show hint button
+
+ That's it. Everything else (animations, exercises, content)
+ is identical for every student.
+
+ STEP 4: LOGGING
+ ────────────────
+ Every interaction is logged:
+   { student: "anon_id", group: "X", topic: "Trees",
+     hintsAvailable: false, exerciseScore: 85, timeSpent: 240s }
+
+   { student: "anon_id2", group: "Y", topic: "Trees",
+     hintsAvailable: true, hintsUsed: 2, exerciseScore: 90, timeSpent: 180s }
+    </div>
+    <div class="insight">
+      <h3>You don't manage this manually</h3>
+      <p>You configure the topic list and group rules once. After that, the app handles everything automatically. You teach the same way regardless &mdash; project the app, walk through examples, say "try the exercise." The app shows or hides the hint button per student behind the scenes.</p>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 10: FAQ ═══════ -->
+  <div class="slide">
+    <h2>Common Questions</h2>
+    <div class="two-col">
+      <div>
+        <div class="card accent">
+          <h3>"What if students compare screens and notice the difference?"</h3>
+          <p>Unlikely &mdash; students focus on their own work. But even if they notice, it doesn't invalidate the study. You can mention in the consent form that "app features may vary" as part of the research.</p>
+        </div>
+        <div class="card accent">
+          <h3>"What if a Group Y student asks a Group X student for hints?"</h3>
+          <p>This is "contamination" and it slightly weakens the effect. But it works <em>against</em> finding a difference, so if you still find one, it's even more convincing. Log hint usage to check.</p>
+        </div>
+        <div class="card accent">
+          <h3>"Is it fair that some students don't get hints?"</h3>
+          <p>Yes. Every student gets hints on exactly half the topics. And at the end, you can unlock all hints for everyone. This is standard in crossover trials (medical studies do the same thing).</p>
+        </div>
+      </div>
+      <div>
+        <div class="card accent">
+          <h3>"Does Rolf need to change anything?"</h3>
+          <p><strong>No.</strong> Rolf teaches his way. He just gives the same tests and surveys. The crossover RCT is entirely within your section &mdash; Rolf doesn't need to know the details.</p>
+        </div>
+        <div class="card accent">
+          <h3>"What data do I get at the end?"</h3>
+          <p>Three powerful comparisons:<br>
+          <span class="blue">1.</span> Your section vs. Rolf's (overall effect)<br>
+          <span class="purple">2.</span> Group X vs. Y per topic (AI hint effect, causal)<br>
+          <span class="green">3.</span> Hint users vs. non-users (dose-response)</p>
+        </div>
+        <div class="card accent">
+          <h3>"What if the results show no difference?"</h3>
+          <p>That's a valid finding! "AI hints did not significantly improve learning" is publishable and valuable. Education research needs null results too.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="nav">
+  <button id="prevBtn" onclick="changeSlide(-1)">&larr; Prev</button>
+  <span class="counter" id="counter">1 / 10</span>
+  <button id="nextBtn" onclick="changeSlide(1)">Next &rarr;</button>
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+
+  function showSlide(n) {
+    slides.forEach(s => s.classList.remove('active'));
+    slides[n].classList.add('active');
+    document.getElementById('counter').textContent = `${n + 1} / ${total}`;
+    document.getElementById('prevBtn').disabled = n === 0;
+    document.getElementById('nextBtn').disabled = n === total - 1;
+    document.getElementById('progress').style.width = `${((n + 1) / total) * 100}%`;
+  }
+
+  function changeSlide(dir) {
+    current = Math.max(0, Math.min(total - 1, current + dir));
+    showSlide(current);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
+  });
+
+  showSlide(0);
+</script>
+
+</body>
+</html>

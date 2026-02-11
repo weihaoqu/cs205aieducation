@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS 205 — Pre-Test &amp; Pre-Survey</title>
+<style>
+/* ── Reset & Base ────────────────────────────────────── */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:#0f172a;color:#e2e8f0;min-height:100vh;
+  padding:0;
+}
+button{font-family:inherit}
+
+/* ── Layout ──────────────────────────────────────────── */
+.app{max-width:720px;margin:0 auto;padding:20px 20px 80px}
+
+/* ── Top Bar (progress + timer) ──────────────────────── */
+.top-bar{
+  position:sticky;top:0;z-index:100;
+  background:#0f172aee;backdrop-filter:blur(8px);
+  padding:12px 0 8px;margin-bottom:24px;
+  display:none;
+}
+.top-bar.visible{display:block}
+.progress-wrap{
+  background:#1e293b;border-radius:8px;height:8px;overflow:hidden;
+  margin-bottom:8px;
+}
+.progress-fill{
+  height:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);
+  border-radius:8px;transition:width .4s ease;width:0;
+}
+.top-meta{display:flex;justify-content:space-between;font-size:.82em;color:#94a3b8}
+.top-meta .timer{color:#60a5fa}
+
+/* ── Screens ─────────────────────────────────────────── */
+.screen{display:none;animation:fadeIn .3s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── Welcome ─────────────────────────────────────────── */
+.welcome h1{font-size:1.9em;margin-bottom:6px}
+.welcome .sub{color:#94a3b8;margin-bottom:28px;line-height:1.6}
+.info-box{
+  background:#1e293b;border:1px solid #334155;border-radius:12px;
+  padding:20px;margin-bottom:20px;line-height:1.7;
+}
+.info-box h3{color:#60a5fa;margin-bottom:8px}
+.info-box ul{padding-left:20px;color:#cbd5e1}
+.info-box ul li{margin-bottom:4px}
+
+/* ── Form Elements ───────────────────────────────────── */
+label.field{display:block;margin-bottom:18px}
+label.field .label-text{display:block;font-weight:600;margin-bottom:6px;color:#f1f5f9}
+label.field .hint{display:block;font-size:.82em;color:#64748b;margin-bottom:6px}
+input[type=text],select{
+  width:100%;padding:12px 14px;border-radius:8px;border:1px solid #334155;
+  background:#1e293b;color:#e2e8f0;font-size:1em;
+  transition:border-color .2s;
+}
+input[type=text]:focus,select:focus{outline:none;border-color:#3b82f6}
+
+/* ── Buttons ─────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:12px 28px;border-radius:8px;border:none;
+  font-size:1em;font-weight:600;cursor:pointer;
+  transition:all .2s;
+}
+.btn-primary{background:#3b82f6;color:#fff}
+.btn-primary:hover{background:#2563eb;transform:translateY(-1px)}
+.btn-primary:disabled{background:#334155;color:#64748b;cursor:not-allowed;transform:none}
+.btn-secondary{background:#1e293b;color:#94a3b8;border:1px solid #334155}
+.btn-secondary:hover{border-color:#3b82f6;color:#e2e8f0}
+.btn-row{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+
+/* ── Section Headers ─────────────────────────────────── */
+.section-header{margin-bottom:24px}
+.section-header h2{font-size:1.5em;margin-bottom:4px}
+.section-header p{color:#94a3b8;line-height:1.6}
+.section-tag{
+  display:inline-block;padding:3px 10px;border-radius:12px;
+  font-size:.75em;font-weight:600;margin-bottom:10px;
+}
+.tag-blue{background:#1e3a5f;color:#60a5fa}
+.tag-green{background:#064e3b;color:#34d399}
+.tag-purple{background:#3b1f6e;color:#a78bfa}
+.tag-amber{background:#78350f;color:#fbbf24}
+
+/* ── MCQ Card ────────────────────────────────────────── */
+.mcq-card{
+  background:#1e293b;border:1px solid #334155;border-radius:12px;
+  padding:24px;margin-bottom:16px;
+}
+.mcq-card .q-num{color:#64748b;font-size:.85em;margin-bottom:8px}
+.mcq-card .q-text{font-size:1.05em;line-height:1.6;margin-bottom:4px}
+.mcq-card pre{
+  background:#0f172a;border:1px solid #334155;border-radius:8px;
+  padding:14px;margin:12px 0;font-size:.9em;overflow-x:auto;
+  color:#e2e8f0;line-height:1.5;
+}
+.mcq-card .tree-diagram{
+  font-family:'Courier New',monospace;white-space:pre;
+  background:#0f172a;border:1px solid #334155;border-radius:8px;
+  padding:14px;margin:12px 0;font-size:.9em;line-height:1.4;
+  color:#e2e8f0;display:block;
+}
+.option-list{list-style:none;padding:0}
+.option-list li{
+  background:#0f172a;border:1px solid #334155;border-radius:8px;
+  padding:12px 16px;margin-bottom:8px;cursor:pointer;
+  transition:all .15s;display:flex;align-items:flex-start;gap:10px;
+  line-height:1.5;
+}
+.option-list li:hover{border-color:#3b82f6;background:#172033}
+.option-list li.selected{border-color:#3b82f6;background:#1e3a5f}
+.option-list li .letter{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;
+  background:#334155;display:flex;align-items:center;justify-content:center;
+  font-size:.82em;font-weight:700;color:#94a3b8;margin-top:1px;
+}
+.option-list li.selected .letter{background:#3b82f6;color:#fff}
+
+/* ── Likert ──────────────────────────────────────────── */
+.likert-group{margin-bottom:28px}
+.likert-group h3{color:#60a5fa;font-size:1.15em;margin-bottom:4px}
+.likert-group .construct-desc{color:#94a3b8;font-size:.88em;margin-bottom:16px}
+.likert-item{
+  background:#1e293b;border:1px solid #334155;border-radius:12px;
+  padding:18px;margin-bottom:10px;
+}
+.likert-item .li-text{margin-bottom:12px;line-height:1.5}
+.likert-item .li-num{color:#64748b;font-size:.82em}
+.likert-scale{
+  display:flex;gap:0;justify-content:space-between;
+}
+.likert-scale label{
+  flex:1;text-align:center;cursor:pointer;padding:8px 2px;
+  border:1px solid #334155;background:#0f172a;
+  font-size:.78em;color:#94a3b8;transition:all .15s;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.likert-scale label:first-child{border-radius:8px 0 0 8px}
+.likert-scale label:last-child{border-radius:0 8px 8px 0}
+.likert-scale label:hover{background:#172033;border-color:#3b82f6}
+.likert-scale input{display:none}
+.likert-scale label.checked{background:#1e3a5f;border-color:#3b82f6;color:#e2e8f0}
+.likert-scale .scale-num{font-weight:700;font-size:1em}
+
+/* ── Results ─────────────────────────────────────────── */
+.score-box{
+  background:linear-gradient(135deg,#1e3a5f,#3b1f6e);
+  border-radius:16px;padding:32px;text-align:center;margin-bottom:28px;
+}
+.score-box .score-num{font-size:3em;font-weight:800}
+.score-box .score-label{color:#94a3b8;margin-top:4px}
+.result-card{
+  background:#1e293b;border:1px solid #334155;border-radius:12px;
+  padding:18px;margin-bottom:10px;
+}
+.result-card.correct{border-left:4px solid #34d399}
+.result-card.incorrect{border-left:4px solid #f87171}
+.result-card .rc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.result-card .rc-q{font-weight:600}
+.result-card .rc-badge{
+  padding:2px 10px;border-radius:12px;font-size:.78em;font-weight:600;
+}
+.result-card.correct .rc-badge{background:#064e3b;color:#34d399}
+.result-card.incorrect .rc-badge{background:#7f1d1d;color:#f87171}
+.result-card .rc-answer{color:#94a3b8;margin-top:4px;font-size:.92em;line-height:1.6}
+.result-card .rc-explain{color:#cbd5e1;margin-top:8px;font-size:.88em;line-height:1.6;border-top:1px solid #334155;padding-top:8px}
+
+/* ── Validation error ────────────────────────────────── */
+.validation-msg{
+  background:#7f1d1d;border:1px solid #f87171;border-radius:8px;
+  padding:12px 16px;margin-bottom:16px;color:#fca5a5;
+  display:none;
+}
+.validation-msg.show{display:block;animation:fadeIn .3s ease}
+
+/* ── Confirmation banner ─────────────────────────────── */
+.confirm-banner{
+  background:#064e3b;border:1px solid #34d399;border-radius:12px;
+  padding:20px;text-align:center;margin-bottom:24px;
+}
+.confirm-banner .check{font-size:2em;margin-bottom:6px}
+.confirm-banner p{color:#a7f3d0}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media(max-width:600px){
+  .app{padding:14px 14px 80px}
+  .welcome h1{font-size:1.5em}
+  .mcq-card{padding:16px}
+  .likert-scale label{font-size:.7em;padding:6px 1px}
+  .score-box .score-num{font-size:2.2em}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ══════════ TOP BAR ══════════ -->
+<div class="top-bar" id="topBar">
+  <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="top-meta">
+    <span id="progressText">Section 1 of 4</span>
+    <span class="timer" id="timer">00:00</span>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN 0: WELCOME ══════════ -->
+<div class="screen active" id="scrWelcome">
+  <div class="welcome">
+    <h1>CS 205 Pre-Test &amp; Survey</h1>
+    <p class="sub">Data Structures — Spring 2026</p>
+
+    <div class="info-box">
+      <h3>What to Expect</h3>
+      <ul>
+        <li><strong>Part 1:</strong> Quick demographics (1 min)</li>
+        <li><strong>Part 2:</strong> 20 multiple-choice concept questions (~20 min)</li>
+        <li><strong>Part 3:</strong> 24 survey questions (~8 min)</li>
+      </ul>
+      <p style="margin-top:12px;color:#94a3b8">Total: ~30 minutes. You'll see your quiz score and correct answers at the end. This does <strong>not</strong> count toward your grade.</p>
+    </div>
+
+    <div class="info-box">
+      <h3>Create Your Anonymous ID</h3>
+      <p style="color:#94a3b8;margin-bottom:12px">This ID lets us match your pre and post responses without using your name. Use the same ID on the post-test later this semester.</p>
+
+      <label class="field">
+        <span class="label-text">Last 4 digits of your phone number</span>
+        <input type="text" id="idPhone" maxlength="4" pattern="[0-9]{4}" placeholder="e.g. 5103" inputmode="numeric">
+      </label>
+      <label class="field">
+        <span class="label-text">Birth month (2 digits)</span>
+        <input type="text" id="idMonth" maxlength="2" pattern="[0-9]{1,2}" placeholder="e.g. 03 for March" inputmode="numeric">
+      </label>
+      <label class="field">
+        <span class="label-text">Your section</span>
+        <select id="idSection">
+          <option value="">— Select —</option>
+          <option value="treatment">Section A (Prof. Oreo's section)</option>
+          <option value="control">Section B (Prof. Rolf's section)</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="validation-msg" id="welcomeError"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="startApp()">Begin &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN 1: DEMOGRAPHICS ══════════ -->
+<div class="screen" id="scrDemo">
+  <div class="section-header">
+    <span class="section-tag tag-blue">Part 1 of 3</span>
+    <h2>Demographics</h2>
+    <p>A few quick background questions.</p>
+  </div>
+
+  <label class="field">
+    <span class="label-text">D1. What is your major?</span>
+    <select id="dMajor">
+      <option value="">— Select —</option>
+      <option value="CS">Computer Science</option>
+      <option value="CE">Computer Engineering</option>
+      <option value="IS">Information Systems</option>
+      <option value="Math">Mathematics</option>
+      <option value="Other">Other</option>
+    </select>
+  </label>
+
+  <label class="field">
+    <span class="label-text">D2. What grade did you receive in the prerequisite programming course?</span>
+    <select id="dGrade">
+      <option value="">— Select —</option>
+      <option value="A">A</option>
+      <option value="B">B</option>
+      <option value="C">C</option>
+      <option value="D">D</option>
+      <option value="Other">Other / N/A</option>
+    </select>
+  </label>
+
+  <label class="field">
+    <span class="label-text">D3. How many programming courses have you taken before this one?</span>
+    <select id="dCourses">
+      <option value="">— Select —</option>
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3+">3 or more</option>
+    </select>
+  </label>
+
+  <label class="field">
+    <span class="label-text">D4. How often have you used AI tools (ChatGPT, Claude, Copilot, etc.) for coursework?</span>
+    <select id="dAI">
+      <option value="">— Select —</option>
+      <option value="Never">Never</option>
+      <option value="A few times">A few times</option>
+      <option value="Monthly">Monthly</option>
+      <option value="Weekly">Weekly</option>
+      <option value="Daily">Daily</option>
+    </select>
+  </label>
+
+  <div class="validation-msg" id="demoError"></div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="goScreen('scrWelcome')">&larr; Back</button>
+    <button class="btn btn-primary" onclick="submitDemo()">Continue &rarr;</button>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN 2: CONCEPT TEST ══════════ -->
+<div class="screen" id="scrQuiz">
+  <div class="section-header">
+    <span class="section-tag tag-purple">Part 2 of 3</span>
+    <h2>Concept Test</h2>
+    <p>20 multiple-choice questions on data structures &amp; algorithms. Pick the best answer for each.</p>
+  </div>
+  <div id="quizContainer"></div>
+  <div class="validation-msg" id="quizError"></div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="prevQuestion()">&larr; Previous</button>
+    <button class="btn btn-primary" id="quizNextBtn" onclick="nextQuestion()">Next &rarr;</button>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN 3: SURVEY ══════════ -->
+<div class="screen" id="scrSurvey">
+  <div class="section-header">
+    <span class="section-tag tag-green">Part 3 of 3</span>
+    <h2>Survey</h2>
+    <p>Rate each statement on a scale from <strong>Strongly Disagree</strong> to <strong>Strongly Agree</strong>.</p>
+  </div>
+  <div id="surveyContainer"></div>
+  <div class="validation-msg" id="surveyError"></div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="goScreen('scrQuiz');showQuestion(19)">&larr; Back to Quiz</button>
+    <button class="btn btn-primary" onclick="submitAll()">Submit Everything &rarr;</button>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN 4: RESULTS ══════════ -->
+<div class="screen" id="scrResults">
+  <div class="confirm-banner" id="confirmBanner">
+    <div class="check">&#10003;</div>
+    <p><strong>Responses recorded!</strong> Thank you for completing the pre-test and survey.</p>
+  </div>
+
+  <div class="score-box">
+    <div class="score-num" id="scoreNum">0/20</div>
+    <div class="score-label">Concept Test Score</div>
+  </div>
+
+  <div class="section-header">
+    <h2>Answer Key</h2>
+    <p>Review the correct answers and explanations below.</p>
+  </div>
+  <div id="resultsContainer"></div>
+
+  <div class="btn-row" style="margin-top:32px;justify-content:center">
+    <a class="btn btn-secondary" href="index.html">&larr; Back to Home</a>
+  </div>
+</div>
+
+</div><!-- /.app -->
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════════════
+
+const QUESTIONS = [
+  {
+    id:1, topic:"Big-O Analysis",
+    text:"What is the time complexity of the following code fragment?",
+    code:"for (int i = 1; i < n; i = i * 2) {\n    System.out.println(i);\n}",
+    options:["O(n)","O(n log n)","O(log n)","O(n\u00B2)"],
+    answer:2,
+    explain:"The loop variable doubles each iteration (i = i * 2), so it takes log\u2082(n) iterations to reach n. A common mistake is assuming all single loops are O(n)."
+  },
+  {
+    id:2, topic:"Big-O Analysis",
+    text:"Consider two algorithms: Algorithm A runs in O(n\u00B2) time and Algorithm B runs in O(n log n) time. For which input sizes is Algorithm A guaranteed to be slower?",
+    options:[
+      "For all input sizes n > 0",
+      "For sufficiently large n (beyond some threshold)",
+      "Only when n > 1000",
+      "Never \u2014 Big-O doesn\u2019t predict actual running time"
+    ],
+    answer:1,
+    explain:"Big-O describes asymptotic behavior \u2014 it guarantees the relationship holds for sufficiently large n, but not necessarily for all n (constant factors matter for small inputs)."
+  },
+  {
+    id:3, topic:"Big-O Analysis",
+    text:"What is the time complexity of searching for a value in a sorted array of n elements using the most efficient algorithm?",
+    options:["O(1)","O(log n)","O(n)","O(n log n)"],
+    answer:1,
+    explain:"Binary search on a sorted array runs in O(log n). Linear search (O(n)) ignores that the array is sorted. O(1) would only apply to direct index access."
+  },
+  {
+    id:4, topic:"Linear Structures",
+    text:"You need a data structure that supports efficient insertion at the front and removal from the front. Which is the best choice?",
+    options:[
+      "ArrayList (dynamic array)",
+      "Singly linked list with head pointer",
+      "Sorted array",
+      "Binary search tree"
+    ],
+    answer:1,
+    explain:"A singly linked list with a head pointer supports O(1) insert and remove at the front. An ArrayList requires O(n) shifting for front insertions."
+  },
+  {
+    id:5, topic:"Stacks",
+    text:"You push elements 1, 2, 3, 4, 5 onto a stack (in that order) and then pop three times. What value is on top of the stack?",
+    options:["1","2","3","4"],
+    answer:1,
+    explain:"Stack is LIFO. After pushing 1\u20135, the stack top-to-bottom is 5,4,3,2,1. Three pops remove 5, 4, 3. The top is now 2."
+  },
+  {
+    id:6, topic:"Circular Queues",
+    text:"In a circular queue implemented with an array of size 5, the front index is 3 and the rear index is 1. How many elements are currently in the queue?",
+    options:["2","3","4","5"],
+    answer:1,
+    explain:"Elements are at indices 3, 4, 0 (wrapping around). Count = (1 \u2212 3 + 5) % 5 = 3. Circular index arithmetic is a common source of confusion."
+  },
+  {
+    id:7, topic:"Linked Lists",
+    text:"Which operation is O(n) for a singly linked list but O(1) for a doubly linked list (both with head and tail pointers)?",
+    options:[
+      "Insert at front",
+      "Insert at back",
+      "Remove from back",
+      "Access the first element"
+    ],
+    answer:2,
+    explain:"Removing from the back of a singly linked list requires traversing to the second-to-last node (O(n)), since there\u2019s no previous pointer. A doubly linked list can follow tail.prev in O(1)."
+  },
+  {
+    id:8, topic:"Recursion",
+    text:"What does the following method return when called with mystery(5)?",
+    code:"int mystery(int n) {\n    if (n <= 1) return 1;\n    return n * mystery(n - 1);\n}",
+    options:["5","15","120","25"],
+    answer:2,
+    explain:"This computes n! (factorial). 5! = 5 \u00D7 4 \u00D7 3 \u00D7 2 \u00D7 1 = 120. The distractor 15 might come from adding instead of multiplying."
+  },
+  {
+    id:9, topic:"Recursion",
+    text:"A recursive method has no base case. What happens when it is called?",
+    options:[
+      "It returns 0",
+      "It runs forever without any error",
+      "It causes a StackOverflowError",
+      "The compiler rejects it"
+    ],
+    answer:2,
+    explain:"Each recursive call adds a frame to the call stack. Without a base case, calls never stop, and the stack eventually overflows. Missing a base case is a runtime error, not a compile error."
+  },
+  {
+    id:10, topic:"Tree Traversals",
+    text:"What is the in-order traversal of this binary search tree?",
+    tree:"        8\n       / \\\n      3   10\n     / \\    \\\n    1   6    14",
+    options:[
+      "8, 3, 1, 6, 10, 14",
+      "1, 3, 6, 8, 10, 14",
+      "1, 6, 3, 14, 10, 8",
+      "8, 3, 10, 1, 6, 14"
+    ],
+    answer:1,
+    explain:"In-order traversal of a BST visits nodes in sorted order (left, root, right). Option A is pre-order. Option D is level-order."
+  },
+  {
+    id:11, topic:"BST Insertion",
+    text:"You insert the value 5 into the BST shown above (rooted at 8, with 3, 10, 1, 6, 14). Where does it go?",
+    tree:"        8\n       / \\\n      3   10\n     / \\    \\\n    1   6    14",
+    options:[
+      "Left child of 6",
+      "Right child of 6",
+      "Left child of 8",
+      "Right child of 3"
+    ],
+    answer:0,
+    explain:"5 < 8 (go left to 3), 5 > 3 (go right to 6), 5 < 6 (go left \u2014 empty slot). So 5 becomes the left child of 6."
+  },
+  {
+    id:12, topic:"Tree Structure",
+    text:"What is the maximum number of nodes in a binary tree of height h (where the root has height 0)?",
+    options:["h + 1","2h","2^(h+1) \u2212 1","2^h"],
+    answer:2,
+    explain:"A complete binary tree of height h has 2^(h+1) \u2212 1 nodes. For example, height 2: 2\u00B3 \u2212 1 = 7 nodes (root + 2 + 4)."
+  },
+  {
+    id:13, topic:"Heaps",
+    text:"Which property distinguishes a min-heap from a binary search tree?",
+    options:[
+      "In a min-heap, every node is smaller than its children; in a BST, left child < parent < right child",
+      "A min-heap is always balanced; a BST is always balanced",
+      "A min-heap supports O(1) search; a BST supports O(log n) search",
+      "They are the same data structure with different names"
+    ],
+    answer:0,
+    explain:"The heap property (parent \u2264 children) is different from the BST property (left < parent < right). BSTs are not always balanced. Heap search is O(n), not O(1)."
+  },
+  {
+    id:14, topic:"Hash Tables",
+    text:"A hash table with 10 slots uses h(k) = k % 10. Keys 12, 22, and 32 are inserted. With chaining, how many keys are stored at index 2?",
+    options:["1","2","3","0"],
+    answer:2,
+    explain:"12 % 10 = 2, 22 % 10 = 2, 32 % 10 = 2. All three hash to index 2. With chaining, they form a linked list at that slot."
+  },
+  {
+    id:15, topic:"Hash Tables",
+    text:"The average-case time complexity for search in a hash table with a good hash function and low load factor is:",
+    options:["O(1)","O(log n)","O(n)","O(n log n)"],
+    answer:0,
+    explain:"With a good hash function and low load factor, collisions are rare, giving average O(1) lookup. O(n) is the worst case when all keys collide into one bucket."
+  },
+  {
+    id:16, topic:"Graphs",
+    text:"Which traversal algorithm finds the shortest path (fewest edges) from node A to node B in an unweighted graph?",
+    options:[
+      "Depth-First Search (DFS)",
+      "Breadth-First Search (BFS)",
+      "Either DFS or BFS \u2014 both find shortest paths",
+      "Neither \u2014 you need Dijkstra\u2019s algorithm"
+    ],
+    answer:1,
+    explain:"BFS explores nodes level by level, so the first time it reaches a node is via the shortest path (in an unweighted graph). DFS may find a path but not necessarily the shortest."
+  },
+  {
+    id:17, topic:"Graphs",
+    text:"An undirected graph has 6 vertices and 15 edges. What kind of graph is this?",
+    options:["A sparse graph","A complete graph","A tree","An impossible graph"],
+    answer:1,
+    explain:"A complete undirected graph with n vertices has n(n\u22121)/2 edges = 6\u00D75/2 = 15. A tree with 6 vertices has exactly 5 edges."
+  },
+  {
+    id:18, topic:"Graph Representation",
+    text:"For a graph with V vertices and E edges, what is the space complexity of an adjacency matrix representation?",
+    options:["O(V)","O(E)","O(V\u00B2)","O(V + E)"],
+    answer:2,
+    explain:"An adjacency matrix is a V \u00D7 V 2D array, regardless of edge count. O(V + E) is the space for an adjacency list representation."
+  },
+  {
+    id:19, topic:"Sorting",
+    text:"Which sorting algorithm has a worst-case time complexity of O(n log n)?",
+    options:["QuickSort","MergeSort","Bubble Sort","Insertion Sort"],
+    answer:1,
+    explain:"MergeSort is O(n log n) in all cases (best, average, worst). QuickSort\u2019s worst case is O(n\u00B2). Bubble Sort and Insertion Sort are O(n\u00B2) worst case."
+  },
+  {
+    id:20, topic:"Sorting",
+    text:"You have an array that is almost sorted \u2014 only a few elements are out of place. Which algorithm would perform best?",
+    options:["MergeSort","QuickSort (random pivot)","Insertion Sort","Selection Sort"],
+    answer:2,
+    explain:"Insertion Sort runs in O(n) on nearly-sorted data because almost no shifting is needed. MergeSort and QuickSort still do O(n log n) regardless."
+  }
+];
+
+const SURVEY_GROUPS = [
+  {
+    id:"engagement",
+    title:"Engagement & Motivation",
+    desc:"Adapted from the Student Course Engagement Questionnaire (Handelsman et al., 2005)",
+    items:[
+      {id:"E1",text:"I look forward to attending this class."},
+      {id:"E2",text:"I actively participate in class discussions and activities."},
+      {id:"E3",text:"I find the topics in this course interesting."},
+      {id:"E4",text:"I put effort into understanding the material, not just passing."},
+      {id:"E5",text:"I feel motivated to study for this course outside of class."},
+      {id:"E6",text:"When I don\u2019t understand something, I seek help (office hours, peers, online)."},
+      {id:"E7",text:"I pay attention during the entire lecture, not just parts of it."},
+      {id:"E8",text:"I connect what I learn in this class to real-world applications."}
+    ]
+  },
+  {
+    id:"self-efficacy",
+    title:"Self-Efficacy in Data Structures",
+    desc:"Adapted from the CS Self-Efficacy Scale (Ramalingam & Wiedenbeck, 1998). \"I am confident that I can...\"",
+    items:[
+      {id:"S1",text:"...understand the difference between arrays and linked lists and when to use each."},
+      {id:"S2",text:"...analyze the time complexity (Big-O) of a simple algorithm."},
+      {id:"S3",text:"...implement a stack or queue in Java."},
+      {id:"S4",text:"...trace through a recursive method and predict its output."},
+      {id:"S5",text:"...explain how a binary search tree insertion works."},
+      {id:"S6",text:"...choose the appropriate data structure for a given problem."},
+      {id:"S7",text:"...debug a program that uses data structures like trees or hash tables."},
+      {id:"S8",text:"...succeed in this course overall."}
+    ]
+  },
+  {
+    id:"ai-perceptions",
+    title:"Perceptions of AI in Learning",
+    desc:"Rate your current feelings about AI tools in education.",
+    items:[
+      {id:"A1",text:"AI tools (like ChatGPT) can help me learn course material more effectively."},
+      {id:"A2",text:"I trust the accuracy of explanations provided by AI tools."},
+      {id:"A3",text:"Using AI tools for learning feels like cheating."},
+      {id:"A4",text:"I would prefer a class that integrates AI tools into instruction over one that does not."},
+      {id:"A5",text:"AI tools can replace the need for human tutors or teaching assistants."},
+      {id:"A6",text:"I worry that relying on AI tools will prevent me from truly learning the material."},
+      {id:"A7",text:"I feel comfortable using AI tools as part of my study routine."},
+      {id:"A8",text:"AI will play an important role in how computer science is taught in the future."}
+    ]
+  }
+];
+
+const LIKERT_LABELS = ["Strongly\nDisagree","Disagree","Neutral","Agree","Strongly\nAgree"];
+
+// ══════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════
+let anonId = "";
+let section = "";
+let currentQ = 0;
+let quizAnswers = new Array(20).fill(-1);
+let surveyAnswers = {};
+let timerInterval = null;
+let elapsedSeconds = 0;
+
+// Google Sheets Web App URL — replace after deploying Apps Script
+const SHEETS_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
+
+// ══════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════
+document.addEventListener("DOMContentLoaded",()=>{
+  buildQuiz();
+  buildSurvey();
+});
+
+// ══════════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════════
+function goScreen(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+  updateProgress();
+}
+
+function updateProgress(){
+  const bar = document.getElementById("topBar");
+  const fill = document.getElementById("progressFill");
+  const txt = document.getElementById("progressText");
+  const active = document.querySelector(".screen.active");
+  if(!active) return;
+  bar.classList.toggle("visible", active.id!=="scrWelcome");
+  const map = {scrDemo:[1,4,"Part 1: Demographics"],scrQuiz:[2,4,"Part 2: Question "+(currentQ+1)+" of 20"],scrSurvey:[3,4,"Part 3: Survey"],scrResults:[4,4,"Complete!"]};
+  const info = map[active.id];
+  if(info){
+    let pct;
+    if(active.id==="scrQuiz") pct = (25 + (currentQ/20)*50);
+    else if(active.id==="scrDemo") pct = 10;
+    else if(active.id==="scrSurvey") pct = 80;
+    else pct = 100;
+    fill.style.width = pct+"%";
+    txt.textContent = info[2];
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// TIMER
+// ══════════════════════════════════════════════════════════════
+function startTimer(){
+  const el = document.getElementById("timer");
+  timerInterval = setInterval(()=>{
+    elapsedSeconds++;
+    const m = String(Math.floor(elapsedSeconds/60)).padStart(2,"0");
+    const s = String(elapsedSeconds%60).padStart(2,"0");
+    el.textContent = m+":"+s;
+  },1000);
+}
+
+// ══════════════════════════════════════════════════════════════
+// WELCOME / START
+// ══════════════════════════════════════════════════════════════
+function startApp(){
+  const phone = document.getElementById("idPhone").value.trim();
+  const month = document.getElementById("idMonth").value.trim();
+  section = document.getElementById("idSection").value;
+  const err = document.getElementById("welcomeError");
+
+  if(phone.length!==4||!/^\d{4}$/.test(phone)){
+    showError(err,"Please enter exactly 4 digits for your phone number.");return;
+  }
+  if(!month||!/^\d{1,2}$/.test(month)||+month<1||+month>12){
+    showError(err,"Please enter a valid birth month (01\u201312).");return;
+  }
+  if(!section){
+    showError(err,"Please select your section.");return;
+  }
+  hideError(err);
+  anonId = phone + month.padStart(2,"0");
+  startTimer();
+  goScreen("scrDemo");
+}
+
+// ══════════════════════════════════════════════════════════════
+// DEMOGRAPHICS
+// ══════════════════════════════════════════════════════════════
+function submitDemo(){
+  const fields = ["dMajor","dGrade","dCourses","dAI"];
+  const err = document.getElementById("demoError");
+  for(const f of fields){
+    if(!document.getElementById(f).value){
+      showError(err,"Please answer all demographic questions before continuing.");return;
+    }
+  }
+  hideError(err);
+  goScreen("scrQuiz");
+  showQuestion(0);
+}
+
+// ══════════════════════════════════════════════════════════════
+// QUIZ — BUILD & NAVIGATE
+// ══════════════════════════════════════════════════════════════
+function buildQuiz(){
+  const c = document.getElementById("quizContainer");
+  QUESTIONS.forEach((q,i)=>{
+    const div = document.createElement("div");
+    div.className = "mcq-card";
+    div.id = "mcq"+i;
+    div.style.display = "none";
+
+    let body = `<div class="q-num">Question ${i+1} of 20 &mdash; ${q.topic}</div>`;
+    body += `<div class="q-text">${q.text}</div>`;
+    if(q.code) body += `<pre>${escHtml(q.code)}</pre>`;
+    if(q.tree) body += `<span class="tree-diagram">${escHtml(q.tree)}</span>`;
+    body += `<ul class="option-list">`;
+    q.options.forEach((opt,oi)=>{
+      const letter = "ABCD"[oi];
+      body += `<li onclick="pickAnswer(${i},${oi})" id="opt${i}_${oi}">
+        <span class="letter">${letter}</span><span>${escHtml(opt)}</span>
+      </li>`;
+    });
+    body += `</ul>`;
+    div.innerHTML = body;
+    c.appendChild(div);
+  });
+}
+
+function showQuestion(n){
+  currentQ = n;
+  document.querySelectorAll(".mcq-card").forEach(c=>c.style.display="none");
+  document.getElementById("mcq"+n).style.display="block";
+  document.getElementById("quizNextBtn").textContent = n===19?"Continue to Survey \u2192":"Next \u2192";
+  updateProgress();
+}
+
+function pickAnswer(qi,oi){
+  quizAnswers[qi] = oi;
+  const card = document.getElementById("mcq"+qi);
+  card.querySelectorAll(".option-list li").forEach((li,idx)=>{
+    li.classList.toggle("selected",idx===oi);
+  });
+  hideError(document.getElementById("quizError"));
+}
+
+function nextQuestion(){
+  const err = document.getElementById("quizError");
+  if(quizAnswers[currentQ]===-1){
+    showError(err,"Please select an answer before continuing.");return;
+  }
+  hideError(err);
+  if(currentQ<19) showQuestion(currentQ+1);
+  else goScreen("scrSurvey");
+}
+
+function prevQuestion(){
+  if(currentQ>0) showQuestion(currentQ-1);
+  else goScreen("scrDemo");
+}
+
+// ══════════════════════════════════════════════════════════════
+// SURVEY — BUILD
+// ══════════════════════════════════════════════════════════════
+function buildSurvey(){
+  const c = document.getElementById("surveyContainer");
+  let itemNum = 0;
+  SURVEY_GROUPS.forEach(g=>{
+    const grp = document.createElement("div");
+    grp.className = "likert-group";
+    let html = `<h3>${g.title}</h3><p class="construct-desc">${g.desc}</p>`;
+    g.items.forEach(item=>{
+      itemNum++;
+      html += `<div class="likert-item">
+        <div class="li-text"><span class="li-num">${itemNum}.</span> ${escHtml(item.text)}</div>
+        <div class="likert-scale">`;
+      for(let v=1;v<=5;v++){
+        html += `<label id="lbl_${item.id}_${v}" onclick="pickLikert('${item.id}',${v})">
+          <input type="radio" name="${item.id}" value="${v}">
+          <span class="scale-num">${v}</span>
+          <span>${LIKERT_LABELS[v-1].replace("\n","<br>")}</span>
+        </label>`;
+      }
+      html += `</div></div>`;
+    });
+    grp.innerHTML = html;
+    c.appendChild(grp);
+  });
+}
+
+function pickLikert(id,val){
+  surveyAnswers[id] = val;
+  for(let v=1;v<=5;v++){
+    document.getElementById("lbl_"+id+"_"+v).classList.toggle("checked",v===val);
+  }
+  hideError(document.getElementById("surveyError"));
+}
+
+// ══════════════════════════════════════════════════════════════
+// SUBMIT
+// ══════════════════════════════════════════════════════════════
+function submitAll(){
+  const err = document.getElementById("surveyError");
+  // Validate all survey items answered
+  const allIds = SURVEY_GROUPS.flatMap(g=>g.items.map(i=>i.id));
+  const missing = allIds.filter(id=>!surveyAnswers[id]);
+  if(missing.length>0){
+    showError(err,`Please answer all survey questions. ${missing.length} remaining.`);return;
+  }
+  hideError(err);
+
+  // Stop timer
+  clearInterval(timerInterval);
+
+  // Grade quiz
+  let score = 0;
+  QUESTIONS.forEach((q,i)=>{if(quizAnswers[i]===q.answer) score++});
+
+  // Build payload
+  const payload = {
+    timestamp: new Date().toISOString(),
+    anonId,
+    section,
+    duration: elapsedSeconds,
+    major: document.getElementById("dMajor").value,
+    prereqGrade: document.getElementById("dGrade").value,
+    priorCourses: document.getElementById("dCourses").value,
+    aiUsage: document.getElementById("dAI").value,
+    quizScore: score,
+  };
+  // Add individual quiz answers
+  QUESTIONS.forEach((q,i)=>{
+    payload["Q"+(i+1)] = "ABCD"[quizAnswers[i]];
+  });
+  // Add survey answers
+  Object.keys(surveyAnswers).forEach(k=>{
+    payload[k] = surveyAnswers[k];
+  });
+
+  // Send to Google Sheets
+  sendToSheets(payload);
+
+  // Show results
+  showResults(score);
+}
+
+function sendToSheets(payload){
+  if(SHEETS_URL==="YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL"){
+    console.log("Sheets URL not configured. Payload:",payload);
+    return;
+  }
+  fetch(SHEETS_URL,{
+    method:"POST",
+    mode:"no-cors",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(payload)
+  }).catch(err=>console.error("Sheet submit error:",err));
+}
+
+// ══════════════════════════════════════════════════════════════
+// RESULTS
+// ══════════════════════════════════════════════════════════════
+function showResults(score){
+  document.getElementById("scoreNum").textContent = score+"/20";
+  const c = document.getElementById("resultsContainer");
+  c.innerHTML = "";
+  QUESTIONS.forEach((q,i)=>{
+    const correct = quizAnswers[i]===q.answer;
+    const div = document.createElement("div");
+    div.className = "result-card "+(correct?"correct":"incorrect");
+    const yourLetter = quizAnswers[i]>=0?"ABCD"[quizAnswers[i]]:"?";
+    const correctLetter = "ABCD"[q.answer];
+    div.innerHTML = `
+      <div class="rc-header">
+        <span class="rc-q">Q${i+1}: ${q.topic}</span>
+        <span class="rc-badge">${correct?"\u2713 Correct":"\u2717 Incorrect"}</span>
+      </div>
+      <div class="rc-answer">
+        Your answer: <strong>${yourLetter}</strong>${correct?"":" &mdash; Correct answer: <strong>"+correctLetter+". "+escHtml(q.options[q.answer])+"</strong>"}
+      </div>
+      <div class="rc-explain">${q.explain}</div>
+    `;
+    c.appendChild(div);
+  });
+  goScreen("scrResults");
+}
+
+// ══════════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════════
+function escHtml(s){
+  const d=document.createElement("div");d.textContent=s;return d.innerHTML;
+}
+function showError(el,msg){el.textContent=msg;el.classList.add("show")}
+function hideError(el){el.classList.remove("show")}
+</script>
+</body>
+</html>

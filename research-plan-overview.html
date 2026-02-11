@@ -137,7 +137,7 @@
   <!-- SLIDE 1: Title -->
   <div class="slide active">
     <h1>CS 205: AI-Assisted Teaching<br>Research Plan</h1>
-    <p class="subtitle">A quasi-experimental study comparing AI-integrated vs. traditional instruction in Data Structures & Algorithms</p>
+    <p class="subtitle">A mixed-design study (quasi-experimental + crossover RCT) comparing AI-integrated vs. traditional instruction in Data Structures &amp; Algorithms</p>
     <div style="margin-top: 40px;">
       <span class="tag blue">Spring 2026</span>
       <span class="tag green">IRB Approved</span>
@@ -194,12 +194,12 @@
       <div class="card accent">
         <h3>RQ3: AI-Specific Impact</h3>
         <p>Can we <span class="highlight">isolate the AI component's</span> contribution from the rest of the app?</p>
-        <p style="margin-top: 12px; font-size: 0.9em; color: #94a3b8;"><strong>Measured by:</strong> Within-section AI on/off toggle + app analytics</p>
+        <p style="margin-top: 12px; font-size: 0.9em; color: #94a3b8;"><strong>Measured by:</strong> Within-section crossover RCT (students randomized to AI on/off per topic) + app analytics</p>
       </div>
     </div>
     <div class="insight">
       <h3>Why three questions, not just one?</h3>
-      <p>RQ1 alone ("do scores go up?") is weak — many things could explain score differences. RQ2 adds the student perspective. RQ3 is the methodological innovation: by toggling AI on/off within YOUR section, we isolate AI's specific effect under the same instructor, same app, same students.</p>
+      <p>RQ1 alone ("do scores go up?") is weak — many things could explain score differences. RQ2 adds the student perspective. RQ3 is the methodological innovation: by <strong>randomly assigning</strong> students to AI-on/AI-off groups per topic (a crossover RCT), we isolate AI's specific effect with true randomization — same instructor, same app, same topic, different randomly-assigned students.</p>
     </div>
   </div>
 
@@ -233,40 +233,40 @@
     </div>
   </div>
 
-  <!-- SLIDE 5: The Key Innovation — AI Isolation -->
+  <!-- SLIDE 5: The Key Innovation — Crossover RCT -->
   <div class="slide">
-    <h2>The Key Innovation: Isolating AI's Impact</h2>
-    <p style="margin-bottom: 16px;">The biggest threat to this study: <span class="red">your app bundles 3 things together</span>. If scores improve, is it the animations? The interactivity? Or the AI hints?</p>
-    <div class="diagram" style="font-size: 0.85em;">
- YOUR SECTION — Within-Section Toggle Design
- ┌─────────────────────────────────────────────────────────────────┐
- │                                                                 │
- │   Topic 1: Arrays        ──── AI HINTS ON  ──── Track scores   │
- │   Topic 2: Linked Lists  ──── AI HINTS OFF ──── Track scores   │
- │   Topic 3: Stacks/Queues ──── AI HINTS ON  ──── Track scores   │
- │   Topic 4: Trees         ──── AI HINTS OFF ──── Track scores   │
- │   Topic 5: Hash Tables   ──── AI HINTS ON  ──── Track scores   │
- │   Topic 6: Graphs        ──── AI HINTS OFF ──── Track scores   │
- │   ...                                                           │
- │                                                                 │
- │   Same students. Same instructor. Same app (animations +        │
- │   interactives always on). ONLY difference = AI hints.          │
- └─────────────────────────────────────────────────────────────────┘
-
- Compare AI-ON topic scores vs AI-OFF topic scores
- ──────────────────────────────────────────────────
-        → This isolates the AI hint effect!
+    <h2>The Key Innovation: Crossover RCT</h2>
+    <p style="margin-bottom: 16px;">The biggest threat to this study: <span class="red">your app bundles 3 things together</span>. If scores improve, is it the animations? The interactivity? Or the AI hints? A <span class="highlight">crossover RCT</span> isolates the AI component with true random assignment.</p>
+    <div class="diagram" style="font-size: 0.82em;">
+ YOUR SECTION — Within-Section Crossover RCT
+ ┌─────────────────────────────────────────────────────────────────────┐
+ │  Students randomly assigned to Group X or Group Y at semester start │
+ │                                                                     │
+ │              Group X (~25 students)    Group Y (~25 students)       │
+ │              ──────────────────────    ──────────────────────       │
+ │  Topic 1:    AI HINTS  ON             AI HINTS OFF                  │
+ │  Topic 2:    AI HINTS OFF             AI HINTS  ON                  │
+ │  Topic 3:    AI HINTS  ON             AI HINTS OFF                  │
+ │  Topic 4:    AI HINTS OFF             AI HINTS  ON                  │
+ │  Topic 5:    AI HINTS  ON             AI HINTS OFF                  │
+ │  Topic 6:    AI HINTS OFF             AI HINTS  ON                  │
+ │                                                                     │
+ │  ✓ Same topic, same instructor, same app — only AI hints differ     │
+ │  ✓ Random assignment → causal inference (true RCT!)                 │
+ │  ✓ Each student gets AI on half the topics → serves as own control  │
+ │  ✓ Topic difficulty is controlled (both groups see the same topic)  │
+ └─────────────────────────────────────────────────────────────────────┘
     </div>
     <div class="two-col">
       <div class="card success">
-        <h3>Between-Section Comparison</h3>
+        <h3>Between-Section (Quasi-Experimental)</h3>
         <p>Your full section vs. Rolf's section</p>
         <p style="color: #94a3b8; margin-top: 8px;">Answers: "Does the whole app+AI approach beat traditional?"</p>
       </div>
-      <div class="card warn">
-        <h3>Within-Section Comparison</h3>
-        <p>AI-on topics vs. AI-off topics (your section only)</p>
-        <p style="color: #94a3b8; margin-top: 8px;">Answers: "Do the AI hints specifically add value?"</p>
+      <div class="card" style="border-left: 4px solid #a78bfa;">
+        <h3 style="color: #a78bfa;">Within-Section (Crossover RCT)</h3>
+        <p>Randomized Group X vs. Group Y on each topic</p>
+        <p style="color: #94a3b8; margin-top: 8px;">Answers: "Do AI hints cause better learning?" <span class="tag green">Causal</span></p>
       </div>
     </div>
   </div>
@@ -330,9 +330,9 @@
           <td>Adjusts for any starting differences between sections</td>
         </tr>
         <tr>
-          <td>AI-on vs. AI-off topics</td>
-          <td>Paired Wilcoxon / paired t-test</td>
-          <td>Same students in both conditions = more statistical power</td>
+          <td>Crossover RCT: AI-on vs. AI-off (per topic)</td>
+          <td>Mixed-effects model (student &amp; topic as random effects)</td>
+          <td>Handles the crossover structure; each student is in both conditions across topics</td>
         </tr>
         <tr>
           <td>Learning gains</td>
@@ -369,8 +369,8 @@
           <ul>
             <li>Report effect sizes (Cohen's d), not just p-values</li>
             <li>Use Bayesian analysis</li>
-            <li>Within-section design = paired data = more power</li>
-            <li>Frame as "case study with quantitative evidence"</li>
+            <li>Crossover RCT = paired data = more statistical power</li>
+            <li>Each student serves as their own control</li>
             <li>Plan a replication semester</li>
           </ul>
         </div>
@@ -383,7 +383,7 @@
           <ul>
             <li>Document both instructors' experience and teaching styles</li>
             <li>Both instructors are experienced — this is a strength, not a weakness</li>
-            <li><strong>Within-section AI toggle</strong> = same instructor for both conditions</li>
+            <li><strong>Crossover RCT</strong> = same instructor, same topic, randomized students</li>
             <li>Shared assessments ensure identical standards</li>
             <li>Collect teaching evaluations from both sections for context</li>
           </ul>
@@ -404,8 +404,8 @@
       </div>
     </div>
     <div class="insight">
-      <h3>The within-section design is your secret weapon</h3>
-      <p>It addresses both Risk 1 (more power from paired data) AND Risk 2 (same instructor controls the confound). This is why reviewers will take this study seriously despite the small N.</p>
+      <h3>The crossover RCT is your secret weapon</h3>
+      <p>It addresses Risk 1 (more power from paired crossover data), Risk 2 (same instructor + random assignment controls all confounds), AND lets you make <strong>causal claims</strong> about AI's impact. This is what elevates the study from "interesting pilot" to "rigorous evidence" — even with a small N.</p>
     </div>
   </div>
 
@@ -481,7 +481,7 @@
         </tr>
         <tr>
           <td><span class="red">Can't tell if AI or other factors caused the effect</span></td>
-          <td><span class="green">Within-section AI toggle isolates the AI component</span></td>
+          <td><span class="green">Crossover RCT with random assignment isolates the AI component — supports causal claims</span></td>
         </tr>
         <tr>
           <td><span class="red">Only test scores, no student voice</span></td>
@@ -493,13 +493,13 @@
         </tr>
         <tr>
           <td><span class="red">"Results not significant" with small N</span></td>
-          <td><span class="green">Effect sizes + Bayesian analysis + paired within-section design</span></td>
+          <td><span class="green">Effect sizes + Bayesian analysis + crossover design (each student = own control)</span></td>
         </tr>
       </tbody>
     </table>
     <div class="insight">
       <h3>The narrative for reviewers</h3>
-      <p>"We built a purpose-built educational AI tool for data structures, ran a controlled comparison with shared assessments, and used a novel within-section toggle to isolate AI's specific contribution — something most studies can't do."</p>
+      <p>"We built a purpose-built educational AI tool for data structures, ran a controlled comparison with shared assessments, and used a <strong>crossover RCT</strong> with random student assignment to isolate AI's causal contribution — a level of rigor most educational AI studies can't achieve."</p>
     </div>
   </div>
 
@@ -514,9 +514,9 @@
           <p style="margin-top: 8px; color: #94a3b8;">Create 15-20 MCQs covering key DS concepts. Have Rolf review them. Administer in both sections during class.</p>
         </div>
         <div class="card warn">
-          <h3><span class="highlight">Priority 2: AI Toggle</span></h3>
-          <p>Add a per-topic on/off switch for AI hints in the web app. This is the technical prerequisite for the within-section design.</p>
-          <p style="margin-top: 8px; color: #94a3b8;">Also ensure all interactions are being logged with the AI condition flag.</p>
+          <h3><span class="highlight">Priority 2: Crossover RCT Setup</span></h3>
+          <p>Implement per-student, per-topic AI hint toggle in the web app. Randomly assign students to Group X / Group Y. This is the technical prerequisite for the crossover RCT.</p>
+          <p style="margin-top: 8px; color: #94a3b8;">Log all interactions with the AI condition flag and student group assignment.</p>
         </div>
       </div>
       <div>
