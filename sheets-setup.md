@@ -20,7 +20,10 @@ No column names to type. The script auto-creates headers on the first submission
 ```javascript
 function doPost(e) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var data = JSON.parse(e.postData.contents);
+
+  // Data arrives as a form field named "data" containing JSON
+  var raw = e.parameter && e.parameter.data ? e.parameter.data : e.postData.contents;
+  var data = JSON.parse(raw);
 
   // Column order — headers auto-created on first submission
   var cols = [

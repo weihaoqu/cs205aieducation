@@ -423,12 +423,23 @@ function submitQuiz() {
   });
 
   if (SHEETS_URL !== "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL") {
-    fetch(SHEETS_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: {"Content-Type":"text/plain;charset=utf-8"},
-      body: JSON.stringify(payload)
-    }).catch(e => console.error("Submit error:", e));
+    var iframe = document.createElement("iframe");
+    iframe.name = "sheets-submit";
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+    var form = document.createElement("form");
+    form.method = "POST";
+    form.action = SHEETS_URL;
+    form.target = "sheets-submit";
+    var input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "data";
+    input.value = JSON.stringify(payload);
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+    form.remove();
+    setTimeout(function(){ iframe.remove(); }, 15000);
   } else {
     console.log("Sheets URL not configured. Payload:", payload);
   }
