@@ -56,7 +56,6 @@ button{font-family:inherit}
 /* ── Form Elements ───────────────────────────────────── */
 label.field{display:block;margin-bottom:18px}
 label.field .label-text{display:block;font-weight:600;margin-bottom:6px;color:#f1f5f9}
-label.field .hint{display:block;font-size:.82em;color:#64748b;margin-bottom:6px}
 input[type=text],select{
   width:100%;padding:12px 14px;border-radius:8px;border:1px solid #334155;
   background:#1e293b;color:#e2e8f0;font-size:1em;
@@ -89,7 +88,6 @@ input[type=text]:focus,select:focus{outline:none;border-color:#3b82f6}
 .tag-blue{background:#1e3a5f;color:#60a5fa}
 .tag-green{background:#064e3b;color:#34d399}
 .tag-purple{background:#3b1f6e;color:#a78bfa}
-.tag-amber{background:#78350f;color:#fbbf24}
 
 /* ── MCQ Card ────────────────────────────────────────── */
 .mcq-card{
@@ -116,7 +114,7 @@ input[type=text]:focus,select:focus{outline:none;border-color:#3b82f6}
   transition:all .15s;display:flex;align-items:flex-start;gap:10px;
   line-height:1.5;
 }
-.option-list li:hover{border-color:#3b82f6;background:#172033}
+.option-list li:hover:not(.locked){border-color:#3b82f6;background:#172033}
 .option-list li.selected{border-color:#3b82f6;background:#1e3a5f}
 .option-list li .letter{
   flex-shrink:0;width:26px;height:26px;border-radius:50%;
@@ -124,6 +122,20 @@ input[type=text]:focus,select:focus{outline:none;border-color:#3b82f6}
   font-size:.82em;font-weight:700;color:#94a3b8;margin-top:1px;
 }
 .option-list li.selected .letter{background:#3b82f6;color:#fff}
+/* Feedback states */
+.option-list li.locked{cursor:default}
+.option-list li.correct-answer{border-color:#34d399;background:#064e3b}
+.option-list li.correct-answer .letter{background:#34d399;color:#0f172a}
+.option-list li.wrong-answer{border-color:#f87171;background:#7f1d1d40}
+.option-list li.wrong-answer .letter{background:#f87171;color:#0f172a}
+.feedback-box{
+  margin-top:14px;padding:14px;border-radius:8px;font-size:.92em;line-height:1.6;
+  display:none;
+}
+.feedback-box.show{display:block;animation:fadeIn .3s ease}
+.feedback-correct{background:#064e3b;border:1px solid #34d399;color:#a7f3d0}
+.feedback-incorrect{background:#7f1d1d;border:1px solid #f87171;color:#fca5a5}
+.feedback-box .fb-explain{color:#cbd5e1;margin-top:6px;font-size:.9em}
 
 /* ── Likert ──────────────────────────────────────────── */
 .likert-group{margin-bottom:28px}
@@ -158,21 +170,6 @@ input[type=text]:focus,select:focus{outline:none;border-color:#3b82f6}
 }
 .score-box .score-num{font-size:3em;font-weight:800}
 .score-box .score-label{color:#94a3b8;margin-top:4px}
-.result-card{
-  background:#1e293b;border:1px solid #334155;border-radius:12px;
-  padding:18px;margin-bottom:10px;
-}
-.result-card.correct{border-left:4px solid #34d399}
-.result-card.incorrect{border-left:4px solid #f87171}
-.result-card .rc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.result-card .rc-q{font-weight:600}
-.result-card .rc-badge{
-  padding:2px 10px;border-radius:12px;font-size:.78em;font-weight:600;
-}
-.result-card.correct .rc-badge{background:#064e3b;color:#34d399}
-.result-card.incorrect .rc-badge{background:#7f1d1d;color:#f87171}
-.result-card .rc-answer{color:#94a3b8;margin-top:4px;font-size:.92em;line-height:1.6}
-.result-card .rc-explain{color:#cbd5e1;margin-top:8px;font-size:.88em;line-height:1.6;border-top:1px solid #334155;padding-top:8px}
 
 /* ── Validation error ────────────────────────────────── */
 .validation-msg{
@@ -223,9 +220,9 @@ input[type=text]:focus,select:focus{outline:none;border-color:#3b82f6}
       <ul>
         <li><strong>Part 1:</strong> Quick demographics (1 min)</li>
         <li><strong>Part 2:</strong> 20 multiple-choice concept questions (~20 min)</li>
-        <li><strong>Part 3:</strong> 24 survey questions (~8 min)</li>
+        <li><strong>Part 3:</strong> Short survey (~5 min)</li>
       </ul>
-      <p style="margin-top:12px;color:#94a3b8">Total: ~30 minutes. You'll see your quiz score and correct answers at the end. This does <strong>not</strong> count toward your grade.</p>
+      <p style="margin-top:12px;color:#94a3b8">Total: ~25 minutes. You'll see the correct answer after each question. This does <strong>not</strong> count toward your grade.</p>
     </div>
 
     <div class="info-box">
@@ -244,7 +241,7 @@ input[type=text]:focus,select:focus{outline:none;border-color:#3b82f6}
         <span class="label-text">Your section</span>
         <select id="idSection">
           <option value="">— Select —</option>
-          <option value="treatment">Section A (Prof. Oreo's section)</option>
+          <option value="treatment">Section A (Prof. Weihao's section)</option>
           <option value="control">Section B (Prof. Rolf's section)</option>
         </select>
       </label>
@@ -262,7 +259,7 @@ input[type=text]:focus,select:focus{outline:none;border-color:#3b82f6}
   <div class="section-header">
     <span class="section-tag tag-blue">Part 1 of 3</span>
     <h2>Demographics</h2>
-    <p>A few quick background questions.</p>
+    <p>A couple of quick background questions.</p>
   </div>
 
   <label class="field">
@@ -278,37 +275,13 @@ input[type=text]:focus,select:focus{outline:none;border-color:#3b82f6}
   </label>
 
   <label class="field">
-    <span class="label-text">D2. What grade did you receive in the prerequisite programming course?</span>
-    <select id="dGrade">
-      <option value="">— Select —</option>
-      <option value="A">A</option>
-      <option value="B">B</option>
-      <option value="C">C</option>
-      <option value="D">D</option>
-      <option value="Other">Other / N/A</option>
-    </select>
-  </label>
-
-  <label class="field">
-    <span class="label-text">D3. How many programming courses have you taken before this one?</span>
+    <span class="label-text">D2. How many programming courses have you taken before this one?</span>
     <select id="dCourses">
       <option value="">— Select —</option>
       <option value="0">0</option>
       <option value="1">1</option>
       <option value="2">2</option>
       <option value="3+">3 or more</option>
-    </select>
-  </label>
-
-  <label class="field">
-    <span class="label-text">D4. How often have you used AI tools (ChatGPT, Claude, Copilot, etc.) for coursework?</span>
-    <select id="dAI">
-      <option value="">— Select —</option>
-      <option value="Never">Never</option>
-      <option value="A few times">A few times</option>
-      <option value="Monthly">Monthly</option>
-      <option value="Weekly">Weekly</option>
-      <option value="Daily">Daily</option>
     </select>
   </label>
 
@@ -360,12 +333,6 @@ input[type=text]:focus,select:focus{outline:none;border-color:#3b82f6}
     <div class="score-num" id="scoreNum">0/20</div>
     <div class="score-label">Concept Test Score</div>
   </div>
-
-  <div class="section-header">
-    <h2>Answer Key</h2>
-    <p>Review the correct answers and explanations below.</p>
-  </div>
-  <div id="resultsContainer"></div>
 
   <div class="btn-row" style="margin-top:32px;justify-content:center">
     <a class="btn btn-secondary" href="index.html">&larr; Back to Home</a>
@@ -570,7 +537,7 @@ const SURVEY_GROUPS = [
   {
     id:"engagement",
     title:"Engagement & Motivation",
-    desc:"Adapted from the Student Course Engagement Questionnaire (Handelsman et al., 2005)",
+    desc:"How do you feel about this course so far?",
     items:[
       {id:"E1",text:"I look forward to attending this class."},
       {id:"E2",text:"I actively participate in class discussions and activities."},
@@ -584,32 +551,24 @@ const SURVEY_GROUPS = [
   },
   {
     id:"self-efficacy",
-    title:"Self-Efficacy in Data Structures",
-    desc:"Adapted from the CS Self-Efficacy Scale (Ramalingam & Wiedenbeck, 1998). \"I am confident that I can...\"",
+    title:"Confidence in Data Structures",
+    desc:"\"I am confident that I can...\"",
     items:[
-      {id:"S1",text:"...understand the difference between arrays and linked lists and when to use each."},
-      {id:"S2",text:"...analyze the time complexity (Big-O) of a simple algorithm."},
-      {id:"S3",text:"...implement a stack or queue in Java."},
-      {id:"S4",text:"...trace through a recursive method and predict its output."},
-      {id:"S5",text:"...explain how a binary search tree insertion works."},
-      {id:"S6",text:"...choose the appropriate data structure for a given problem."},
-      {id:"S7",text:"...debug a program that uses data structures like trees or hash tables."},
-      {id:"S8",text:"...succeed in this course overall."}
+      {id:"S1",text:"...analyze the time complexity (Big-O) of a simple algorithm."},
+      {id:"S2",text:"...trace through a recursive method and predict its output."},
+      {id:"S3",text:"...choose the appropriate data structure for a given problem."},
+      {id:"S4",text:"...succeed in this course overall."}
     ]
   },
   {
     id:"ai-perceptions",
-    title:"Perceptions of AI in Learning",
-    desc:"Rate your current feelings about AI tools in education.",
+    title:"AI in Education",
+    desc:"Your current views on AI tools in learning.",
     items:[
       {id:"A1",text:"AI tools (like ChatGPT) can help me learn course material more effectively."},
-      {id:"A2",text:"I trust the accuracy of explanations provided by AI tools."},
-      {id:"A3",text:"Using AI tools for learning feels like cheating."},
-      {id:"A4",text:"I would prefer a class that integrates AI tools into instruction over one that does not."},
-      {id:"A5",text:"AI tools can replace the need for human tutors or teaching assistants."},
-      {id:"A6",text:"I worry that relying on AI tools will prevent me from truly learning the material."},
-      {id:"A7",text:"I feel comfortable using AI tools as part of my study routine."},
-      {id:"A8",text:"AI will play an important role in how computer science is taught in the future."}
+      {id:"A2",text:"Using AI tools for learning feels like cheating."},
+      {id:"A3",text:"I feel comfortable using AI tools as part of my study routine."},
+      {id:"A4",text:"AI will play an important role in how computer science is taught in the future."}
     ]
   }
 ];
@@ -623,6 +582,7 @@ let anonId = "";
 let section = "";
 let currentQ = 0;
 let quizAnswers = new Array(20).fill(-1);
+let quizRevealed = new Array(20).fill(false); // track which Qs have shown feedback
 let surveyAnswers = {};
 let timerInterval = null;
 let elapsedSeconds = 0;
@@ -709,11 +669,11 @@ function startApp(){
 // DEMOGRAPHICS
 // ══════════════════════════════════════════════════════════════
 function submitDemo(){
-  const fields = ["dMajor","dGrade","dCourses","dAI"];
+  const fields = ["dMajor","dCourses"];
   const err = document.getElementById("demoError");
   for(const f of fields){
     if(!document.getElementById(f).value){
-      showError(err,"Please answer all demographic questions before continuing.");return;
+      showError(err,"Please answer all questions before continuing.");return;
     }
   }
   hideError(err);
@@ -736,7 +696,7 @@ function buildQuiz(){
     body += `<div class="q-text">${q.text}</div>`;
     if(q.code) body += `<pre>${escHtml(q.code)}</pre>`;
     if(q.tree) body += `<span class="tree-diagram">${escHtml(q.tree)}</span>`;
-    body += `<ul class="option-list">`;
+    body += `<ul class="option-list" id="opts${i}">`;
     q.options.forEach((opt,oi)=>{
       const letter = "ABCD"[oi];
       body += `<li onclick="pickAnswer(${i},${oi})" id="opt${i}_${oi}">
@@ -744,6 +704,8 @@ function buildQuiz(){
       </li>`;
     });
     body += `</ul>`;
+    // Feedback box (hidden until answer is picked)
+    body += `<div class="feedback-box" id="fb${i}"><div class="fb-result"></div><div class="fb-explain"></div></div>`;
     div.innerHTML = body;
     c.appendChild(div);
   });
@@ -758,11 +720,32 @@ function showQuestion(n){
 }
 
 function pickAnswer(qi,oi){
+  // If already revealed, don't allow changing
+  if(quizRevealed[qi]) return;
+
   quizAnswers[qi] = oi;
-  const card = document.getElementById("mcq"+qi);
-  card.querySelectorAll(".option-list li").forEach((li,idx)=>{
-    li.classList.toggle("selected",idx===oi);
+  const q = QUESTIONS[qi];
+  const correct = oi === q.answer;
+
+  // Lock all options and show correct/wrong styling
+  const optList = document.getElementById("opts"+qi);
+  optList.querySelectorAll("li").forEach((li,idx)=>{
+    li.classList.add("locked");
+    li.classList.remove("selected","correct-answer","wrong-answer");
+    if(idx === q.answer) li.classList.add("correct-answer");
+    else if(idx === oi && !correct) li.classList.add("wrong-answer");
   });
+
+  // Show feedback box
+  const fb = document.getElementById("fb"+qi);
+  fb.className = "feedback-box show " + (correct ? "feedback-correct" : "feedback-incorrect");
+  const correctLetter = "ABCD"[q.answer];
+  fb.querySelector(".fb-result").innerHTML = correct
+    ? "\u2713 <strong>Correct!</strong>"
+    : "\u2717 <strong>Incorrect.</strong> The answer is <strong>" + correctLetter + ". " + escHtml(q.options[q.answer]) + "</strong>";
+  fb.querySelector(".fb-explain").textContent = q.explain;
+
+  quizRevealed[qi] = true;
   hideError(document.getElementById("quizError"));
 }
 
@@ -845,9 +828,7 @@ function submitAll(){
     section,
     duration: elapsedSeconds,
     major: document.getElementById("dMajor").value,
-    prereqGrade: document.getElementById("dGrade").value,
     priorCourses: document.getElementById("dCourses").value,
-    aiUsage: document.getElementById("dAI").value,
     quizScore: score,
   };
   // Add individual quiz answers
@@ -863,7 +844,8 @@ function submitAll(){
   sendToSheets(payload);
 
   // Show results
-  showResults(score);
+  document.getElementById("scoreNum").textContent = score+"/20";
+  goScreen("scrResults");
 }
 
 function sendToSheets(payload){
@@ -877,34 +859,6 @@ function sendToSheets(payload){
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify(payload)
   }).catch(err=>console.error("Sheet submit error:",err));
-}
-
-// ══════════════════════════════════════════════════════════════
-// RESULTS
-// ══════════════════════════════════════════════════════════════
-function showResults(score){
-  document.getElementById("scoreNum").textContent = score+"/20";
-  const c = document.getElementById("resultsContainer");
-  c.innerHTML = "";
-  QUESTIONS.forEach((q,i)=>{
-    const correct = quizAnswers[i]===q.answer;
-    const div = document.createElement("div");
-    div.className = "result-card "+(correct?"correct":"incorrect");
-    const yourLetter = quizAnswers[i]>=0?"ABCD"[quizAnswers[i]]:"?";
-    const correctLetter = "ABCD"[q.answer];
-    div.innerHTML = `
-      <div class="rc-header">
-        <span class="rc-q">Q${i+1}: ${q.topic}</span>
-        <span class="rc-badge">${correct?"\u2713 Correct":"\u2717 Incorrect"}</span>
-      </div>
-      <div class="rc-answer">
-        Your answer: <strong>${yourLetter}</strong>${correct?"":" &mdash; Correct answer: <strong>"+correctLetter+". "+escHtml(q.options[q.answer])+"</strong>"}
-      </div>
-      <div class="rc-explain">${q.explain}</div>
-    `;
-    c.appendChild(div);
-  });
-  goScreen("scrResults");
 }
 
 // ══════════════════════════════════════════════════════════════
