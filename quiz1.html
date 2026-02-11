@@ -424,8 +424,8 @@ function submitQuiz() {
 
   if (SHEETS_URL !== "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL") {
     fetch(SHEETS_URL, {
-      method: "POST", mode: "no-cors",
-      headers: {"Content-Type":"application/json"},
+      method: "POST",
+      headers: {"Content-Type":"text/plain;charset=utf-8"},
       body: JSON.stringify(payload)
     }).catch(e => console.error("Submit error:", e));
   } else {
