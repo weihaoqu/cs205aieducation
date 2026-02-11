@@ -1,0 +1,4 @@
+1. Which of the following is the correct way to declare and allocate an array of 10 integers in Java?A. int arr = new int(10);B. int[] arr = new int[10];C. int arr[] = int[10];D. array int[10] = new array;
+2. What is the time complexity of accessing an element by index in a Java array of length n?A. O(n)B. O(log n)C. O(1)D. O(n^2)
+3. How many Foo objects are created in the following: Foo fooArray = new Foo[10]
+A. 10B. 0C. 1D. It cannot be determined

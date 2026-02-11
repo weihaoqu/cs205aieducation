@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS 205 — Shared Quiz Plan (All 6 Quizzes)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #f8fafc; color: #1e293b; line-height: 1.7;
+    max-width: 920px; margin: 0 auto; padding: 40px 24px 80px;
+  }
+  h1 { font-size: 2em; margin-bottom: 8px; color: #0f172a; }
+  h2 { font-size: 1.5em; margin-top: 48px; margin-bottom: 16px; color: #1e40af; border-bottom: 2px solid #dbeafe; padding-bottom: 8px; }
+  h3 { font-size: 1.15em; margin-top: 24px; margin-bottom: 10px; color: #1e3a8a; }
+  p { margin-bottom: 10px; }
+  .subtitle { color: #64748b; font-size: 1.1em; margin-bottom: 32px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.8em; font-weight: 600; }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-green { background: #d1fae5; color: #065f46; }
+  .badge-yellow { background: #fef3c7; color: #92400e; }
+  .badge-red { background: #fee2e2; color: #991b1b; }
+  .badge-purple { background: #ede9fe; color: #5b21b6; }
+
+  .card {
+    background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 20px 24px; margin: 14px 0; box-shadow: 0 1px 3px #0000000d;
+  }
+  .card.highlight { border-left: 4px solid #3b82f6; }
+  .card.warn { border-left: 4px solid #f59e0b; background: #fffbeb; }
+
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.95em; }
+  th { background: #f1f5f9; padding: 10px 14px; text-align: left; font-weight: 600; border-bottom: 2px solid #e2e8f0; }
+  td { padding: 10px 14px; border-bottom: 1px solid #f1f5f9; }
+  tr:hover td { background: #f8fafc; }
+
+  .qbox {
+    background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 18px 22px; margin: 10px 0; position: relative;
+  }
+  .qbox .qnum {
+    position: absolute; top: -9px; left: 14px; background: #3b82f6; color: white;
+    padding: 2px 10px; border-radius: 10px; font-size: 0.78em; font-weight: 600;
+  }
+  .qbox .qtopic {
+    position: absolute; top: -9px; right: 14px; background: #e2e8f0; color: #475569;
+    padding: 2px 10px; border-radius: 10px; font-size: 0.72em;
+  }
+  .qbox .qtext { font-weight: 600; margin-bottom: 10px; padding-top: 6px; }
+  .qbox pre {
+    background: #f1f5f9; padding: 12px; border-radius: 6px; font-size: 0.88em;
+    margin: 8px 0; overflow-x: auto; line-height: 1.5;
+  }
+  .qbox ol { padding-left: 20px; margin-bottom: 6px; }
+  .qbox ol li { margin-bottom: 4px; }
+  .qbox .answer { color: #059669; font-weight: 600; margin-top: 6px; font-size: 0.88em; }
+  .qbox .rationale { color: #64748b; font-size: 0.88em; margin-top: 2px; font-style: italic; }
+
+  ul { padding-left: 22px; margin-bottom: 10px; }
+  li { margin-bottom: 4px; }
+  .print-note { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 16px; margin: 20px 0; color: #1e40af; font-size: 0.92em; }
+
+  @media print {
+    body { max-width: 100%; padding: 20px; }
+    .card, .qbox { break-inside: avoid; }
+    .print-note { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<h1>CS 205 Shared Quiz Plan</h1>
+<p class="subtitle">6 Quizzes &bull; 8 MCQs Each &bull; Spring 2026<br>
+<span class="badge badge-yellow">For Rolf to review &mdash; flag any questions to change</span></p>
+
+<div class="print-note">
+  This document contains all 48 quiz questions across 6 quizzes. Both sections take identical quizzes. Review each question and suggest changes before administration.
+</div>
+
+<!-- ─── SCHEDULE OVERVIEW ─── -->
+<div class="card highlight">
+  <h3 style="margin-top:0">Schedule Overview</h3>
+  <table>
+    <thead>
+      <tr><th>Quiz</th><th>Topics</th><th>Week</th><th>Approx. Date</th><th>RCT Groups</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Quiz 1</strong></td><td>Arrays + Big-O</td><td>5</td><td>Feb 10&ndash;14</td><td><span class="badge badge-purple">X</span> + <span class="badge badge-yellow">Y</span></td></tr>
+      <tr><td><strong>Quiz 2</strong></td><td>Linked Lists + Recursion</td><td>7</td><td>Feb 24&ndash;28</td><td><span class="badge badge-purple">X</span> + <span class="badge badge-yellow">Y</span></td></tr>
+      <tr><td><strong>Quiz 3</strong></td><td>Stacks + Queues</td><td>9</td><td>Mar 10&ndash;14</td><td><span class="badge badge-purple">X</span> + <span class="badge badge-yellow">Y</span></td></tr>
+      <tr><td><strong>Quiz 4</strong></td><td>Trees + Priority Queues</td><td>11</td><td>Mar 24&ndash;28</td><td><span class="badge badge-purple">X</span> + <span class="badge badge-yellow">Y</span></td></tr>
+      <tr><td><strong>Quiz 5</strong></td><td>Heaps + Hash Tables/Maps</td><td>13</td><td>Apr 7&ndash;11</td><td><span class="badge badge-purple">X</span> + <span class="badge badge-yellow">Y</span></td></tr>
+      <tr><td><strong>Quiz 6</strong></td><td>Search Trees + Dynamic Programming</td><td>14&ndash;15</td><td>Apr 14&ndash;18</td><td><span class="badge badge-purple">X</span> + <span class="badge badge-yellow">Y</span></td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:0.88em;color:#64748b;margin-top:8px"><strong>Format:</strong> 8 MCQs per quiz (4 per topic), ~12 minutes, taken in class on phones/laptops. Both sections take the identical quiz.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<h2>Quiz 1: Arrays &amp; Big-O <span class="badge badge-red">This Week</span></h2>
+<p style="color:#64748b;font-size:0.9em;margin-bottom:12px">8 questions (5 Arrays including Rolf's contributions, 3 Big-O)</p>
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="qbox">
+  <span class="qnum">Q1</span><span class="qtopic">Arrays (Java) &mdash; from Rolf</span>
+  <div class="qtext">Which of the following is the correct way to declare and allocate an array of 10 integers in Java?</div>
+  <ol type="A"><li>int arr = new int(10);</li><li>int[] arr = new int[10];</li><li>int arr[] = int[10];</li><li>array int[10] = new array;</li></ol>
+  <p class="answer">Answer: B &mdash; int[] arr = new int[10];</p>
+  <p class="rationale">Square brackets on the type (int[]), allocated with new and size in brackets. Option A uses parentheses. Option C is missing 'new'.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q2</span><span class="qtopic">Arrays &mdash; from Rolf</span>
+  <div class="qtext">What is the time complexity of accessing an element by index in a Java array of length n?</div>
+  <ol type="A"><li>O(n)</li><li>O(log n)</li><li>O(1)</li><li>O(n&sup2;)</li></ol>
+  <p class="answer">Answer: C &mdash; O(1)</p>
+  <p class="rationale">Arrays store elements contiguously. Address = base + i &times; element_size, a single arithmetic operation.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q3</span><span class="qtopic">Arrays (Java) &mdash; from Rolf</span>
+  <div class="qtext">How many Foo objects are created by the following code? <code>Foo[] fooArray = new Foo[10];</code></div>
+  <ol type="A"><li>10</li><li>0</li><li>1</li><li>It cannot be determined</li></ol>
+  <p class="answer">Answer: B &mdash; 0</p>
+  <p class="rationale">new Foo[10] allocates an array of 10 references, all initialized to null. No Foo objects are created &mdash; just the array container. You need new Foo() for each slot to create actual objects.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q4</span><span class="qtopic">Arrays</span>
+  <div class="qtext">An ArrayList has 8 elements and its internal array has capacity 8. What happens when you add a 9th element?</div>
+  <ol type="A"><li>An IndexOutOfBoundsException is thrown</li><li>The element is added to a separate overflow area</li><li>A new array of larger capacity is created, all elements are copied, then the new element is added</li><li>The array automatically grows by exactly one slot</li></ol>
+  <p class="answer">Answer: C</p>
+  <p class="rationale">Dynamic arrays typically double capacity when full. All elements are copied &mdash; O(n) operation, amortized O(1).</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q5</span><span class="qtopic">Arrays</span>
+  <div class="qtext">What is the time complexity of inserting an element at index 0 of an array of n elements?</div>
+  <ol type="A"><li>O(1)</li><li>O(log n)</li><li>O(n)</li><li>O(n&sup2;)</li></ol>
+  <p class="answer">Answer: C &mdash; O(n)</p>
+  <p class="rationale">Inserting at index 0 requires shifting all n elements one position right. Arrays are poor for front insertions &mdash; linked lists handle this in O(1).</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q6</span><span class="qtopic">Big-O</span>
+  <div class="qtext">What is the time complexity of the following code?</div>
+  <pre>for (int i = 0; i &lt; n; i++) {
+    for (int j = 0; j &lt; n; j++) {
+        System.out.println(i + j);
+    }
+}</pre>
+  <ol type="A"><li>O(n)</li><li>O(n log n)</li><li>O(n&sup2;)</li><li>O(2n)</li></ol>
+  <p class="answer">Answer: C &mdash; O(n&sup2;)</p>
+  <p class="rationale">Outer loop runs n times &times; inner loop runs n times = n&sup2; total iterations.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q7</span><span class="qtopic">Big-O</span>
+  <div class="qtext">An algorithm takes 5 seconds when n = 1,000 and 20 seconds when n = 2,000. What is its likely time complexity?</div>
+  <ol type="A"><li>O(n)</li><li>O(n log n)</li><li>O(n&sup2;)</li><li>O(n&sup3;)</li></ol>
+  <p class="answer">Answer: C &mdash; O(n&sup2;)</p>
+  <p class="rationale">Doubling n &rarr; 4&times; time is the signature of O(n&sup2;). O(n) would 2&times;. O(n&sup3;) would 8&times;.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q8</span><span class="qtopic">Big-O</span>
+  <div class="qtext">What is the space complexity of this method (not counting the input)?</div>
+  <pre>int[] doubleArray(int[] arr) {
+    int[] result = new int[arr.length];
+    for (int i = 0; i &lt; arr.length; i++) {
+        result[i] = arr[i] * 2;
+    }
+    return result;
+}</pre>
+  <ol type="A"><li>O(1)</li><li>O(log n)</li><li>O(n)</li><li>O(n&sup2;)</li></ol>
+  <p class="answer">Answer: C &mdash; O(n)</p>
+  <p class="rationale">Allocates a new array of size n. The loop variable is O(1) extra. Total additional space: O(n).</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<h2>Quiz 2: Linked Lists &amp; Recursion <span class="badge badge-blue">Week 7</span></h2>
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="qbox">
+  <span class="qnum">Q1</span><span class="qtopic">Linked Lists</span>
+  <div class="qtext">What is the time complexity of accessing the k-th element in a singly linked list of n nodes?</div>
+  <ol type="A"><li>O(1)</li><li>O(k)</li><li>O(n)</li><li>O(n&sup2;)</li></ol>
+  <p class="answer">Answer: B &mdash; O(k), which is O(n) in the worst case</p>
+  <p class="rationale">You must traverse from the head, following k next pointers. Unlike arrays, there's no direct index access.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q2</span><span class="qtopic">Linked Lists</span>
+  <div class="qtext">You have a singly linked list: A &rarr; B &rarr; C &rarr; D. You want to delete node C. What must you update?</div>
+  <ol type="A"><li>Set C.next = null</li><li>Set B.next = D</li><li>Set D.next = B</li><li>Set A.next = D</li></ol>
+  <p class="answer">Answer: B &mdash; Set B.next = D</p>
+  <p class="rationale">To remove C, bypass it by pointing its predecessor (B) to its successor (D). This is why deletion in a singly linked list requires access to the previous node.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q3</span><span class="qtopic">Linked Lists</span>
+  <div class="qtext">Which advantage does a linked list have over an array?</div>
+  <ol type="A"><li>Faster access to elements by index</li><li>Less memory usage per element</li><li>O(1) insertion at the front without shifting</li><li>Better cache performance</li></ol>
+  <p class="answer">Answer: C</p>
+  <p class="rationale">Inserting at the front of a linked list is O(1) &mdash; just create a new node and point it to the old head. Arrays require shifting all elements. Arrays win on index access, memory density, and cache performance.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q4</span><span class="qtopic">Linked Lists</span>
+  <div class="qtext">A doubly linked list with head and tail pointers can perform which operation in O(1) that a singly linked list cannot?</div>
+  <ol type="A"><li>Insert at front</li><li>Get the first element</li><li>Remove the last element</li><li>Check if the list is empty</li></ol>
+  <p class="answer">Answer: C</p>
+  <p class="rationale">Removing the last element requires updating the second-to-last node's next pointer. In a doubly linked list, tail.prev gives you that node in O(1). A singly linked list must traverse the entire list to find it.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q5</span><span class="qtopic">Recursion</span>
+  <div class="qtext">What does this method return when called with f(4)?</div>
+  <pre>int f(int n) {
+    if (n == 0) return 0;
+    return n + f(n - 1);
+}</pre>
+  <ol type="A"><li>4</li><li>6</li><li>10</li><li>24</li></ol>
+  <p class="answer">Answer: C &mdash; 10</p>
+  <p class="rationale">f(4) = 4 + f(3) = 4 + 3 + f(2) = 4 + 3 + 2 + f(1) = 4 + 3 + 2 + 1 + f(0) = 4+3+2+1+0 = 10. This computes the sum 1+2+...+n.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q6</span><span class="qtopic">Recursion</span>
+  <div class="qtext">How many times is the base case reached when calling fib(5) with this naive implementation?</div>
+  <pre>int fib(int n) {
+    if (n &lt;= 1) return n;
+    return fib(n-1) + fib(n-2);
+}</pre>
+  <ol type="A"><li>2</li><li>3</li><li>5</li><li>8</li></ol>
+  <p class="answer">Answer: C &mdash; 5 times</p>
+  <p class="rationale">Drawing the recursion tree: fib(5) branches into fib(4)+fib(3), which further branches. The base cases (n=0 or n=1) are reached 5 times total: fib(1) is called 3 times, fib(0) is called 2 times.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q7</span><span class="qtopic">Recursion</span>
+  <div class="qtext">What is the time complexity of the naive recursive Fibonacci implementation shown above?</div>
+  <ol type="A"><li>O(n)</li><li>O(n&sup2;)</li><li>O(2&#8319;)</li><li>O(n log n)</li></ol>
+  <p class="answer">Answer: C &mdash; O(2&#8319;)</p>
+  <p class="rationale">Each call branches into two recursive calls, creating a binary tree of calls. The tree has roughly 2&#8319; nodes. This is why memoization or dynamic programming is essential for Fibonacci.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q8</span><span class="qtopic">Recursion</span>
+  <div class="qtext">A recursive method works correctly but is very slow for large inputs. Which technique can improve its performance by storing previously computed results?</div>
+  <ol type="A"><li>Encapsulation</li><li>Memoization</li><li>Polymorphism</li><li>Garbage collection</li></ol>
+  <p class="answer">Answer: B &mdash; Memoization</p>
+  <p class="rationale">Memoization stores the results of expensive function calls and returns the cached result when the same inputs occur again. It converts the exponential Fibonacci into O(n) by avoiding redundant computation.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<h2>Quiz 3: Stacks &amp; Queues <span class="badge badge-blue">Week 9</span></h2>
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="qbox">
+  <span class="qnum">Q1</span><span class="qtopic">Stacks</span>
+  <div class="qtext">Which data structure would you use to check if parentheses in an expression are balanced? e.g., <code>((a+b)*(c-d))</code></div>
+  <ol type="A"><li>Queue</li><li>Stack</li><li>Array</li><li>Linked List</li></ol>
+  <p class="answer">Answer: B &mdash; Stack</p>
+  <p class="rationale">Push each opening paren onto the stack. When you see a closing paren, pop and check for a match. If the stack is empty at the end with no mismatches, the expression is balanced. LIFO order naturally matches nested structures.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q2</span><span class="qtopic">Stacks</span>
+  <div class="qtext">You push A, B, C, D onto a stack, then pop twice, then push E, then pop once. What is on top?</div>
+  <ol type="A"><li>A</li><li>B</li><li>C</li><li>E</li></ol>
+  <p class="answer">Answer: B</p>
+  <p class="rationale">After push A,B,C,D: stack = [A,B,C,D] (D on top). Pop twice removes D, C: stack = [A,B]. Push E: stack = [A,B,E]. Pop once removes E: stack = [A,B]. Top = B.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q3</span><span class="qtopic">Stacks</span>
+  <div class="qtext">What is the time complexity of push and pop operations on a stack implemented with a linked list?</div>
+  <ol type="A"><li>Push: O(1), Pop: O(n)</li><li>Push: O(n), Pop: O(1)</li><li>Push: O(1), Pop: O(1)</li><li>Push: O(n), Pop: O(n)</li></ol>
+  <p class="answer">Answer: C &mdash; Both O(1)</p>
+  <p class="rationale">With a linked list, push adds a node at the head (O(1)) and pop removes the head node (O(1)). No shifting or resizing needed.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q4</span><span class="qtopic">Stacks</span>
+  <div class="qtext">Evaluate the postfix expression: <code>3 4 + 2 *</code></div>
+  <ol type="A"><li>9</li><li>10</li><li>14</li><li>24</li></ol>
+  <p class="answer">Answer: C &mdash; 14</p>
+  <p class="rationale">Push 3, push 4. See +: pop 4 and 3, compute 3+4=7, push 7. Push 2. See *: pop 2 and 7, compute 7*2=14, push 14. Result = 14.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q5</span><span class="qtopic">Queues</span>
+  <div class="qtext">Which principle does a queue follow?</div>
+  <ol type="A"><li>Last In, First Out (LIFO)</li><li>First In, First Out (FIFO)</li><li>Highest priority first</li><li>Random access</li></ol>
+  <p class="answer">Answer: B &mdash; FIFO</p>
+  <p class="rationale">A queue processes elements in the order they arrive, like a line at a store. LIFO describes a stack. Highest priority first describes a priority queue.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q6</span><span class="qtopic">Queues</span>
+  <div class="qtext">You enqueue A, B, C, D into a queue, then dequeue twice. What is at the front of the queue?</div>
+  <ol type="A"><li>A</li><li>B</li><li>C</li><li>D</li></ol>
+  <p class="answer">Answer: C</p>
+  <p class="rationale">FIFO: enqueue A,B,C,D (front=A, rear=D). Dequeue removes A, then B. Front is now C.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q7</span><span class="qtopic">Queues</span>
+  <div class="qtext">A circular queue is implemented with an array of size 6. After several enqueue/dequeue operations, front = 4 and rear = 2. How many elements are in the queue?</div>
+  <ol type="A"><li>2</li><li>4</li><li>3</li><li>6</li></ol>
+  <p class="answer">Answer: B &mdash; 4</p>
+  <p class="rationale">Elements at indices 4, 5, 0, 1 (wrapping around). Count = (2 - 4 + 6) % 6 = 4. The formula (rear - front + capacity) % capacity handles the wrap-around.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q8</span><span class="qtopic">Queues</span>
+  <div class="qtext">Which real-world scenario is best modeled by a queue?</div>
+  <ol type="A"><li>Undo/redo in a text editor</li><li>Print jobs waiting to be processed</li><li>Evaluating a mathematical expression</li><li>Browser back button history</li></ol>
+  <p class="answer">Answer: B</p>
+  <p class="rationale">Print jobs are processed in the order received (FIFO) &mdash; a perfect queue application. Undo/redo and browser history are stacks (LIFO). Expression evaluation uses a stack.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<h2>Quiz 4: Trees &amp; Priority Queues <span class="badge badge-blue">Week 11</span></h2>
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="qbox">
+  <span class="qnum">Q1</span><span class="qtopic">Trees</span>
+  <div class="qtext">In a binary tree, a node with no children is called a:</div>
+  <ol type="A"><li>Root</li><li>Internal node</li><li>Leaf</li><li>Subtree</li></ol>
+  <p class="answer">Answer: C &mdash; Leaf</p>
+  <p class="rationale">A leaf node has no children (both left and right child are null). An internal node has at least one child. The root is the topmost node.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q2</span><span class="qtopic">Trees</span>
+  <div class="qtext">What is the pre-order traversal of this tree?</div>
+  <pre>      5
+     / \
+    3   8
+   / \
+  1   4</pre>
+  <ol type="A"><li>1, 3, 4, 5, 8</li><li>5, 3, 1, 4, 8</li><li>1, 4, 3, 8, 5</li><li>5, 3, 8, 1, 4</li></ol>
+  <p class="answer">Answer: B &mdash; 5, 3, 1, 4, 8</p>
+  <p class="rationale">Pre-order visits: root, left subtree, right subtree. So: 5 (root), then 3, 1, 4 (left subtree), then 8 (right subtree). Option A is in-order.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q3</span><span class="qtopic">Trees</span>
+  <div class="qtext">A binary tree has 7 nodes. What is the minimum possible height of this tree (root height = 0)?</div>
+  <ol type="A"><li>2</li><li>3</li><li>4</li><li>6</li></ol>
+  <p class="answer">Answer: A &mdash; 2</p>
+  <p class="rationale">A complete binary tree minimizes height. Height 2 gives 3 levels (0, 1, 2) with a maximum of 1 + 2 + 4 = 7 nodes &mdash; exactly 7. A perfectly complete binary tree of height 2 fits all 7 nodes. Height 1 can hold at most 3 nodes, so height 2 is the minimum.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q4</span><span class="qtopic">Trees</span>
+  <div class="qtext">Which traversal of a Binary Search Tree visits nodes in sorted (ascending) order?</div>
+  <ol type="A"><li>Pre-order</li><li>In-order</li><li>Post-order</li><li>Level-order</li></ol>
+  <p class="answer">Answer: B &mdash; In-order</p>
+  <p class="rationale">In-order (left, root, right) visits BST nodes in ascending sorted order. This is a key property of BSTs and one of the most important things to know about tree traversals.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q5</span><span class="qtopic">Priority Queues</span>
+  <div class="qtext">You insert elements with priorities 5, 2, 8, 1, 4 into a min-priority queue. What is removed first by a dequeue (removeMin) operation?</div>
+  <ol type="A"><li>5 (first inserted)</li><li>1 (lowest priority value)</li><li>8 (highest priority value)</li><li>4 (last inserted)</li></ol>
+  <p class="answer">Answer: B &mdash; 1</p>
+  <p class="rationale">A min-priority queue always removes the element with the smallest priority value, regardless of insertion order. Unlike a regular queue (FIFO), priority determines the exit order.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q6</span><span class="qtopic">Priority Queues</span>
+  <div class="qtext">What is the time complexity of inserting an element into a priority queue implemented with a binary heap of n elements?</div>
+  <ol type="A"><li>O(1)</li><li>O(log n)</li><li>O(n)</li><li>O(n log n)</li></ol>
+  <p class="answer">Answer: B &mdash; O(log n)</p>
+  <p class="rationale">Insert adds the element at the bottom of the heap, then "bubbles up" to restore the heap property. The maximum number of swaps is the height of the tree = log n.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q7</span><span class="qtopic">Priority Queues</span>
+  <div class="qtext">Which real-world scenario is best modeled by a priority queue?</div>
+  <ol type="A"><li>Customers waiting in a checkout line</li><li>Emergency room patients triaged by severity</li><li>Undo history in a text editor</li><li>Browsing web pages in order visited</li></ol>
+  <p class="answer">Answer: B</p>
+  <p class="rationale">ER patients are seen based on severity (priority), not arrival order. A checkout line is a regular queue (FIFO). Undo history is a stack. Web browsing history is a stack.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q8</span><span class="qtopic">Priority Queues</span>
+  <div class="qtext">What is the time complexity of finding (but not removing) the minimum element in a min-heap?</div>
+  <ol type="A"><li>O(1)</li><li>O(log n)</li><li>O(n)</li><li>O(n log n)</li></ol>
+  <p class="answer">Answer: A &mdash; O(1)</p>
+  <p class="rationale">The minimum element is always at the root of a min-heap. You simply read the first element of the array. Removing it is O(log n), but just finding it is O(1).</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<h2>Quiz 5: Heaps &amp; Hash Tables/Maps <span class="badge badge-blue">Week 13</span></h2>
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="qbox">
+  <span class="qnum">Q1</span><span class="qtopic">Heaps</span>
+  <div class="qtext">Which of the following arrays represents a valid min-heap?</div>
+  <ol type="A"><li>[1, 3, 5, 7, 9, 8, 6]</li><li>[1, 5, 3, 7, 8, 9, 6]</li><li>[3, 1, 5, 7, 9, 8, 6]</li><li>[1, 3, 5, 4, 7, 8, 6]</li></ol>
+  <p class="answer">Answer: A</p>
+  <p class="rationale">In a min-heap, every parent must be &le; its children. For index i: left child = 2i+1, right child = 2i+2. Option A: 1&le;3, 1&le;5, 3&le;7, 3&le;9, 5&le;8, 5&le;6 &mdash; all valid. Option C fails because 3 &gt; 1 (root is not minimum).</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q2</span><span class="qtopic">Heaps</span>
+  <div class="qtext">After removing the minimum element from a min-heap, what operation restores the heap property?</div>
+  <ol type="A"><li>Bubble up from the root</li><li>Bubble down (sift down) from the root</li><li>Sort the entire array</li><li>Rebuild the heap from scratch</li></ol>
+  <p class="answer">Answer: B &mdash; Bubble down from the root</p>
+  <p class="rationale">After removal, the last element is moved to the root, then "bubbled down" by swapping with its smaller child until the heap property is restored. This takes O(log n). Rebuilding from scratch would be O(n) &mdash; unnecessary.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q3</span><span class="qtopic">Heaps</span>
+  <div class="qtext">What is the time complexity of building a heap from an unsorted array of n elements using the bottom-up (heapify) approach?</div>
+  <ol type="A"><li>O(n log n)</li><li>O(n&sup2;)</li><li>O(n)</li><li>O(log n)</li></ol>
+  <p class="answer">Answer: C &mdash; O(n)</p>
+  <p class="rationale">The bottom-up heapify approach starts from the last non-leaf and sifts down each node. Although it seems like it should be O(n log n), the mathematical analysis shows most nodes are near the bottom and require few swaps. The total work sums to O(n).</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q4</span><span class="qtopic">Heaps</span>
+  <div class="qtext">In an array-based heap with n elements, what is the index of the parent of the element at index i (assuming 0-based indexing)?</div>
+  <ol type="A"><li>i / 2</li><li>(i - 1) / 2</li><li>2 * i + 1</li><li>i - 1</li></ol>
+  <p class="answer">Answer: B &mdash; (i - 1) / 2</p>
+  <p class="rationale">For 0-based indexing: parent = (i-1)/2 (integer division), left child = 2i+1, right child = 2i+2. For 1-based indexing, parent = i/2. This is a fundamental heap formula.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q5</span><span class="qtopic">Hash Tables</span>
+  <div class="qtext">A hash table with 7 slots uses h(k) = k % 7. Keys 10, 17, and 24 are inserted. With chaining, which slot contains all three keys?</div>
+  <ol type="A"><li>Slot 0</li><li>Slot 1</li><li>Slot 3</li><li>Slot 5</li></ol>
+  <p class="answer">Answer: C &mdash; Slot 3</p>
+  <p class="rationale">10 % 7 = 3, 17 % 7 = 3, 24 % 7 = 3. All three hash to slot 3. With chaining, they form a linked list at that slot.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q6</span><span class="qtopic">Hash Tables</span>
+  <div class="qtext">What happens to hash table performance as the load factor (n/capacity) increases?</div>
+  <ol type="A"><li>Performance improves because more slots are utilized</li><li>Performance degrades because collisions become more frequent</li><li>Performance is unaffected by load factor</li><li>The hash table automatically prevents high load factors</li></ol>
+  <p class="answer">Answer: B</p>
+  <p class="rationale">Higher load factor = more elements per slot on average = more collisions = longer chains (or more probing). This is why hash tables resize when load factor exceeds a threshold (typically 0.75 in Java).</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q7</span><span class="qtopic">Hash Tables</span>
+  <div class="qtext">In Java, what is the worst-case time complexity of <code>HashMap.get(key)</code>?</div>
+  <ol type="A"><li>O(1)</li><li>O(log n)</li><li>O(n)</li><li>O(n log n)</li></ol>
+  <p class="answer">Answer: C &mdash; O(n)</p>
+  <p class="rationale">In the worst case, all keys hash to the same bucket, creating one long chain of length n. Searching that chain is O(n). (Java 8+ converts long chains to balanced trees, making worst case O(log n), but the classic answer is O(n).)</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q8</span><span class="qtopic">Maps</span>
+  <div class="qtext">You need a data structure that maps student names to their grades and supports fast lookup. Which is the best choice?</div>
+  <ol type="A"><li>ArrayList of student-grade pairs</li><li>Sorted array with binary search</li><li>HashMap</li><li>LinkedList of student-grade pairs</li></ol>
+  <p class="answer">Answer: C &mdash; HashMap</p>
+  <p class="rationale">HashMap provides O(1) average-case lookup by key. An ArrayList or LinkedList would require O(n) linear search. A sorted array gives O(log n) with binary search but O(n) for insertions.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<h2>Quiz 6: Search Trees &amp; Dynamic Programming <span class="badge badge-blue">Week 14-15</span></h2>
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="qbox">
+  <span class="qnum">Q1</span><span class="qtopic">Search Trees</span>
+  <div class="qtext">You insert keys 5, 3, 7, 1, 4 into an empty BST (in that order). What is the right child of the root?</div>
+  <ol type="A"><li>3</li><li>7</li><li>4</li><li>1</li></ol>
+  <p class="answer">Answer: B &mdash; 7</p>
+  <p class="rationale">5 becomes the root. 3 &lt; 5, goes left. 7 &gt; 5, goes right. So the right child of the root (5) is 7. Then 1 and 4 go into the left subtree under 3.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q2</span><span class="qtopic">Search Trees</span>
+  <div class="qtext">What is the worst-case time complexity of searching in a BST with n nodes?</div>
+  <ol type="A"><li>O(1)</li><li>O(log n)</li><li>O(n)</li><li>O(n log n)</li></ol>
+  <p class="answer">Answer: C &mdash; O(n)</p>
+  <p class="rationale">If elements are inserted in sorted order (e.g., 1,2,3,4,5), the BST degenerates into a linked list (all right children). Search becomes O(n). Balanced BSTs (AVL, Red-Black) guarantee O(log n) worst case.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q3</span><span class="qtopic">Search Trees</span>
+  <div class="qtext">What advantage does a TreeMap have over a HashMap in Java?</div>
+  <ol type="A"><li>Faster average lookup time</li><li>Keys are stored in sorted order</li><li>Uses less memory</li><li>Handles collisions better</li></ol>
+  <p class="answer">Answer: B &mdash; Keys are stored in sorted order</p>
+  <p class="rationale">TreeMap is backed by a Red-Black tree, so keys are always sorted. This allows operations like finding the smallest key, range queries, and ordered iteration. HashMap is faster for lookup (O(1) vs O(log n)) but doesn't maintain order.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q4</span><span class="qtopic">Search Trees</span>
+  <div class="qtext">After deleting a node with two children from a BST, which value typically replaces it?</div>
+  <ol type="A"><li>Its parent's value</li><li>The in-order successor (smallest value in right subtree)</li><li>The largest value in the tree</li><li>The average of its two children</li></ol>
+  <p class="answer">Answer: B</p>
+  <p class="rationale">The in-order successor (smallest value in the right subtree) maintains the BST property because it's larger than everything in the left subtree and smaller than everything else in the right subtree. The in-order predecessor (largest in left subtree) also works.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q5</span><span class="qtopic">Dynamic Programming</span>
+  <div class="qtext">What are the two key properties that a problem must have for dynamic programming to apply?</div>
+  <ol type="A"><li>Sorted input and constant space</li><li>Optimal substructure and overlapping subproblems</li><li>Linear time and logarithmic space</li><li>Divide-and-conquer and greedy choice</li></ol>
+  <p class="answer">Answer: B</p>
+  <p class="rationale">Optimal substructure means the optimal solution contains optimal solutions to subproblems. Overlapping subproblems means the same subproblems are solved repeatedly. When both exist, DP avoids redundant computation by storing results.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q6</span><span class="qtopic">Dynamic Programming</span>
+  <div class="qtext">The Fibonacci sequence can be computed in O(n) time using dynamic programming. What makes the naive recursive version O(2&#8319;)?</div>
+  <ol type="A"><li>It uses too much memory</li><li>It recalculates the same subproblems many times</li><li>It has too many base cases</li><li>The recursive calls are too deep</li></ol>
+  <p class="answer">Answer: B</p>
+  <p class="rationale">Naive recursion recomputes fib(k) many times for each k. For example, fib(3) is computed multiple times when calculating fib(5). DP stores each result once, eliminating this redundancy.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q7</span><span class="qtopic">Dynamic Programming</span>
+  <div class="qtext">In a bottom-up DP solution, you fill in a table starting from:</div>
+  <ol type="A"><li>The final answer and working backward</li><li>The base cases and building up to the final answer</li><li>Random entries in any order</li><li>The middle of the table outward</li></ol>
+  <p class="answer">Answer: B</p>
+  <p class="rationale">Bottom-up DP starts from the smallest subproblems (base cases) and iteratively builds up to the desired answer. This contrasts with top-down (memoized recursion), which starts from the final problem and recurses down to base cases.</p>
+</div>
+
+<div class="qbox">
+  <span class="qnum">Q8</span><span class="qtopic">Dynamic Programming</span>
+  <div class="qtext">You want to find the minimum number of coins to make change for 11 cents using coins of 1, 5, and 6 cents. What is the answer?</div>
+  <ol type="A"><li>2 coins (5 + 6)</li><li>3 coins (5 + 5 + 1)</li><li>6 coins (all 1s + one 5)</li><li>11 coins (all 1s)</li></ol>
+  <p class="answer">Answer: A &mdash; 2 coins (5 + 6)</p>
+  <p class="rationale">A greedy approach (always pick the largest coin) would choose 6 + 5 = 11 in 2 coins, which happens to be optimal here. But greedy doesn't always work for coin change &mdash; DP systematically finds the true minimum by building up from smaller amounts.</p>
+</div>
+
+
+<!-- ─── NOTES FOR ROLF ─── -->
+<h2>Notes for Rolf</h2>
+
+<div class="card warn">
+  <h3 style="margin-top:0">Please Review</h3>
+  <ul>
+    <li>All 48 questions are above. Flag any that don't match your coverage or seem unfair.</li>
+    <li>Both sections take <strong>identical quizzes</strong> &mdash; same questions, same order.</li>
+    <li>Quizzes are administered in class on phones/laptops (~12 minutes each).</li>
+    <li>If you want to add, remove, or modify questions, let's discuss so we stay in sync.</li>
+    <li>The quiz schedule assumes the same topic order as the Spring 2025 syllabus.</li>
+  </ul>
+</div>
+
+<div class="card highlight">
+  <h3 style="margin-top:0">Quiz Administration</h3>
+  <ul>
+    <li>Each quiz is a web app (like the pre-test) &mdash; students open it on their device</li>
+    <li>Students enter their name and section, then answer 8 MCQs</li>
+    <li>Responses are automatically submitted to the shared Google Sheet</li>
+    <li>Scores are shown immediately after submission</li>
+    <li>Both sections should take each quiz in the same week</li>
+  </ul>
+</div>
+
+<p style="margin-top: 40px; text-align: center; color: #94a3b8; font-size: 0.9em;">
+  CS 205 Shared Quiz Plan &mdash; Spring 2026<br>
+  Generated for review by all collaborators. Last updated: February 2026.
+</p>
+
+</body>
+</html>

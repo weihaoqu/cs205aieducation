@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS 205 — Quiz 1: Arrays &amp; Big-O</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:#0f172a;color:#e2e8f0;min-height:100vh;padding:0;
+}
+button{font-family:inherit}
+.app{max-width:720px;margin:0 auto;padding:20px 20px 80px}
+
+/* Top bar */
+.top-bar{
+  position:sticky;top:0;z-index:100;
+  background:#0f172aee;backdrop-filter:blur(8px);
+  padding:12px 0 8px;margin-bottom:24px;display:none;
+}
+.top-bar.visible{display:block}
+.progress-wrap{background:#1e293b;border-radius:8px;height:8px;overflow:hidden;margin-bottom:8px}
+.progress-fill{height:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);border-radius:8px;transition:width .4s ease;width:0}
+.top-meta{display:flex;justify-content:space-between;font-size:.82em;color:#94a3b8}
+.top-meta .timer{color:#60a5fa}
+
+/* Screens */
+.screen{display:none;animation:fadeIn .3s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* Welcome */
+h1{font-size:1.9em;margin-bottom:6px}
+.sub{color:#94a3b8;margin-bottom:28px;line-height:1.6}
+.info-box{
+  background:#1e293b;border:1px solid #334155;border-radius:12px;
+  padding:20px;margin-bottom:20px;line-height:1.7;
+}
+.info-box h3{color:#60a5fa;margin-bottom:8px}
+
+/* Form elements */
+label.field{display:block;margin-bottom:18px}
+label.field .label-text{display:block;font-weight:600;margin-bottom:6px;color:#f1f5f9}
+input[type=text],select{
+  width:100%;padding:12px 14px;border-radius:8px;border:1px solid #334155;
+  background:#1e293b;color:#e2e8f0;font-size:1em;transition:border-color .2s;
+}
+input[type=text]:focus,select:focus{outline:none;border-color:#3b82f6}
+
+/* Buttons */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:12px 28px;border-radius:8px;border:none;
+  font-size:1em;font-weight:600;cursor:pointer;transition:all .2s;
+}
+.btn-primary{background:#3b82f6;color:#fff}
+.btn-primary:hover{background:#2563eb;transform:translateY(-1px)}
+.btn-primary:disabled{background:#334155;color:#64748b;cursor:not-allowed;transform:none}
+.btn-secondary{background:#1e293b;color:#94a3b8;border:1px solid #334155}
+.btn-secondary:hover{border-color:#3b82f6;color:#e2e8f0}
+.btn-row{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+
+/* Section header */
+.section-header{margin-bottom:24px}
+.section-header h2{font-size:1.5em;margin-bottom:4px}
+.section-header p{color:#94a3b8;line-height:1.6}
+.section-tag{
+  display:inline-block;padding:3px 10px;border-radius:12px;
+  font-size:.75em;font-weight:600;margin-bottom:10px;
+}
+.tag-purple{background:#3b1f6e;color:#a78bfa}
+.tag-green{background:#064e3b;color:#34d399}
+
+/* MCQ card */
+.mcq-card{
+  background:#1e293b;border:1px solid #334155;border-radius:12px;
+  padding:24px;margin-bottom:16px;
+}
+.mcq-card .q-num{color:#64748b;font-size:.85em;margin-bottom:8px}
+.mcq-card .q-text{font-size:1.05em;line-height:1.6;margin-bottom:4px}
+.mcq-card pre{
+  background:#0f172a;border:1px solid #334155;border-radius:8px;
+  padding:14px;margin:12px 0;font-size:.9em;overflow-x:auto;
+  color:#e2e8f0;line-height:1.5;
+}
+.option-list{list-style:none;padding:0}
+.option-list li{
+  background:#0f172a;border:1px solid #334155;border-radius:8px;
+  padding:12px 16px;margin-bottom:8px;cursor:pointer;
+  transition:all .15s;display:flex;align-items:flex-start;gap:10px;line-height:1.5;
+}
+.option-list li:hover{border-color:#3b82f6;background:#172033}
+.option-list li.selected{border-color:#3b82f6;background:#1e3a5f}
+.option-list li .letter{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;
+  background:#334155;display:flex;align-items:center;justify-content:center;
+  font-size:.82em;font-weight:700;color:#94a3b8;margin-top:1px;
+}
+.option-list li.selected .letter{background:#3b82f6;color:#fff}
+
+/* Results */
+.score-box{
+  background:linear-gradient(135deg,#1e3a5f,#3b1f6e);
+  border-radius:16px;padding:32px;text-align:center;margin-bottom:28px;
+}
+.score-box .score-num{font-size:3em;font-weight:800}
+.score-box .score-label{color:#94a3b8;margin-top:4px}
+.confirm-banner{
+  background:#064e3b;border:1px solid #34d399;border-radius:12px;
+  padding:20px;text-align:center;margin-bottom:24px;
+}
+.confirm-banner .check{font-size:2em;margin-bottom:6px}
+.confirm-banner p{color:#a7f3d0}
+.result-card{
+  background:#1e293b;border:1px solid #334155;border-radius:12px;
+  padding:18px;margin-bottom:10px;
+}
+.result-card.correct{border-left:4px solid #34d399}
+.result-card.incorrect{border-left:4px solid #f87171}
+.result-card .rc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.result-card .rc-q{font-weight:600}
+.result-card .rc-badge{padding:2px 10px;border-radius:12px;font-size:.78em;font-weight:600}
+.result-card.correct .rc-badge{background:#064e3b;color:#34d399}
+.result-card.incorrect .rc-badge{background:#7f1d1d;color:#f87171}
+.result-card .rc-answer{color:#94a3b8;margin-top:4px;font-size:.92em;line-height:1.6}
+.result-card .rc-explain{color:#cbd5e1;margin-top:8px;font-size:.88em;line-height:1.6;border-top:1px solid #334155;padding-top:8px}
+
+/* Validation */
+.validation-msg{
+  background:#7f1d1d;border:1px solid #f87171;border-radius:8px;
+  padding:12px 16px;margin-bottom:16px;color:#fca5a5;display:none;
+}
+.validation-msg.show{display:block;animation:fadeIn .3s ease}
+
+@media(max-width:600px){
+  .app{padding:14px 14px 80px}
+  h1{font-size:1.5em}
+  .mcq-card{padding:16px}
+  .score-box .score-num{font-size:2.2em}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- Top bar -->
+<div class="top-bar" id="topBar">
+  <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="top-meta">
+    <span id="progressText">Question 1 of 8</span>
+    <span class="timer" id="timer">00:00</span>
+  </div>
+</div>
+
+<!-- SCREEN: Welcome -->
+<div class="screen active" id="scrWelcome">
+  <h1>CS 205 — Quiz 1</h1>
+  <p class="sub">Arrays &amp; Algorithm Analysis (Big-O)</p>
+
+  <div class="info-box">
+    <h3>Quiz Details</h3>
+    <ul style="padding-left:20px;color:#cbd5e1">
+      <li>8 multiple-choice questions</li>
+      <li>~12 minutes</li>
+      <li>This quiz is <strong>graded</strong></li>
+      <li>One attempt only — choose your answers carefully</li>
+    </ul>
+  </div>
+
+  <label class="field">
+    <span class="label-text">Your Name</span>
+    <input type="text" id="studentName" placeholder="First and Last name">
+  </label>
+  <label class="field">
+    <span class="label-text">Your Section</span>
+    <select id="studentSection">
+      <option value="">— Select —</option>
+      <option value="treatment">Section A (Prof. Oreo's section)</option>
+      <option value="control">Section B (Prof. Rolf's section)</option>
+    </select>
+  </label>
+
+  <div class="validation-msg" id="welcomeError"></div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="startQuiz()">Start Quiz &rarr;</button>
+  </div>
+</div>
+
+<!-- SCREEN: Quiz -->
+<div class="screen" id="scrQuiz">
+  <div id="quizContainer"></div>
+  <div class="validation-msg" id="quizError"></div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="prevQ()">&larr; Previous</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQ()">Next &rarr;</button>
+  </div>
+</div>
+
+<!-- SCREEN: Results -->
+<div class="screen" id="scrResults">
+  <div class="confirm-banner" id="confirmBanner">
+    <div class="check">&#10003;</div>
+    <p><strong>Quiz submitted!</strong> Your responses have been recorded.</p>
+  </div>
+  <div class="score-box">
+    <div class="score-num" id="scoreNum">0/8</div>
+    <div class="score-label">Quiz 1 Score</div>
+  </div>
+  <div class="section-header">
+    <h2>Review</h2>
+    <p>Correct answers and explanations.</p>
+  </div>
+  <div id="resultsContainer"></div>
+  <div class="btn-row" style="margin-top:32px;justify-content:center">
+    <a class="btn btn-secondary" href="index.html">&larr; Back to Home</a>
+  </div>
+</div>
+
+</div>
+
+<script>
+const QUIZ_ID = "quiz1";
+const QUIZ_TITLE = "Quiz 1: Arrays & Big-O";
+
+const QUESTIONS = [
+  // ── ARRAYS (5 questions — blended with Rolf's) ────────
+  {
+    id:1, topic:"Arrays (Java)",
+    text:"Which of the following is the correct way to declare and allocate an array of 10 integers in Java?",
+    options:[
+      "int arr = new int(10);",
+      "int[] arr = new int[10];",
+      "int arr[] = int[10];",
+      "array int[10] = new array;"
+    ],
+    answer:1,
+    explain:"In Java, arrays are declared with square brackets on the type (int[]) and allocated with new and the size in brackets (new int[10]). Option A uses parentheses instead of brackets. Option C is missing 'new'. Option D is not valid Java syntax."
+  },
+  {
+    id:2, topic:"Arrays",
+    text:"What is the time complexity of accessing element arr[i] in a standard array of length n?",
+    options:["O(n)","O(log n)","O(1)","O(n\u00B2)"],
+    answer:2,
+    explain:"Arrays store elements contiguously in memory. The address of arr[i] is computed as base_address + i \u00D7 element_size \u2014 a single arithmetic operation, so access is O(1) regardless of array size."
+  },
+  {
+    id:3, topic:"Arrays (Java)",
+    text:"How many Foo objects are created by the following code?\n\nFoo[] fooArray = new Foo[10];",
+    options:["10","0","1","It cannot be determined"],
+    answer:1,
+    explain:"new Foo[10] allocates an array of 10 references, all initialized to null. No Foo objects are created \u2014 just the array itself. You would need to call new Foo() for each slot to actually create Foo objects. This is a key distinction between allocating the array and allocating the objects it holds."
+  },
+  {
+    id:4, topic:"Arrays",
+    text:"An ArrayList has 8 elements and its internal array has capacity 8. What happens when you add a 9th element?",
+    options:[
+      "An IndexOutOfBoundsException is thrown",
+      "The element is added to a separate overflow area",
+      "A new array of larger capacity is created, all elements are copied, then the new element is added",
+      "The array automatically grows by exactly one slot"
+    ],
+    answer:2,
+    explain:"Dynamic arrays (ArrayList) allocate a new, larger array (typically double the capacity) when full. All existing elements are copied over \u2014 an O(n) operation, but amortized O(1) over many insertions. Growing by exactly one slot would make every insertion O(n)."
+  },
+  {
+    id:5, topic:"Arrays",
+    text:"What is the time complexity of inserting an element at index 0 of an array of n elements?",
+    options:["O(1)","O(log n)","O(n)","O(n\u00B2)"],
+    answer:2,
+    explain:"Inserting at index 0 requires shifting all n existing elements one position to the right to make room. That\u2019s n moves, so O(n). This is why arrays are poor for frequent front insertions \u2014 linked lists handle this in O(1)."
+  },
+  // ── BIG-O (3 questions) ───────────────────────────────
+  {
+    id:6, topic:"Big-O",
+    text:"What is the time complexity of the following code?",
+    code:"for (int i = 0; i < n; i++) {\n    for (int j = 0; j < n; j++) {\n        System.out.println(i + j);\n    }\n}",
+    options:["O(n)","O(n log n)","O(n\u00B2)","O(2n)"],
+    answer:2,
+    explain:"The outer loop runs n times. For each iteration, the inner loop also runs n times. Total iterations: n \u00D7 n = n\u00B2. The print statement is O(1) per iteration, so the overall complexity is O(n\u00B2)."
+  },
+  {
+    id:7, topic:"Big-O",
+    text:"An algorithm takes 5 seconds when n = 1,000 and 20 seconds when n = 2,000. What is its likely time complexity?",
+    options:["O(n)","O(n log n)","O(n\u00B2)","O(n\u00B3)"],
+    answer:2,
+    explain:"When n doubles (1000 \u2192 2000), the time quadruples (5s \u2192 20s). That\u2019s the signature of O(n\u00B2): doubling input \u2192 4\u00D7 time. For O(n), time would double (5 \u2192 10). For O(n\u00B3), time would 8\u00D7 (5 \u2192 40)."
+  },
+  {
+    id:8, topic:"Big-O",
+    text:"What is the space complexity of this method (not counting the input)?",
+    code:"int[] doubleArray(int[] arr) {\n    int[] result = new int[arr.length];\n    for (int i = 0; i < arr.length; i++) {\n        result[i] = arr[i] * 2;\n    }\n    return result;\n}",
+    options:["O(1)","O(log n)","O(n)","O(n\u00B2)"],
+    answer:2,
+    explain:"The method allocates a new array (result) of size n, where n = arr.length. The loop variable i is O(1) extra space. Total additional space: O(n). This is an important distinction from time complexity \u2014 the loop is also O(n) in time, but for a different reason."
+  }
+];
+
+// ── STATE ───────────────────────────────────────────────
+let currentQ = 0;
+let answers = new Array(QUESTIONS.length).fill(-1);
+let timerInterval = null;
+let elapsed = 0;
+let studentName = "";
+let studentSection = "";
+
+const SHEETS_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
+
+// ── INIT ────────────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", buildQuiz);
+
+function buildQuiz() {
+  const c = document.getElementById("quizContainer");
+  QUESTIONS.forEach((q, i) => {
+    const div = document.createElement("div");
+    div.className = "mcq-card";
+    div.id = "mcq" + i;
+    div.style.display = "none";
+    let html = `<div class="q-num">Question ${i+1} of ${QUESTIONS.length} \u2014 ${q.topic}</div>`;
+    html += `<div class="q-text">${q.text}</div>`;
+    if (q.code) html += `<pre>${esc(q.code)}</pre>`;
+    html += `<ul class="option-list">`;
+    q.options.forEach((opt, oi) => {
+      const letter = "ABCD"[oi];
+      html += `<li onclick="pick(${i},${oi})" id="opt${i}_${oi}">
+        <span class="letter">${letter}</span><span>${esc(opt)}</span></li>`;
+    });
+    html += `</ul>`;
+    div.innerHTML = html;
+    c.appendChild(div);
+  });
+}
+
+// ── NAVIGATION ──────────────────────────────────────────
+function goScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function updateBar() {
+  const bar = document.getElementById("topBar");
+  const fill = document.getElementById("progressFill");
+  const txt = document.getElementById("progressText");
+  bar.classList.add("visible");
+  const pct = ((currentQ + 1) / QUESTIONS.length) * 100;
+  fill.style.width = pct + "%";
+  txt.textContent = `Question ${currentQ+1} of ${QUESTIONS.length}`;
+}
+
+// ── TIMER ───────────────────────────────────────────────
+function startTimer() {
+  const el = document.getElementById("timer");
+  timerInterval = setInterval(() => {
+    elapsed++;
+    const m = String(Math.floor(elapsed/60)).padStart(2,"0");
+    const s = String(elapsed%60).padStart(2,"0");
+    el.textContent = m + ":" + s;
+  }, 1000);
+}
+
+// ── START ───────────────────────────────────────────────
+function startQuiz() {
+  studentName = document.getElementById("studentName").value.trim();
+  studentSection = document.getElementById("studentSection").value;
+  const err = document.getElementById("welcomeError");
+  if (!studentName) { showErr(err, "Please enter your name."); return; }
+  if (!studentSection) { showErr(err, "Please select your section."); return; }
+  hideErr(err);
+  startTimer();
+  goScreen("scrQuiz");
+  showQ(0);
+}
+
+// ── QUIZ INTERACTION ────────────────────────────────────
+function showQ(n) {
+  currentQ = n;
+  document.querySelectorAll(".mcq-card").forEach(c => c.style.display = "none");
+  document.getElementById("mcq" + n).style.display = "block";
+  document.getElementById("nextBtn").textContent = n === QUESTIONS.length - 1 ? "Submit Quiz \u2192" : "Next \u2192";
+  updateBar();
+}
+
+function pick(qi, oi) {
+  answers[qi] = oi;
+  const card = document.getElementById("mcq" + qi);
+  card.querySelectorAll(".option-list li").forEach((li, idx) => {
+    li.classList.toggle("selected", idx === oi);
+  });
+  hideErr(document.getElementById("quizError"));
+}
+
+function nextQ() {
+  const err = document.getElementById("quizError");
+  if (answers[currentQ] === -1) { showErr(err, "Please select an answer."); return; }
+  hideErr(err);
+  if (currentQ < QUESTIONS.length - 1) showQ(currentQ + 1);
+  else submitQuiz();
+}
+
+function prevQ() {
+  if (currentQ > 0) showQ(currentQ - 1);
+}
+
+// ── SUBMIT ──────────────────────────────────────────────
+function submitQuiz() {
+  clearInterval(timerInterval);
+  let score = 0;
+  QUESTIONS.forEach((q, i) => { if (answers[i] === q.answer) score++; });
+
+  const payload = {
+    quiz: QUIZ_ID,
+    timestamp: new Date().toISOString(),
+    name: studentName,
+    section: studentSection,
+    duration: elapsed,
+    score: score,
+    total: QUESTIONS.length,
+  };
+  QUESTIONS.forEach((q, i) => {
+    payload["Q" + (i+1)] = "ABCD"[answers[i]];
+  });
+
+  if (SHEETS_URL !== "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL") {
+    fetch(SHEETS_URL, {
+      method: "POST", mode: "no-cors",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(payload)
+    }).catch(e => console.error("Submit error:", e));
+  } else {
+    console.log("Sheets URL not configured. Payload:", payload);
+  }
+
+  showResults(score);
+}
+
+// ── RESULTS ─────────────────────────────────────────────
+function showResults(score) {
+  document.getElementById("scoreNum").textContent = score + "/" + QUESTIONS.length;
+  const c = document.getElementById("resultsContainer");
+  c.innerHTML = "";
+  QUESTIONS.forEach((q, i) => {
+    const correct = answers[i] === q.answer;
+    const div = document.createElement("div");
+    div.className = "result-card " + (correct ? "correct" : "incorrect");
+    const yours = answers[i] >= 0 ? "ABCD"[answers[i]] : "?";
+    const right = "ABCD"[q.answer];
+    div.innerHTML = `
+      <div class="rc-header">
+        <span class="rc-q">Q${i+1}: ${q.topic}</span>
+        <span class="rc-badge">${correct ? "\u2713 Correct" : "\u2717 Incorrect"}</span>
+      </div>
+      <div class="rc-answer">
+        Your answer: <strong>${yours}</strong>${correct ? "" : " \u2014 Correct: <strong>" + right + ". " + esc(q.options[q.answer]) + "</strong>"}
+      </div>
+      <div class="rc-explain">${q.explain}</div>`;
+    c.appendChild(div);
+  });
+  document.getElementById("topBar").classList.remove("visible");
+  goScreen("scrResults");
+}
+
+// ── HELPERS ─────────────────────────────────────────────
+function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+function showErr(el, msg) { el.textContent = msg; el.classList.add("show"); }
+function hideErr(el) { el.classList.remove("show"); }
+</script>
+</body>
+</html>
