@@ -164,15 +164,23 @@ input[type=text]:focus,select:focus{outline:none;border-color:#3b82f6}
     <ul style="padding-left:20px;color:#cbd5e1">
       <li>8 multiple-choice questions</li>
       <li>~12 minutes</li>
-      <li>This quiz is <strong>graded</strong></li>
       <li>One attempt only — choose your answers carefully</li>
     </ul>
   </div>
 
-  <label class="field">
-    <span class="label-text">Your Name</span>
-    <input type="text" id="studentName" placeholder="First and Last name">
-  </label>
+  <div class="info-box">
+    <h3>Your Anonymous ID</h3>
+    <p style="color:#94a3b8;margin-bottom:12px">Same ID as the pre-test — lets us track progress without using your name.</p>
+    <label class="field">
+      <span class="label-text">Last 4 digits of your phone number</span>
+      <input type="text" id="idPhone" maxlength="4" pattern="[0-9]{4}" placeholder="e.g. 5103" inputmode="numeric">
+    </label>
+    <label class="field">
+      <span class="label-text">Birth month (2 digits)</span>
+      <input type="text" id="idMonth" maxlength="2" pattern="[0-9]{1,2}" placeholder="e.g. 03 for March" inputmode="numeric">
+    </label>
+  </div>
+
   <label class="field">
     <span class="label-text">Your Section</span>
     <select id="studentSection">
@@ -305,7 +313,7 @@ let currentQ = 0;
 let answers = new Array(QUESTIONS.length).fill(-1);
 let timerInterval = null;
 let elapsed = 0;
-let studentName = "";
+let anonId = "";
 let studentSection = "";
 
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbyRMqYXRah6RLPnxXKVoYU9grXOzFa6JkLpT6ce4i8Fkkr5H8nEKx6zeiYO5rRIZevh/exec";
@@ -365,11 +373,14 @@ function startTimer() {
 
 // ── START ───────────────────────────────────────────────
 function startQuiz() {
-  studentName = document.getElementById("studentName").value.trim();
+  const phone = document.getElementById("idPhone").value.trim();
+  const month = document.getElementById("idMonth").value.trim();
   studentSection = document.getElementById("studentSection").value;
   const err = document.getElementById("welcomeError");
-  if (!studentName) { showErr(err, "Please enter your name."); return; }
+  if (phone.length !== 4 || !/^\d{4}$/.test(phone)) { showErr(err, "Please enter exactly 4 digits for your phone number."); return; }
+  if (!month || !/^\d{1,2}$/.test(month) || +month < 1 || +month > 12) { showErr(err, "Please enter a valid birth month (01\u201312)."); return; }
   if (!studentSection) { showErr(err, "Please select your section."); return; }
+  anonId = phone + month.padStart(2, "0");
   hideErr(err);
   startTimer();
   goScreen("scrQuiz");
@@ -415,7 +426,7 @@ function submitQuiz() {
   const payload = {
     quiz: QUIZ_ID,
     timestamp: new Date().toISOString(),
-    name: studentName,
+    anonId: anonId,
     section: studentSection,
     duration: elapsed,
     score: score,

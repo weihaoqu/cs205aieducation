@@ -84,12 +84,12 @@ function handleQuiz(ss, data) {
   }
 
   var cols = [
-    "Quiz","Timestamp","Name","Section","Duration","Score","Total",
+    "Quiz","Timestamp","AnonID","Section","Duration","Score","Total",
     "Q1","Q2","Q3","Q4","Q5","Q6","Q7","Q8"
   ];
 
   var keyMap = {
-    "Quiz": "quiz", "Timestamp": "timestamp", "Name": "name",
+    "Quiz": "quiz", "Timestamp": "timestamp", "AnonID": "anonId",
     "Section": "section", "Duration": "duration", "Score": "score", "Total": "total"
   };
 
@@ -171,7 +171,7 @@ The URL is already configured in all quiz files (`quiz1.html` through `quiz6.htm
 |---------|------|
 | Quiz | Quiz ID (`quiz1` through `quiz6`) |
 | Timestamp | Client-side ISO timestamp |
-| Name | Student's full name |
+| AnonID | 6-char anonymous ID (4 phone digits + 2-digit birth month) |
 | Section | `treatment` (Weihao) or `control` (Rolf) |
 | Duration | Seconds spent on the quiz |
 | Score | Number correct (0–8) |
