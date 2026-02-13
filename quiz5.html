@@ -127,6 +127,20 @@ input[type=text]:focus,select:focus{outline:none;border-color:#3b82f6}
 .result-card .rc-answer{color:#94a3b8;margin-top:4px;font-size:.92em;line-height:1.6}
 .result-card .rc-explain{color:#cbd5e1;margin-top:8px;font-size:.88em;line-height:1.6;border-top:1px solid #334155;padding-top:8px}
 
+/* Inline feedback after checking */
+.inline-feedback{
+  margin-top:16px;padding:16px;border-radius:10px;
+  background:#0f172a;border:1px solid #334155;animation:fadeIn .3s ease;
+}
+.fb-badge{font-weight:700;font-size:1.05em;margin-bottom:8px}
+.fb-correct{color:#34d399}
+.fb-incorrect{color:#f87171}
+.fb-explain{color:#cbd5e1;font-size:.9em;line-height:1.7}
+.option-list li.reveal-correct{border-color:#34d399!important;background:#064e3b!important}
+.option-list li.reveal-correct .letter{background:#34d399;color:#064e3b}
+.option-list li.reveal-wrong{border-color:#f87171!important;background:#7f1d1d!important}
+.option-list li.reveal-wrong .letter{background:#f87171;color:#7f1d1d}
+
 /* Validation */
 .validation-msg{
   background:#7f1d1d;border:1px solid #f87171;border-radius:8px;
@@ -316,6 +330,7 @@ const QUESTIONS = [
 // ── STATE ───────────────────────────────────────────────
 let currentQ = 0;
 let answers = new Array(QUESTIONS.length).fill(-1);
+let checked = new Array(QUESTIONS.length).fill(false);
 let timerInterval = null;
 let elapsed = 0;
 let anonId = "";
@@ -343,6 +358,10 @@ function buildQuiz() {
         <span class="letter">${letter}</span><span>${esc(opt)}</span></li>`;
     });
     html += `</ul>`;
+    html += `<div class="inline-feedback" id="feedback${i}" style="display:none">
+      <div class="fb-badge" id="fbBadge${i}"></div>
+      <div class="fb-explain">${q.explain}</div>
+    </div>`;
     div.innerHTML = html;
     c.appendChild(div);
   });
@@ -397,11 +416,17 @@ function showQ(n) {
   currentQ = n;
   document.querySelectorAll(".mcq-card").forEach(c => c.style.display = "none");
   document.getElementById("mcq" + n).style.display = "block";
-  document.getElementById("nextBtn").textContent = n === QUESTIONS.length - 1 ? "Submit Quiz \u2192" : "Next \u2192";
+  const btn = document.getElementById("nextBtn");
+  if (checked[n]) {
+    btn.textContent = n === QUESTIONS.length - 1 ? "Finish Quiz \u2192" : "Next \u2192";
+  } else {
+    btn.textContent = "Check Answer";
+  }
   updateBar();
 }
 
 function pick(qi, oi) {
+  if (checked[qi]) return;
   answers[qi] = oi;
   const card = document.getElementById("mcq" + qi);
   card.querySelectorAll(".option-list li").forEach((li, idx) => {
@@ -414,8 +439,27 @@ function nextQ() {
   const err = document.getElementById("quizError");
   if (answers[currentQ] === -1) { showErr(err, "Please select an answer."); return; }
   hideErr(err);
+  if (!checked[currentQ]) { checkAnswer(currentQ); return; }
   if (currentQ < QUESTIONS.length - 1) showQ(currentQ + 1);
   else submitQuiz();
+}
+
+function checkAnswer(qi) {
+  checked[qi] = true;
+  const q = QUESTIONS[qi];
+  const card = document.getElementById("mcq" + qi);
+  card.querySelectorAll(".option-list li").forEach((li, idx) => {
+    li.style.cursor = "default";
+    if (idx === q.answer) li.classList.add("reveal-correct");
+    else if (idx === answers[qi]) li.classList.add("reveal-wrong");
+  });
+  const isCorrect = answers[qi] === q.answer;
+  const badge = document.getElementById("fbBadge" + qi);
+  badge.textContent = isCorrect ? "\u2713 Correct!" : "\u2717 Incorrect \u2014 answer is " + "ABCD"[q.answer];
+  badge.className = "fb-badge " + (isCorrect ? "fb-correct" : "fb-incorrect");
+  document.getElementById("feedback" + qi).style.display = "block";
+  const btn = document.getElementById("nextBtn");
+  btn.textContent = qi === QUESTIONS.length - 1 ? "Finish Quiz \u2192" : "Next \u2192";
 }
 
 function prevQ() {
