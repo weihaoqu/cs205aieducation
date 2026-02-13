@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS 205 — Quiz 5: Heaps &amp; Hash Tables</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:#0f172a;color:#e2e8f0;min-height:100vh;padding:0;
+}
+button{font-family:inherit}
+.app{max-width:720px;margin:0 auto;padding:20px 20px 80px}
+
+/* Top bar */
+.top-bar{
+  position:sticky;top:0;z-index:100;
+  background:#0f172aee;backdrop-filter:blur(8px);
+  padding:12px 0 8px;margin-bottom:24px;display:none;
+}
+.top-bar.visible{display:block}
+.progress-wrap{background:#1e293b;border-radius:8px;height:8px;overflow:hidden;margin-bottom:8px}
+.progress-fill{height:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);border-radius:8px;transition:width .4s ease;width:0}
+.top-meta{display:flex;justify-content:space-between;font-size:.82em;color:#94a3b8}
+.top-meta .timer{color:#60a5fa}
+
+/* Screens */
+.screen{display:none;animation:fadeIn .3s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* Welcome */
+h1{font-size:1.9em;margin-bottom:6px}
+.sub{color:#94a3b8;margin-bottom:28px;line-height:1.6}
+.info-box{
+  background:#1e293b;border:1px solid #334155;border-radius:12px;
+  padding:20px;margin-bottom:20px;line-height:1.7;
+}
+.info-box h3{color:#60a5fa;margin-bottom:8px}
+
+/* Form elements */
+label.field{display:block;margin-bottom:18px}
+label.field .label-text{display:block;font-weight:600;margin-bottom:6px;color:#f1f5f9}
+input[type=text],select{
+  width:100%;padding:12px 14px;border-radius:8px;border:1px solid #334155;
+  background:#1e293b;color:#e2e8f0;font-size:1em;transition:border-color .2s;
+}
+input[type=text]:focus,select:focus{outline:none;border-color:#3b82f6}
+
+/* Buttons */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:12px 28px;border-radius:8px;border:none;
+  font-size:1em;font-weight:600;cursor:pointer;transition:all .2s;
+}
+.btn-primary{background:#3b82f6;color:#fff}
+.btn-primary:hover{background:#2563eb;transform:translateY(-1px)}
+.btn-primary:disabled{background:#334155;color:#64748b;cursor:not-allowed;transform:none}
+.btn-secondary{background:#1e293b;color:#94a3b8;border:1px solid #334155}
+.btn-secondary:hover{border-color:#3b82f6;color:#e2e8f0}
+.btn-row{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+
+/* Section header */
+.section-header{margin-bottom:24px}
+.section-header h2{font-size:1.5em;margin-bottom:4px}
+.section-header p{color:#94a3b8;line-height:1.6}
+.section-tag{
+  display:inline-block;padding:3px 10px;border-radius:12px;
+  font-size:.75em;font-weight:600;margin-bottom:10px;
+}
+.tag-purple{background:#3b1f6e;color:#a78bfa}
+.tag-green{background:#064e3b;color:#34d399}
+
+/* MCQ card */
+.mcq-card{
+  background:#1e293b;border:1px solid #334155;border-radius:12px;
+  padding:24px;margin-bottom:16px;
+}
+.mcq-card .q-num{color:#64748b;font-size:.85em;margin-bottom:8px}
+.mcq-card .q-text{font-size:1.05em;line-height:1.6;margin-bottom:4px}
+.mcq-card pre{
+  background:#0f172a;border:1px solid #334155;border-radius:8px;
+  padding:14px;margin:12px 0;font-size:.9em;overflow-x:auto;
+  color:#e2e8f0;line-height:1.5;
+}
+.option-list{list-style:none;padding:0}
+.option-list li{
+  background:#0f172a;border:1px solid #334155;border-radius:8px;
+  padding:12px 16px;margin-bottom:8px;cursor:pointer;
+  transition:all .15s;display:flex;align-items:flex-start;gap:10px;line-height:1.5;
+}
+.option-list li:hover{border-color:#3b82f6;background:#172033}
+.option-list li.selected{border-color:#3b82f6;background:#1e3a5f}
+.option-list li .letter{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;
+  background:#334155;display:flex;align-items:center;justify-content:center;
+  font-size:.82em;font-weight:700;color:#94a3b8;margin-top:1px;
+}
+.option-list li.selected .letter{background:#3b82f6;color:#fff}
+
+/* Results */
+.score-box{
+  background:linear-gradient(135deg,#1e3a5f,#3b1f6e);
+  border-radius:16px;padding:32px;text-align:center;margin-bottom:28px;
+}
+.score-box .score-num{font-size:3em;font-weight:800}
+.score-box .score-label{color:#94a3b8;margin-top:4px}
+.confirm-banner{
+  background:#064e3b;border:1px solid #34d399;border-radius:12px;
+  padding:20px;text-align:center;margin-bottom:24px;
+}
+.confirm-banner .check{font-size:2em;margin-bottom:6px}
+.confirm-banner p{color:#a7f3d0}
+.result-card{
+  background:#1e293b;border:1px solid #334155;border-radius:12px;
+  padding:18px;margin-bottom:10px;
+}
+.result-card.correct{border-left:4px solid #34d399}
+.result-card.incorrect{border-left:4px solid #f87171}
+.result-card .rc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.result-card .rc-q{font-weight:600}
+.result-card .rc-badge{padding:2px 10px;border-radius:12px;font-size:.78em;font-weight:600}
+.result-card.correct .rc-badge{background:#064e3b;color:#34d399}
+.result-card.incorrect .rc-badge{background:#7f1d1d;color:#f87171}
+.result-card .rc-answer{color:#94a3b8;margin-top:4px;font-size:.92em;line-height:1.6}
+.result-card .rc-explain{color:#cbd5e1;margin-top:8px;font-size:.88em;line-height:1.6;border-top:1px solid #334155;padding-top:8px}
+
+/* Validation */
+.validation-msg{
+  background:#7f1d1d;border:1px solid #f87171;border-radius:8px;
+  padding:12px 16px;margin-bottom:16px;color:#fca5a5;display:none;
+}
+.validation-msg.show{display:block;animation:fadeIn .3s ease}
+
+@media(max-width:600px){
+  .app{padding:14px 14px 80px}
+  h1{font-size:1.5em}
+  .mcq-card{padding:16px}
+  .score-box .score-num{font-size:2.2em}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- Top bar -->
+<div class="top-bar" id="topBar">
+  <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="top-meta">
+    <span id="progressText">Question 1 of 8</span>
+    <span class="timer" id="timer">00:00</span>
+  </div>
+</div>
+
+<!-- SCREEN: Welcome -->
+<div class="screen active" id="scrWelcome">
+  <h1>CS 205 — Quiz 5</h1>
+  <p class="sub">Heaps &amp; Hash Tables</p>
+
+  <div class="info-box">
+    <h3>Quiz Details</h3>
+    <ul style="padding-left:20px;color:#cbd5e1">
+      <li>8 multiple-choice questions</li>
+      <li>~12 minutes</li>
+      <li>This quiz is <strong>graded</strong></li>
+      <li>One attempt only — choose your answers carefully</li>
+    </ul>
+  </div>
+
+  <label class="field">
+    <span class="label-text">Your Name</span>
+    <input type="text" id="studentName" placeholder="First and Last name">
+  </label>
+  <label class="field">
+    <span class="label-text">Your Section</span>
+    <select id="studentSection">
+      <option value="">— Select —</option>
+      <option value="treatment">Section A (Prof. Weihao's section)</option>
+      <option value="control">Section B (Prof. Rolf's section)</option>
+    </select>
+  </label>
+
+  <div class="validation-msg" id="welcomeError"></div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="startQuiz()">Start Quiz &rarr;</button>
+  </div>
+</div>
+
+<!-- SCREEN: Quiz -->
+<div class="screen" id="scrQuiz">
+  <div id="quizContainer"></div>
+  <div class="validation-msg" id="quizError"></div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="prevQ()">&larr; Previous</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQ()">Next &rarr;</button>
+  </div>
+</div>
+
+<!-- SCREEN: Results -->
+<div class="screen" id="scrResults">
+  <div class="confirm-banner" id="confirmBanner">
+    <div class="check">&#10003;</div>
+    <p><strong>Quiz submitted!</strong> Your responses have been recorded.</p>
+  </div>
+  <div class="score-box">
+    <div class="score-num" id="scoreNum">0/8</div>
+    <div class="score-label">Quiz 5 Score</div>
+  </div>
+  <div class="section-header">
+    <h2>Review</h2>
+    <p>Correct answers and explanations.</p>
+  </div>
+  <div id="resultsContainer"></div>
+  <div class="btn-row" style="margin-top:32px;justify-content:center">
+    <a class="btn btn-secondary" href="index.html">&larr; Back to Home</a>
+  </div>
+</div>
+
+</div>
+
+<script>
+const QUIZ_ID = "quiz5";
+const QUIZ_TITLE = "Quiz 5: Heaps & Hash Tables";
+
+const QUESTIONS = [
+  // ── HEAPS (4 questions) ───────────────────────────────
+  {
+    id:1, topic:"Heaps",
+    text:"Which of the following arrays represents a valid min-heap?",
+    options:[
+      "[1, 3, 5, 7, 9, 8, 6]",
+      "[1, 5, 3, 7, 8, 9, 6]",
+      "[3, 1, 5, 7, 9, 8, 6]",
+      "[1, 3, 5, 4, 7, 8, 6]"
+    ],
+    answer:0,
+    explain:"In a min-heap, every parent must be \u2264 its children. For index i: left child = 2i+1, right child = 2i+2. Option A: 1\u22643, 1\u22645, 3\u22647, 3\u22649, 5\u22648, 5\u22646 \u2014 all valid. Option C fails because 3 > 1 (root is not minimum)."
+  },
+  {
+    id:2, topic:"Heaps",
+    text:"After removing the minimum element from a min-heap, what operation restores the heap property?",
+    options:[
+      "Bubble up from the root",
+      "Bubble down (sift down) from the root",
+      "Sort the entire array",
+      "Rebuild the heap from scratch"
+    ],
+    answer:1,
+    explain:"After removal, the last element is moved to the root, then \u201Cbubbled down\u201D by swapping with its smaller child until the heap property is restored. This takes O(log n). Rebuilding from scratch would be O(n) \u2014 unnecessary."
+  },
+  {
+    id:3, topic:"Heaps",
+    text:"What is the time complexity of building a heap from an unsorted array of n elements using the bottom-up (heapify) approach?",
+    options:["O(n log n)","O(n\u00B2)","O(n)","O(log n)"],
+    answer:2,
+    explain:"The bottom-up heapify approach starts from the last non-leaf and sifts down each node. Although it seems like it should be O(n log n), the mathematical analysis shows most nodes are near the bottom and require few swaps. The total work sums to O(n)."
+  },
+  {
+    id:4, topic:"Heaps",
+    text:"In an array-based heap with n elements, what is the index of the parent of the element at index i (assuming 0-based indexing)?",
+    options:["i / 2","(i - 1) / 2","2 * i + 1","i - 1"],
+    answer:1,
+    explain:"For 0-based indexing: parent = (i\u22121)/2 (integer division), left child = 2i+1, right child = 2i+2. For 1-based indexing, parent = i/2. This is a fundamental heap formula."
+  },
+  // ── HASH TABLES (4 questions) ─────────────────────────
+  {
+    id:5, topic:"Hash Tables",
+    text:"A hash table with 7 slots uses h(k) = k % 7. Keys 10, 17, and 24 are inserted. With chaining, which slot contains all three keys?",
+    options:["Slot 0","Slot 1","Slot 3","Slot 5"],
+    answer:2,
+    explain:"10 % 7 = 3, 17 % 7 = 3, 24 % 7 = 3. All three hash to slot 3. With chaining, they form a linked list at that slot."
+  },
+  {
+    id:6, topic:"Hash Tables",
+    text:"What happens to hash table performance as the load factor (n/capacity) increases?",
+    options:[
+      "Performance improves because more slots are utilized",
+      "Performance degrades because collisions become more frequent",
+      "Performance is unaffected by load factor",
+      "The hash table automatically prevents high load factors"
+    ],
+    answer:1,
+    explain:"Higher load factor = more elements per slot on average = more collisions = longer chains (or more probing). This is why hash tables resize when load factor exceeds a threshold (typically 0.75 in Java)."
+  },
+  {
+    id:7, topic:"Hash Tables",
+    text:"In Java, what is the worst-case time complexity of HashMap.get(key)?",
+    options:["O(1)","O(log n)","O(n)","O(n log n)"],
+    answer:2,
+    explain:"In the worst case, all keys hash to the same bucket, creating one long chain of length n. Searching that chain is O(n). (Java 8+ converts long chains to balanced trees, making worst case O(log n), but the classic answer is O(n).)"
+  },
+  {
+    id:8, topic:"Maps",
+    text:"You need a data structure that maps student names to their grades and supports fast lookup. Which is the best choice?",
+    options:[
+      "ArrayList of student-grade pairs",
+      "Sorted array with binary search",
+      "HashMap",
+      "LinkedList of student-grade pairs"
+    ],
+    answer:2,
+    explain:"HashMap provides O(1) average-case lookup by key. An ArrayList or LinkedList would require O(n) linear search. A sorted array gives O(log n) with binary search but O(n) for insertions."
+  }
+];
+
+// ── STATE ───────────────────────────────────────────────
+let currentQ = 0;
+let answers = new Array(QUESTIONS.length).fill(-1);
+let timerInterval = null;
+let elapsed = 0;
+let studentName = "";
+let studentSection = "";
+
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbxw3bQHcS-ZmZzLIqnKl9HrBTX71H_THqYchSsC1EKnjJker9lYtCN54CAqlYOJU2fQvw/exec";
+
+// ── INIT ────────────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", buildQuiz);
+
+function buildQuiz() {
+  const c = document.getElementById("quizContainer");
+  QUESTIONS.forEach((q, i) => {
+    const div = document.createElement("div");
+    div.className = "mcq-card";
+    div.id = "mcq" + i;
+    div.style.display = "none";
+    let html = `<div class="q-num">Question ${i+1} of ${QUESTIONS.length} \u2014 ${q.topic}</div>`;
+    html += `<div class="q-text">${q.text}</div>`;
+    if (q.code) html += `<pre>${esc(q.code)}</pre>`;
+    html += `<ul class="option-list">`;
+    q.options.forEach((opt, oi) => {
+      const letter = "ABCD"[oi];
+      html += `<li onclick="pick(${i},${oi})" id="opt${i}_${oi}">
+        <span class="letter">${letter}</span><span>${esc(opt)}</span></li>`;
+    });
+    html += `</ul>`;
+    div.innerHTML = html;
+    c.appendChild(div);
+  });
+}
+
+// ── NAVIGATION ──────────────────────────────────────────
+function goScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function updateBar() {
+  const bar = document.getElementById("topBar");
+  const fill = document.getElementById("progressFill");
+  const txt = document.getElementById("progressText");
+  bar.classList.add("visible");
+  const pct = ((currentQ + 1) / QUESTIONS.length) * 100;
+  fill.style.width = pct + "%";
+  txt.textContent = `Question ${currentQ+1} of ${QUESTIONS.length}`;
+}
+
+// ── TIMER ───────────────────────────────────────────────
+function startTimer() {
+  const el = document.getElementById("timer");
+  timerInterval = setInterval(() => {
+    elapsed++;
+    const m = String(Math.floor(elapsed/60)).padStart(2,"0");
+    const s = String(elapsed%60).padStart(2,"0");
+    el.textContent = m + ":" + s;
+  }, 1000);
+}
+
+// ── START ───────────────────────────────────────────────
+function startQuiz() {
+  studentName = document.getElementById("studentName").value.trim();
+  studentSection = document.getElementById("studentSection").value;
+  const err = document.getElementById("welcomeError");
+  if (!studentName) { showErr(err, "Please enter your name."); return; }
+  if (!studentSection) { showErr(err, "Please select your section."); return; }
+  hideErr(err);
+  startTimer();
+  goScreen("scrQuiz");
+  showQ(0);
+}
+
+// ── QUIZ INTERACTION ────────────────────────────────────
+function showQ(n) {
+  currentQ = n;
+  document.querySelectorAll(".mcq-card").forEach(c => c.style.display = "none");
+  document.getElementById("mcq" + n).style.display = "block";
+  document.getElementById("nextBtn").textContent = n === QUESTIONS.length - 1 ? "Submit Quiz \u2192" : "Next \u2192";
+  updateBar();
+}
+
+function pick(qi, oi) {
+  answers[qi] = oi;
+  const card = document.getElementById("mcq" + qi);
+  card.querySelectorAll(".option-list li").forEach((li, idx) => {
+    li.classList.toggle("selected", idx === oi);
+  });
+  hideErr(document.getElementById("quizError"));
+}
+
+function nextQ() {
+  const err = document.getElementById("quizError");
+  if (answers[currentQ] === -1) { showErr(err, "Please select an answer."); return; }
+  hideErr(err);
+  if (currentQ < QUESTIONS.length - 1) showQ(currentQ + 1);
+  else submitQuiz();
+}
+
+function prevQ() {
+  if (currentQ > 0) showQ(currentQ - 1);
+}
+
+// ── SUBMIT ──────────────────────────────────────────────
+function submitQuiz() {
+  clearInterval(timerInterval);
+  let score = 0;
+  QUESTIONS.forEach((q, i) => { if (answers[i] === q.answer) score++; });
+
+  const payload = {
+    quiz: QUIZ_ID,
+    timestamp: new Date().toISOString(),
+    name: studentName,
+    section: studentSection,
+    duration: elapsed,
+    score: score,
+    total: QUESTIONS.length,
+  };
+  QUESTIONS.forEach((q, i) => {
+    payload["Q" + (i+1)] = "ABCD"[answers[i]];
+  });
+
+  if (SHEETS_URL !== "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL") {
+    var iframe = document.createElement("iframe");
+    iframe.name = "sheets-submit";
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+    var form = document.createElement("form");
+    form.method = "POST";
+    form.action = SHEETS_URL;
+    form.target = "sheets-submit";
+    var input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "data";
+    input.value = JSON.stringify(payload);
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+    form.remove();
+    setTimeout(function(){ iframe.remove(); }, 15000);
+  } else {
+    console.log("Sheets URL not configured. Payload:", payload);
+  }
+
+  showResults(score);
+}
+
+// ── RESULTS ─────────────────────────────────────────────
+function showResults(score) {
+  document.getElementById("scoreNum").textContent = score + "/" + QUESTIONS.length;
+  const c = document.getElementById("resultsContainer");
+  c.innerHTML = "";
+  QUESTIONS.forEach((q, i) => {
+    const correct = answers[i] === q.answer;
+    const div = document.createElement("div");
+    div.className = "result-card " + (correct ? "correct" : "incorrect");
+    const yours = answers[i] >= 0 ? "ABCD"[answers[i]] : "?";
+    const right = "ABCD"[q.answer];
+    div.innerHTML = `
+      <div class="rc-header">
+        <span class="rc-q">Q${i+1}: ${q.topic}</span>
+        <span class="rc-badge">${correct ? "\u2713 Correct" : "\u2717 Incorrect"}</span>
+      </div>
+      <div class="rc-answer">
+        Your answer: <strong>${yours}</strong>${correct ? "" : " \u2014 Correct: <strong>" + right + ". " + esc(q.options[q.answer]) + "</strong>"}
+      </div>
+      <div class="rc-explain">${q.explain}</div>`;
+    c.appendChild(div);
+  });
+  document.getElementById("topBar").classList.remove("visible");
+  goScreen("scrResults");
+}
+
+// ── HELPERS ─────────────────────────────────────────────
+function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+function showErr(el, msg) { el.textContent = msg; el.classList.add("show"); }
+function hideErr(el) { el.classList.remove("show"); }
+</script>
+</body>
+</html>
