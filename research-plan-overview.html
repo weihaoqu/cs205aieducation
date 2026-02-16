@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CS205 AI Education Research Plan</title>
+<title>AI-Assisted Teaching Research Plan</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; overflow: hidden; }
@@ -84,6 +84,7 @@
   .tag.green { background: #064e3b; color: #34d399; }
   .tag.yellow { background: #422006; color: #fbbf24; }
   .tag.red { background: #450a0a; color: #f87171; }
+  .tag.purple { background: #2e1065; color: #a78bfa; }
 
   /* Timeline */
   .timeline { position: relative; padding-left: 30px; margin-top: 16px; }
@@ -97,23 +98,8 @@
     width: 12px; height: 12px; border-radius: 50%; background: #3b82f6;
   }
   .timeline-item.done::before { background: #10b981; }
-  .timeline-item.urgent::before { background: #ef4444; animation: pulse 1.5s infinite; }
+  .timeline-item.active::before { background: #fbbf24; }
   .timeline-item.future::before { background: #475569; }
-  @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 #ef444480; } 50% { box-shadow: 0 0 0 8px #ef444400; } }
-
-  /* Flow arrow */
-  .flow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
-  .flow-box {
-    background: #1e293b; border: 1px solid #475569; border-radius: 8px;
-    padding: 12px 20px; font-size: 1em; text-align: center;
-  }
-  .flow-arrow { color: #475569; font-size: 1.5em; }
-
-  .big-number { font-size: 3em; font-weight: 700; color: #3b82f6; }
-  .vs-badge {
-    display: inline-block; background: #7c3aed; color: white; padding: 6px 16px;
-    border-radius: 20px; font-weight: 700; font-size: 1.1em;
-  }
 
   /* Key insight box */
   .insight {
@@ -121,6 +107,8 @@
     border-radius: 12px; padding: 24px; margin: 20px 0;
   }
   .insight h3 { color: #60a5fa; margin-bottom: 8px; }
+
+  .big-number { font-size: 3em; font-weight: 700; color: #3b82f6; }
 
   kbd {
     background: #334155; border: 1px solid #475569; border-radius: 4px;
@@ -136,445 +124,452 @@
 
   <!-- SLIDE 1: Title -->
   <div class="slide active">
-    <h1>CS 205: AI-Assisted Teaching<br>Research Plan</h1>
-    <p class="subtitle">A mixed-design study (quasi-experimental + crossover RCT) comparing AI-integrated vs. traditional instruction in Data Structures &amp; Algorithms</p>
+    <h1>AI-Assisted Teaching<br>Research Plan</h1>
+    <p class="subtitle">A multi-course study on how AI-generated content impacts student engagement, confidence, and learning across disciplines</p>
     <div style="margin-top: 40px;">
       <span class="tag blue">Spring 2026</span>
       <span class="tag green">IRB Approved</span>
-      <span class="tag yellow">Study In Progress</span>
+      <span class="tag yellow">Recruiting Collaborators</span>
     </div>
-    <p style="margin-top: 40px; color: #64748b;">Use <kbd>&larr;</kbd> <kbd>&rarr;</kbd> arrow keys or buttons below to navigate</p>
+    <p style="margin-top: 20px; color: #94a3b8;">PI: Weihao Qu &nbsp;&bull;&nbsp; Co-PI: Ling Zheng &nbsp;&bull;&nbsp; Monmouth University</p>
+    <p style="margin-top: 40px; color: #64748b;">Use <kbd>&larr;</kbd> <kbd>&rarr;</kbd> arrow keys to navigate</p>
   </div>
 
-  <!-- SLIDE 2: The Big Picture -->
+  <!-- SLIDE 2: The Vision -->
   <div class="slide">
-    <h2>The Big Picture: What Are We Studying?</h2>
-    <div class="diagram" style="font-size: 0.85em;">
- YOUR SECTION                              ROLF'S SECTION
- ┌──────────────────────────┐              ┌──────────────────────────┐
- │                          │              │                          │
- │  Custom Web App          │              │  Traditional Lectures    │
- │  ┌────────────────────┐  │              │                          │
- │  │ Animations         │  │              │  - Slides & whiteboard   │
- │  │ Interactive Exercises│ │              │  - Live coding           │
- │  │ AI Hints & Guidance │  │     VS      │  - Textbook              │
- │  └────────────────────┘  │              │  - Standard office hours  │
- │                          │              │                          │
- │  &lt; 50 students           │              │  &lt; 50 students           │
- └─────────────┬────────────┘              └─────────────┬────────────┘
-               │                                         │
-               └──────────────┬──────────────────────────┘
-                              │
-                   ┌──────────▼──────────┐
-                   │   SAME Assessments  │
-                   │   SAME Quizzes      │
-                   │   SAME Exams        │
-                   └─────────────────────┘
+    <h2>The Vision: Two Tiers of Evidence</h2>
+    <div class="diagram" style="font-size: 0.82em;">
+ TIER 1: DEEP STUDY (CS 205 — Data Structures)
+ ┌─────────────────────────────────────────────────────────────┐
+ │  Treatment Section         Control Section                  │
+ │  (Prof. Weihao)            (Prof. Rolf)                     │
+ │  AI-generated slides,      Traditional lectures,            │
+ │  demos, exercises          textbook, whiteboard             │
+ │                                                             │
+ │  ✓ Full-semester RCT with control group                     │
+ │  ✓ Pre-test → 6 biweekly quizzes → Post-survey             │
+ │  ✓ Shared assessments, identical content                    │
+ │  ✓ Rigorous causal evidence                                 │
+ └─────────────────────────────────────────────────────────────┘
+
+ TIER 2: BREADTH STUDY (Multiple Courses, Multiple Disciplines)
+ ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐
+ │  CS 336  │  │  CS 305  │  │  CS 310  │  │  SE 641  │  + more
+ └──────────┘  └──────────┘  └──────────┘  └──────────┘
+ │  Each course: professor uses AI-generated content for       │
+ │  selected topics. One retrospective survey after the unit.  │
+ │                                                             │
+ │  ✓ Cross-discipline generalizability                        │
+ │  ✓ Minimal burden on collaborating faculty                  │
+ │  ✓ "Across N courses, students consistently reported..."    │
     </div>
     <div class="insight">
-      <h3>Why this matters</h3>
-      <p>By sharing identical assessments, we can directly compare learning outcomes. The only systematic difference is the teaching approach — your AI-enhanced web app vs. Rolf's traditional methods.</p>
+      <h3>Why both tiers?</h3>
+      <p>Tier 1 (CS 205) gives <strong>rigorous causal evidence</strong> with a control group. Tier 2 gives <strong>breadth and generalizability</strong> across disciplines. Together, this is a much stronger paper than either alone.</p>
     </div>
   </div>
 
-  <!-- SLIDE 3: Three Research Questions -->
+  <!-- SLIDE 3: Research Questions -->
   <div class="slide">
-    <h2>Three Research Questions</h2>
+    <h2>Research Questions</h2>
     <div class="three-col">
       <div class="card accent">
         <h3>RQ1: Learning Outcomes</h3>
-        <p>Does the AI-integrated approach improve student <span class="highlight">performance</span> on shared assessments?</p>
-        <p style="margin-top: 12px; font-size: 0.9em; color: #94a3b8;"><strong>Measured by:</strong> Quiz/exam scores, pre-post concept test gains</p>
+        <p>Does AI-assisted teaching improve student <span class="highlight">performance</span> on assessments?</p>
+        <p style="margin-top: 12px; font-size: 0.9em; color: #94a3b8;"><strong>Tier 1:</strong> Quiz scores, pre/post concept test gains (treatment vs control)</p>
       </div>
       <div class="card accent">
         <h3>RQ2: Student Experience</h3>
-        <p>How does it affect <span class="highlight">engagement</span>, <span class="highlight">self-efficacy</span>, and <span class="highlight">AI perceptions</span>?</p>
-        <p style="margin-top: 12px; font-size: 0.9em; color: #94a3b8;"><strong>Measured by:</strong> Surveys (3 constructs) + end-of-term interviews</p>
+        <p>How does it affect <span class="highlight">engagement</span>, <span class="highlight">confidence</span>, and <span class="highlight">AI perceptions</span>?</p>
+        <p style="margin-top: 12px; font-size: 0.9em; color: #94a3b8;"><strong>Tier 1:</strong> Pre/post surveys<br><strong>Tier 2:</strong> Retrospective before/after surveys</p>
       </div>
       <div class="card accent">
-        <h3>RQ3: AI-Specific Impact</h3>
-        <p>Can we <span class="highlight">isolate the AI component's</span> contribution from the rest of the app?</p>
-        <p style="margin-top: 12px; font-size: 0.9em; color: #94a3b8;"><strong>Measured by:</strong> Within-section crossover RCT (students randomized to AI on/off per topic) + app analytics</p>
+        <h3>RQ3: Generalizability</h3>
+        <p>Do these effects hold <span class="highlight">across disciplines</span> and course types?</p>
+        <p style="margin-top: 12px; font-size: 0.9em; color: #94a3b8;"><strong>Tier 2:</strong> Cross-course analysis of N courses spanning CS, SE, and beyond</p>
       </div>
     </div>
     <div class="insight">
-      <h3>Why three questions, not just one?</h3>
-      <p>RQ1 alone ("do scores go up?") is weak — many things could explain score differences. RQ2 adds the student perspective. RQ3 is the methodological innovation: by <strong>randomly assigning</strong> students to AI-on/AI-off groups per topic (a crossover RCT), we isolate AI's specific effect with true randomization — same instructor, same app, same topic, different randomly-assigned students.</p>
+      <h3>Why RQ3 matters</h3>
+      <p>Most AI-in-education studies are single-course. Reviewers always ask: "Does this generalize?" Having data from multiple courses across multiple disciplines directly answers that question — a major differentiator.</p>
     </div>
   </div>
 
-  <!-- SLIDE 4: The Intervention -->
+  <!-- SLIDE 4: Tier 1 — CS 205 Deep Study -->
   <div class="slide">
-    <h2>Your Intervention: The Web App</h2>
-    <p style="margin-bottom: 20px;">Built with Claude Code, used <strong>during lectures only</strong> (you project it in class).</p>
-    <div class="three-col">
-      <div class="card" style="border-top: 3px solid #3b82f6;">
-        <h3 style="color: #3b82f6;">Animations</h3>
-        <p>Step-by-step visualizations of DS operations</p>
-        <p style="margin-top: 8px; font-size: 0.9em; color: #64748b;">Tree rotations, graph traversals, sorting traces...</p>
-        <p style="margin-top: 12px;"><span class="tag blue">Visual Learning</span></p>
+    <h2>Tier 1: CS 205 Deep Study</h2>
+    <p style="margin-bottom: 16px;">Full-semester controlled experiment — already in progress.</p>
+    <div class="two-col">
+      <div>
+        <div class="card success">
+          <h3>Treatment (Prof. Weihao)</h3>
+          <ul>
+            <li>AI-generated slides and presentations</li>
+            <li>Interactive demos and exercises</li>
+            <li>AI-powered hints and guidance</li>
+            <li>Custom web app used during lectures</li>
+          </ul>
+        </div>
+        <div class="card danger">
+          <h3>Control (Prof. Rolf)</h3>
+          <ul>
+            <li>Traditional lectures and whiteboard</li>
+            <li>Standard textbook and materials</li>
+            <li>Same content, same assessments</li>
+            <li>No AI-generated content</li>
+          </ul>
+        </div>
       </div>
-      <div class="card" style="border-top: 3px solid #10b981;">
-        <h3 style="color: #10b981;">Interactive Exercises</h3>
-        <p>Students follow along with hands-on problems during class</p>
-        <p style="margin-top: 8px; font-size: 0.9em; color: #64748b;">Active learning, not passive viewing</p>
-        <p style="margin-top: 12px;"><span class="tag green">Active Learning</span></p>
+      <div>
+        <h3>Data Collection</h3>
+        <div class="card accent">
+          <strong>Pre-Test</strong> (Week 5) <span class="tag green">Done</span>
+          <p style="font-size:.95em">20 MCQs + 16 Likert items (engagement, self-efficacy, AI perceptions)</p>
+        </div>
+        <div class="card accent">
+          <strong>6 Biweekly Quizzes</strong> (Weeks 7–15) <span class="tag yellow">In Progress</span>
+          <p style="font-size:.95em">8 MCQs each, identical across sections, instant feedback</p>
+        </div>
+        <div class="card accent">
+          <strong>Post-Survey</strong> (Week 16)
+          <p style="font-size:.95em">Same 16 Likert items + 8 AI experience reflection items</p>
+        </div>
       </div>
-      <div class="card" style="border-top: 3px solid #f59e0b;">
-        <h3 style="color: #f59e0b;">AI Hints</h3>
-        <p>Step-by-step guidance that nudges students toward the answer</p>
-        <p style="margin-top: 8px; font-size: 0.9em; color: #64748b;">Guides without giving away answers</p>
-        <p style="margin-top: 12px;"><span class="tag yellow">AI-Powered</span></p>
-      </div>
-    </div>
-    <div class="insight">
-      <h3>Why build a custom app instead of just using ChatGPT?</h3>
-      <p>A purpose-built tool is a much stronger research contribution. Generic chatbots are unpredictable and hard to replicate. Your app provides <strong>controlled, reproducible</strong> AI interactions, <strong>full analytics</strong> on every hint request, and a <strong>feature toggle</strong> for the study. Reviewers will value this over "we told students to use ChatGPT."</p>
     </div>
   </div>
 
-  <!-- SLIDE 5: The Key Innovation — Crossover RCT -->
+  <!-- SLIDE 5: Tier 2 — Multi-Course Expansion -->
   <div class="slide">
-    <h2>The Key Innovation: Crossover RCT</h2>
-    <p style="margin-bottom: 16px;">The biggest threat to this study: <span class="red">your app bundles 3 things together</span>. If scores improve, is it the animations? The interactivity? Or the AI hints? A <span class="highlight">crossover RCT</span> isolates the AI component with true random assignment.</p>
+    <h2>Tier 2: Multi-Course Expansion</h2>
+    <p style="margin-bottom: 16px;">Professors integrate AI-generated content into selected topics, then students take a single retrospective survey.</p>
     <div class="diagram" style="font-size: 0.82em;">
- YOUR SECTION — Within-Section Crossover RCT
- ┌─────────────────────────────────────────────────────────────────────┐
- │  Students randomly assigned to Group X or Group Y at semester start │
- │                                                                     │
- │              Group X (~25 students)    Group Y (~25 students)       │
- │              ──────────────────────    ──────────────────────       │
- │  Topic 1:    AI HINTS  ON             AI HINTS OFF                  │
- │  Topic 2:    AI HINTS OFF             AI HINTS  ON                  │
- │  Topic 3:    AI HINTS  ON             AI HINTS OFF                  │
- │  Topic 4:    AI HINTS OFF             AI HINTS  ON                  │
- │  Topic 5:    AI HINTS  ON             AI HINTS OFF                  │
- │  Topic 6:    AI HINTS OFF             AI HINTS  ON                  │
- │                                                                     │
- │  ✓ Same topic, same instructor, same app — only AI hints differ     │
- │  ✓ Random assignment → causal inference (true RCT!)                 │
- │  ✓ Each student gets AI on half the topics → serves as own control  │
- │  ✓ Topic difficulty is controlled (both groups see the same topic)  │
- └─────────────────────────────────────────────────────────────────────┘
+ Professor teaches Topic X normally     Professor teaches Topic Y with AI content
+ ┌────────────────────────────┐         ┌────────────────────────────┐
+ │  Traditional materials     │         │  AI-generated slides       │
+ │  Standard lectures         │  ───▶   │  AI-generated demos        │
+ │                            │         │  AI-generated exercises     │
+ └────────────────────────────┘         └────────────┬───────────────┘
+                                                     │
+                                           ┌─────────▼──────────┐
+                                           │  ONE-TIME SURVEY    │
+                                           │  (~6 min, in class) │
+                                           │                     │
+                                           │  "Before AI unit,   │
+                                           │   I felt [1-5]"     │
+                                           │  "After AI unit,    │
+                                           │   I feel [1-5]"     │
+                                           └─────────────────────┘
     </div>
-    <div class="two-col">
-      <div class="card success">
-        <h3>Between-Section (Quasi-Experimental)</h3>
-        <p>Your full section vs. Rolf's section</p>
-        <p style="color: #94a3b8; margin-top: 8px;">Answers: "Does the whole app+AI approach beat traditional?"</p>
-      </div>
-      <div class="card" style="border-left: 4px solid #a78bfa;">
-        <h3 style="color: #a78bfa;">Within-Section (Crossover RCT)</h3>
-        <p>Randomized Group X vs. Group Y on each topic</p>
-        <p style="color: #94a3b8; margin-top: 8px;">Answers: "Do AI hints cause better learning?" <span class="tag green">Causal</span></p>
-      </div>
+    <div class="insight">
+      <h3>Why retrospective (not pre + post)?</h3>
+      <p>AI integration may only last 2–4 weeks. A pre/post survey over the whole semester would be too noisy. The <strong>retrospective pre-post</strong> design asks students to rate "before" and "after" in one sitting — actually considered <strong>more accurate</strong> for self-report measures because it avoids response shift bias.</p>
     </div>
   </div>
 
-  <!-- SLIDE 6: Data Collection -->
+  <!-- SLIDE 6: What Collaborators Do -->
   <div class="slide">
-    <h2>What Data Are We Collecting?</h2>
+    <h2>What Collaborators Need to Do</h2>
+    <p style="margin-bottom: 16px;">We keep the burden minimal. <span class="highlight">We do the heavy lifting.</span></p>
     <div class="two-col">
       <div>
-        <h3>Quantitative (Numbers)</h3>
-        <div class="card accent">
-          <strong>Pre/Post Concept Test</strong>
-          <p style="font-size: 0.95em;">15-20 MCQs on DS concepts. Measures learning gains from start to end of semester. Both sections.</p>
-        </div>
-        <div class="card accent">
-          <strong>Shared Assessments (3-5)</strong>
-          <p style="font-size: 0.95em;">Quizzes, assignments, exams — identical across sections. The primary outcome measure.</p>
-        </div>
-        <div class="card accent">
-          <strong>Surveys (3 Constructs)</strong>
-          <p style="font-size: 0.95em;">Engagement, self-efficacy, AI perceptions. Likert scales, pre + post semester.</p>
-        </div>
-        <div class="card accent">
-          <strong>App Analytics</strong>
-          <p style="font-size: 0.95em;">Every click logged: hints requested, time on task, exercise completion, AI-on/off condition.</p>
+        <h3><span class="green">What WE Do For You</span></h3>
+        <div class="card success">
+          <ul>
+            <li><strong>Generate your AI content</strong> — slides, demos, exercises, explanations tailored to your topics</li>
+            <li><strong>Plan which topics</strong> to integrate AI into (we'll work with you)</li>
+            <li><strong>Build the survey</strong> — already built, ready to deploy</li>
+            <li><strong>Handle all data collection</strong> — anonymous, Google Sheets backend</li>
+            <li><strong>Run the analysis</strong> — we analyze the data and write the paper</li>
+            <li><strong>IRB is already approved</strong> — covers all collaborating courses</li>
+          </ul>
         </div>
       </div>
       <div>
-        <h3>Qualitative (Stories)</h3>
+        <h3><span class="blue">What YOU Do</span></h3>
         <div class="card accent">
-          <strong>End-of-Term Interviews</strong>
-          <p style="font-size: 0.95em;">8-12 students, semi-structured, 20-30 min each. Captures lived experience with the app and AI hints.</p>
+          <ul>
+            <li><strong>Use the AI content</strong> in 2+ weeks of your course</li>
+            <li><strong>Give 6 minutes of class time</strong> for the one-time survey</li>
+            <li><strong>Tell us your topics</strong> so we can generate relevant content</li>
+          </ul>
+          <p style="margin-top: 16px; color: #94a3b8;">That's it. ~30 minutes of your time total.</p>
         </div>
-        <div style="margin-top: 24px;">
-          <h3>Why Both?</h3>
-          <p>Numbers tell you <em>what</em> happened. Interviews tell you <em>why</em>.</p>
-          <p style="margin-top: 12px;">If AI-on topics show higher scores, interviews explain: "The hints helped me see where I was stuck." If no score difference, interviews might reveal: "The hints were helpful but I would've figured it out anyway."</p>
-          <p style="margin-top: 12px;">This <span class="highlight">mixed-methods</span> approach is what top CS education venues expect.</p>
+        <h3 style="margin-top: 24px;"><span class="highlight">What You GET</span></h3>
+        <div class="card warn">
+          <ul>
+            <li><strong>Free AI-generated teaching materials</strong> customized for your course</li>
+            <li><strong>Co-authorship</strong> on the research paper</li>
+            <li><strong>Student feedback data</strong> on how AI content was received</li>
+            <li><strong>A ready-made research contribution</strong> for your portfolio</li>
+          </ul>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- SLIDE 7: Analysis Plan -->
+  <!-- SLIDE 7: The Survey Instrument -->
   <div class="slide">
-    <h2>How We'll Analyze the Data</h2>
-    <p style="margin-bottom: 12px;">With &lt; 50 students per group, <span class="highlight">effect sizes matter more than p-values</span>.</p>
+    <h2>The Survey Instrument (Tier 2)</h2>
+    <p style="margin-bottom: 16px;">One survey, ~6 minutes, administered after the AI-integrated unit.</p>
     <table>
       <thead>
-        <tr><th>Comparison</th><th>Statistical Method</th><th>Why This Method</th></tr>
+        <tr><th>Section</th><th>Items</th><th>What It Measures</th></tr>
       </thead>
       <tbody>
         <tr>
-          <td>Your section vs. Rolf's (scores)</td>
-          <td>Mann-Whitney U + Cohen's d</td>
-          <td>Non-parametric; works with small N and non-normal data</td>
+          <td><span class="tag blue">Part 1</span> Context</td>
+          <td>Checkboxes + dropdown</td>
+          <td>What AI content was used (slides, demos, exercises, chatbot, etc.) and for how long</td>
         </tr>
         <tr>
-          <td>Controlling for baseline</td>
-          <td>ANCOVA (pre-test as covariate)</td>
-          <td>Adjusts for any starting differences between sections</td>
+          <td><span class="tag yellow">Part 2</span> Before vs. After</td>
+          <td>6 items &times; 2 (before + after)</td>
+          <td>Engagement, motivation, confidence — retrospective comparison</td>
         </tr>
         <tr>
-          <td>Crossover RCT: AI-on vs. AI-off (per topic)</td>
-          <td>Mixed-effects model (student &amp; topic as random effects)</td>
-          <td>Handles the crossover structure; each student is in both conditions across topics</td>
+          <td><span class="tag purple">Part 3</span> AI Experience</td>
+          <td>8 Likert items</td>
+          <td>How students used AI tools, perceived helpfulness, understanding</td>
         </tr>
         <tr>
-          <td>Learning gains</td>
-          <td>Normalized gain (Hake)</td>
-          <td>Standard in education research; accounts for ceiling effects</td>
-        </tr>
-        <tr>
-          <td>Hint usage &rarr; performance</td>
-          <td>Correlation / regression</td>
-          <td>Exploratory: does more AI hint usage predict better scores?</td>
-        </tr>
-        <tr>
-          <td>Interviews</td>
-          <td>Thematic analysis (Braun & Clarke)</td>
-          <td>Standard qualitative method; produces rich, credible themes</td>
+          <td><span class="tag green">Part 4</span> Preferences</td>
+          <td>4 Likert items</td>
+          <td>Would they want more AI-assisted courses? Trust? Recommendations?</td>
         </tr>
       </tbody>
     </table>
-    <div class="insight">
-      <h3>Why Bayesian analysis too?</h3>
-      <p>With small samples, traditional tests often say "not significant" even when there IS an effect. Bayesian analysis lets you say "the data provide <em>moderate evidence</em> for an effect of size X" — much more useful for a pilot study. It's increasingly accepted at SIGCSE.</p>
+    <div class="two-col" style="margin-top: 16px;">
+      <div class="card success">
+        <h3>IRB Consent Built In</h3>
+        <p>The survey starts with an IRB consent screen. Students who decline still take the survey (so they don't feel singled out), but their data is flagged as non-consented and excluded from analysis.</p>
+      </div>
+      <div class="card accent">
+        <h3>Anonymous &amp; Linked</h3>
+        <p>Students create an anonymous ID (last 4 phone digits + birth month). This links their responses across instruments without using names.</p>
+      </div>
     </div>
   </div>
 
-  <!-- SLIDE 8: Risks & Mitigations -->
+  <!-- SLIDE 8: Analysis Plan -->
   <div class="slide">
-    <h2>Three Big Risks (and How We Handle Them)</h2>
-    <div class="three-col">
-      <div class="card danger">
-        <h3><span class="red">Risk 1: Small Sample</span></h3>
-        <p>&lt; 50 per group may not reach statistical significance.</p>
-        <div style="margin-top: 16px; border-top: 1px solid #334155; padding-top: 12px;">
-          <h3 style="color: #34d399;">Mitigations</h3>
-          <ul>
-            <li>Report effect sizes (Cohen's d), not just p-values</li>
-            <li>Use Bayesian analysis</li>
-            <li>Crossover RCT = paired data = more statistical power</li>
-            <li>Each student serves as their own control</li>
-            <li>Plan a replication semester</li>
-          </ul>
-        </div>
-      </div>
-      <div class="card danger">
-        <h3><span class="red">Risk 2: Instructor Confound</span></h3>
-        <p>Both are experienced, effective instructors — but different teaching styles could still influence results.</p>
-        <div style="margin-top: 16px; border-top: 1px solid #334155; padding-top: 12px;">
-          <h3 style="color: #34d399;">Mitigations</h3>
-          <ul>
-            <li>Document both instructors' experience and teaching styles</li>
-            <li>Both instructors are experienced — this is a strength, not a weakness</li>
-            <li><strong>Crossover RCT</strong> = same instructor, same topic, randomized students</li>
-            <li>Shared assessments ensure identical standards</li>
-            <li>Collect teaching evaluations from both sections for context</li>
-          </ul>
-        </div>
-      </div>
-      <div class="card danger">
-        <h3><span class="red">Risk 3: Compliance</span></h3>
-        <p>Students skip surveys, don't engage, or give shallow answers.</p>
-        <div style="margin-top: 16px; border-top: 1px solid #334155; padding-top: 12px;">
-          <h3 style="color: #34d399;">Mitigations</h3>
-          <ul>
-            <li>Keep surveys &lt; 10 minutes</li>
-            <li>Administer during class time</li>
-            <li>Small incentives (extra credit)</li>
-            <li>App engagement is controlled by you (lecture tool)</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="insight">
-      <h3>The crossover RCT is your secret weapon</h3>
-      <p>It addresses Risk 1 (more power from paired crossover data), Risk 2 (same instructor + random assignment controls all confounds), AND lets you make <strong>causal claims</strong> about AI's impact. This is what elevates the study from "interesting pilot" to "rigorous evidence" — even with a small N.</p>
-    </div>
-  </div>
-
-  <!-- SLIDE 9: Timeline -->
-  <div class="slide">
-    <h2>Timeline: Spring 2026 &rarr; SIGCSE 2027</h2>
+    <h2>How We'll Analyze the Data</h2>
     <div class="two-col">
       <div>
-        <h3>Semester (Jan &ndash; May 2026)</h3>
+        <h3>Tier 1: CS 205 (Controlled)</h3>
+        <table>
+          <tbody>
+            <tr>
+              <td>Treatment vs Control scores</td>
+              <td>Mann-Whitney U + Cohen's d</td>
+            </tr>
+            <tr>
+              <td>Controlling for baseline</td>
+              <td>ANCOVA (pre-test covariate)</td>
+            </tr>
+            <tr>
+              <td>Learning gains over time</td>
+              <td>Repeated measures (6 quizzes)</td>
+            </tr>
+            <tr>
+              <td>Survey attitude shifts</td>
+              <td>Paired t-test / Wilcoxon</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3>Tier 2: Multi-Course (Breadth)</h3>
+        <table>
+          <tbody>
+            <tr>
+              <td>Before vs After (per student)</td>
+              <td>Paired Wilcoxon signed-rank</td>
+            </tr>
+            <tr>
+              <td>Cross-course patterns</td>
+              <td>Mixed-effects model (course as random effect)</td>
+            </tr>
+            <tr>
+              <td>AI type &rarr; engagement</td>
+              <td>Regression (slides vs demos vs exercises)</td>
+            </tr>
+            <tr>
+              <td>Overall themes</td>
+              <td>Descriptive statistics + effect sizes</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="insight">
+      <h3>The story we can tell</h3>
+      <p>Tier 1: "In a controlled experiment, AI-assisted teaching improved [scores/engagement/confidence] with effect size d = X."<br>
+      Tier 2: "This finding generalizes across <strong>N courses in M disciplines</strong>, where students consistently reported higher engagement after AI-integrated units (average before: 2.8 &rarr; after: 3.9)."</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: Current Status & Timeline -->
+  <div class="slide">
+    <h2>Timeline: Where We Are Now</h2>
+    <div class="two-col">
+      <div>
+        <h3>Spring 2026</h3>
         <div class="timeline">
           <div class="timeline-item done">
-            <strong>Weeks 1-3 (Jan)</strong><br>
-            <span style="color: #94a3b8;">Semester start, initial lectures</span>
+            <strong>Week 5 (Feb)</strong> <span class="tag green">Done</span><br>
+            <span style="color: #94a3b8;">Pre-test &amp; pre-survey administered (CS 205)</span>
           </div>
-          <div class="timeline-item urgent">
-            <strong>Week 4-5 (NOW!) </strong><span class="tag red">URGENT</span><br>
-            <span style="color: #fbbf24;">Administer pre-test & pre-survey if not done.<br>Implement AI feature toggle in app.</span>
-          </div>
-          <div class="timeline-item future">
-            <strong>Weeks 6-9 (Feb-Mar)</strong><br>
-            <span style="color: #94a3b8;">First assessment + midterm. AI toggle active.</span>
+          <div class="timeline-item active">
+            <strong>Weeks 7–15 (Mar–May)</strong> <span class="tag yellow">Now</span><br>
+            <span style="color: #fbbf24;">6 biweekly quizzes (CS 205)<br>Recruiting Tier 2 collaborators<br>Generating AI content for partner courses</span>
           </div>
           <div class="timeline-item future">
-            <strong>Weeks 10-15 (Mar-Apr)</strong><br>
-            <span style="color: #94a3b8;">Continue data collection. Final exam. Post-test & post-survey.</span>
+            <strong>Weeks 12–15</strong><br>
+            <span style="color: #94a3b8;">Tier 2 courses administer retrospective survey</span>
           </div>
           <div class="timeline-item future">
             <strong>Week 16 (May)</strong><br>
-            <span style="color: #94a3b8;">Conduct 8-12 student interviews.</span>
+            <span style="color: #94a3b8;">CS 205 post-survey</span>
           </div>
         </div>
       </div>
       <div>
-        <h3>Post-Semester (May &ndash; Aug 2026)</h3>
+        <h3>Summer–Fall 2026</h3>
         <div class="timeline">
           <div class="timeline-item future">
-            <strong>May &ndash; June</strong><br>
-            <span style="color: #94a3b8;">Data cleaning, statistical analysis, qualitative coding</span>
+            <strong>May–June</strong><br>
+            <span style="color: #94a3b8;">Data cleaning &amp; analysis</span>
           </div>
           <div class="timeline-item future">
             <strong>July</strong><br>
-            <span style="color: #94a3b8;">Draft paper, iterate with Rolf</span>
+            <span style="color: #94a3b8;">Draft paper with all collaborators</span>
           </div>
           <div class="timeline-item future">
             <strong>August</strong> <span class="tag blue">TARGET</span><br>
-            <span style="color: #94a3b8;">Submit to SIGCSE 2027</span>
+            <span style="color: #94a3b8;">Submit to SIGCSE 2027 or similar venue</span>
           </div>
         </div>
         <div class="card warn" style="margin-top: 24px;">
-          <h3>Why SIGCSE?</h3>
-          <p style="font-size: 0.95em;">Premier CS education venue. Your study's strengths — shared assessments, custom tool, mixed methods, AI isolation design — align perfectly with what SIGCSE reviewers value.</p>
+          <h3>For Tier 2 collaborators</h3>
+          <p style="font-size: 0.95em;">If you join now, we generate your AI content in the next 2–3 weeks, you use it, and students take the 6-minute survey before the semester ends. That's it.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- SLIDE 10: What Makes This Study Strong -->
+  <!-- SLIDE 10: What We've Built -->
   <div class="slide">
-    <h2>What Makes This Study Stand Out</h2>
-    <p style="margin-bottom: 24px;">Most "AI in education" studies have major weaknesses. Here's how yours avoids them:</p>
+    <h2>What's Already Built &amp; Ready</h2>
+    <div class="three-col">
+      <div class="card success">
+        <h3 style="color: #34d399;">CS 205 Instruments</h3>
+        <ul>
+          <li>Pre-test (20 MCQs + survey)</li>
+          <li>6 quizzes (48 questions)</li>
+          <li>Post-survey (16 + 8 items)</li>
+          <li>All deployed on GitHub Pages</li>
+          <li>Google Sheets data collection</li>
+        </ul>
+        <p style="margin-top: 12px;"><span class="tag green">Live &amp; collecting data</span></p>
+      </div>
+      <div class="card success">
+        <h3 style="color: #34d399;">General Survey</h3>
+        <ul>
+          <li>IRB consent screen</li>
+          <li>Course selector (CS 336, CS 305, CS 310, SE 641)</li>
+          <li>Retrospective before/after items</li>
+          <li>AI experience reflection</li>
+          <li>Preference items</li>
+        </ul>
+        <p style="margin-top: 12px;"><span class="tag green">Ready to deploy</span></p>
+      </div>
+      <div class="card success">
+        <h3 style="color: #34d399;">Infrastructure</h3>
+        <ul>
+          <li>IRB approval covers all courses</li>
+          <li>Anonymous ID system</li>
+          <li>Google Sheets backend</li>
+          <li>AI content generation pipeline (Claude Code)</li>
+          <li>Slide/demo generation tools</li>
+        </ul>
+        <p style="margin-top: 12px;"><span class="tag green">All set up</span></p>
+      </div>
+    </div>
+    <div class="insight">
+      <h3>Everything is ready — we just need your topics</h3>
+      <p>Tell us which topics you'd like AI content for, and we'll generate slides, demos, and exercises within days. The survey is already deployed. You just use the materials and give 6 minutes of class time.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: Why This Study Stands Out -->
+  <div class="slide">
+    <h2>Why This Study Stands Out</h2>
+    <p style="margin-bottom: 16px;">Most "AI in education" studies have major weaknesses. Here's how ours avoids them:</p>
     <table>
       <thead>
-        <tr><th>Common Weakness</th><th>How Your Study Avoids It</th></tr>
+        <tr><th>Common Weakness</th><th>How Our Study Avoids It</th></tr>
       </thead>
       <tbody>
         <tr>
           <td><span class="red">"We just let students use ChatGPT"</span></td>
-          <td><span class="green">Purpose-built app with controlled AI features and full logging</span></td>
+          <td><span class="green">Purpose-built AI-generated content tailored to each course</span></td>
         </tr>
         <tr>
-          <td><span class="red">Different exams for each group</span></td>
-          <td><span class="green">Identical shared assessments designed collaboratively</span></td>
+          <td><span class="red">Single course, single discipline</span></td>
+          <td><span class="green">Multi-course, multi-discipline (CS, SE, and more)</span></td>
         </tr>
         <tr>
-          <td><span class="red">Can't tell if AI or other factors caused the effect</span></td>
-          <td><span class="green">Crossover RCT with random assignment isolates the AI component — supports causal claims</span></td>
+          <td><span class="red">No control group</span></td>
+          <td><span class="green">CS 205 has a true control section with shared assessments</span></td>
         </tr>
         <tr>
           <td><span class="red">Only test scores, no student voice</span></td>
-          <td><span class="green">Mixed methods: scores + surveys + interviews + analytics</span></td>
+          <td><span class="green">Scores + surveys + retrospective reflections across courses</span></td>
+        </tr>
+        <tr>
+          <td><span class="red">"Does this generalize?"</span></td>
+          <td><span class="green">Tier 2 directly answers this with cross-course data</span></td>
         </tr>
         <tr>
           <td><span class="red">No baseline measurement</span></td>
-          <td><span class="green">Pre/post concept test + pre-survey establishes baselines</span></td>
-        </tr>
-        <tr>
-          <td><span class="red">"Results not significant" with small N</span></td>
-          <td><span class="green">Effect sizes + Bayesian analysis + crossover design (each student = own control)</span></td>
+          <td><span class="green">CS 205: pre/post tests. Others: retrospective before/after design</span></td>
         </tr>
       </tbody>
     </table>
     <div class="insight">
       <h3>The narrative for reviewers</h3>
-      <p>"We built a purpose-built educational AI tool for data structures, ran a controlled comparison with shared assessments, and used a <strong>crossover RCT</strong> with random student assignment to isolate AI's causal contribution — a level of rigor most educational AI studies can't achieve."</p>
+      <p>"We conducted a controlled experiment in one course and replicated the survey across <strong>N additional courses spanning M disciplines</strong>. In the controlled study, AI-assisted teaching improved [X]. Across all courses, students consistently reported [Y]. This multi-tier design provides both <strong>causal rigor</strong> and <strong>cross-discipline generalizability</strong>."</p>
     </div>
   </div>
 
-  <!-- SLIDE 11: Immediate Action Items -->
+  <!-- SLIDE 12: Join Us -->
   <div class="slide">
-    <h2>What You Need to Do This Week</h2>
-    <div class="two-col">
-      <div>
-        <div class="card danger" style="border: 2px solid #ef4444;">
-          <h3><span class="red">Priority 1: Pre-Test</span></h3>
-          <p>If the pre-test/pre-survey hasn't been administered yet, do it <strong>this week</strong>. Every day you wait weakens the baseline data.</p>
-          <p style="margin-top: 8px; color: #94a3b8;">Create 15-20 MCQs covering key DS concepts. Have Rolf review them. Administer in both sections during class.</p>
-        </div>
-        <div class="card warn">
-          <h3><span class="highlight">Priority 2: Crossover RCT Setup</span></h3>
-          <p>Implement per-student, per-topic AI hint toggle in the web app. Randomly assign students to Group X / Group Y. This is the technical prerequisite for the crossover RCT.</p>
-          <p style="margin-top: 8px; color: #94a3b8;">Log all interactions with the AI condition flag and student group assignment.</p>
-        </div>
+    <h2>Join the Study</h2>
+    <div style="text-align: center; margin-bottom: 40px;">
+      <p style="font-size: 1.4em; color: #e2e8f0;">We're looking for professors who are interested in using AI-generated content in their teaching this semester.</p>
+    </div>
+    <div class="three-col">
+      <div class="card" style="border-top: 3px solid #3b82f6; text-align: center;">
+        <div class="big-number">~30 min</div>
+        <p>of your time total</p>
       </div>
-      <div>
-        <div class="card accent">
-          <h3>Priority 3: Topic Assignment</h3>
-          <p>Decide which topics are AI-on and which are AI-off. Balance by difficulty. Example:</p>
-          <ul style="margin-top: 8px;">
-            <li><span class="green">AI-ON:</span> Arrays, Stacks/Queues, Hash Tables, Sorting</li>
-            <li><span class="red">AI-OFF:</span> Linked Lists, Trees, Heaps, Graphs</li>
-          </ul>
-        </div>
-        <div class="card accent">
-          <h3>Priority 4: Coordinate with Rolf</h3>
-          <p>Confirm the shared assessment schedule. Ask if he'll administer the same surveys in his section (would greatly strengthen the paper).</p>
-        </div>
+      <div class="card" style="border-top: 3px solid #10b981; text-align: center;">
+        <div class="big-number">6 min</div>
+        <p>of class time for the survey</p>
+      </div>
+      <div class="card" style="border-top: 3px solid #f59e0b; text-align: center;">
+        <div class="big-number">2+ weeks</div>
+        <p>of AI content in your course</p>
       </div>
     </div>
-  </div>
-
-  <!-- SLIDE 12: Open Questions -->
-  <div class="slide">
-    <h2>Open Questions to Resolve</h2>
-    <div class="two-col">
-      <div>
-        <div class="card warn">
-          <h3>1. Pre-test status?</h3>
-          <p>Has it been given yet? If not, this is urgent.</p>
-        </div>
-        <div class="card warn">
-          <h3>2. AI toggle feasibility?</h3>
-          <p>How much engineering work to add the per-topic toggle?</p>
-        </div>
-        <div class="card warn">
-          <h3>3. Which topics AI-on/off?</h3>
-          <p>Need to balance difficulty, timing, and content coverage.</p>
-        </div>
-        <div class="card warn">
-          <h3>4. Rolf's survey participation?</h3>
-          <p>Will he give the same surveys? Having control-group survey data is very valuable.</p>
-        </div>
+    <div class="two-col" style="margin-top: 20px;">
+      <div class="card success" style="text-align: center;">
+        <h3 style="color: #34d399;">What you get</h3>
+        <p>Free AI teaching materials + co-authorship + student feedback data</p>
       </div>
-      <div>
-        <div class="card warn">
-          <h3>5. Incentives approved?</h3>
-          <p>Has IRB approved extra credit or gift cards for survey/interview participation?</p>
-        </div>
-        <div class="card warn">
-          <h3>6. Concept test authoring?</h3>
-          <p>Who writes the pre/post concept test? What's the review process?</p>
-        </div>
-        <div class="card warn">
-          <h3>7. Interview logistics?</h3>
-          <p>Who conducts the interviews? Are they trained in qualitative methods?</p>
-        </div>
-        <div class="card" style="border: 1px solid #3b82f6; margin-top: 16px;">
-          <h3 style="color: #60a5fa;">Full spec available at:</h3>
-          <p style="font-family: monospace; color: #94a3b8;">cs205aieducation/spec.md</p>
-        </div>
+      <div class="card accent" style="text-align: center;">
+        <h3>Contact</h3>
+        <p><strong>Weihao Qu</strong><br>wqu@monmouth.edu<br>732-263-5396</p>
       </div>
     </div>
   </div>
