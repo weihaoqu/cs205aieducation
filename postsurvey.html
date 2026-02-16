@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS 205 — Post-Survey</title>
+<style>
+/* ── Reset & Base ────────────────────────────────────── */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:#0f172a;color:#e2e8f0;min-height:100vh;
+  padding:0;
+}
+button{font-family:inherit}
+
+/* ── Layout ──────────────────────────────────────────── */
+.app{max-width:720px;margin:0 auto;padding:20px 20px 80px}
+
+/* ── Top Bar (progress + timer) ──────────────────────── */
+.top-bar{
+  position:sticky;top:0;z-index:100;
+  background:#0f172aee;backdrop-filter:blur(8px);
+  padding:12px 0 8px;margin-bottom:24px;
+  display:none;
+}
+.top-bar.visible{display:block}
+.progress-wrap{
+  background:#1e293b;border-radius:8px;height:8px;overflow:hidden;
+  margin-bottom:8px;
+}
+.progress-fill{
+  height:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);
+  border-radius:8px;transition:width .4s ease;width:0;
+}
+.top-meta{display:flex;justify-content:space-between;font-size:.82em;color:#94a3b8}
+.top-meta .timer{color:#60a5fa}
+
+/* ── Screens ─────────────────────────────────────────── */
+.screen{display:none;animation:fadeIn .3s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── Welcome ─────────────────────────────────────────── */
+.welcome h1{font-size:1.9em;margin-bottom:6px}
+.welcome .sub{color:#94a3b8;margin-bottom:28px;line-height:1.6}
+.info-box{
+  background:#1e293b;border:1px solid #334155;border-radius:12px;
+  padding:20px;margin-bottom:20px;line-height:1.7;
+}
+.info-box h3{color:#60a5fa;margin-bottom:8px}
+.info-box ul{padding-left:20px;color:#cbd5e1}
+.info-box ul li{margin-bottom:4px}
+
+/* ── Form Elements ───────────────────────────────────── */
+label.field{display:block;margin-bottom:18px}
+label.field .label-text{display:block;font-weight:600;margin-bottom:6px;color:#f1f5f9}
+input[type=text],select{
+  width:100%;padding:12px 14px;border-radius:8px;border:1px solid #334155;
+  background:#1e293b;color:#e2e8f0;font-size:1em;
+  transition:border-color .2s;
+}
+input[type=text]:focus,select:focus{outline:none;border-color:#3b82f6}
+
+/* ── Buttons ─────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:12px 28px;border-radius:8px;border:none;
+  font-size:1em;font-weight:600;cursor:pointer;
+  transition:all .2s;
+}
+.btn-primary{background:#3b82f6;color:#fff}
+.btn-primary:hover{background:#2563eb;transform:translateY(-1px)}
+.btn-primary:disabled{background:#334155;color:#64748b;cursor:not-allowed;transform:none}
+.btn-secondary{background:#1e293b;color:#94a3b8;border:1px solid #334155}
+.btn-secondary:hover{border-color:#3b82f6;color:#e2e8f0}
+.btn-row{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+
+/* ── Section Headers ─────────────────────────────────── */
+.section-header{margin-bottom:24px}
+.section-header h2{font-size:1.5em;margin-bottom:4px}
+.section-header p{color:#94a3b8;line-height:1.6}
+.section-tag{
+  display:inline-block;padding:3px 10px;border-radius:12px;
+  font-size:.75em;font-weight:600;margin-bottom:10px;
+}
+.tag-blue{background:#1e3a5f;color:#60a5fa}
+.tag-green{background:#064e3b;color:#34d399}
+.tag-purple{background:#3b1f6e;color:#a78bfa}
+
+/* ── Likert ──────────────────────────────────────────── */
+.likert-group{margin-bottom:28px}
+.likert-group h3{color:#60a5fa;font-size:1.15em;margin-bottom:4px}
+.likert-group .construct-desc{color:#94a3b8;font-size:.88em;margin-bottom:16px}
+.likert-item{
+  background:#1e293b;border:1px solid #334155;border-radius:12px;
+  padding:18px;margin-bottom:10px;
+}
+.likert-item .li-text{margin-bottom:12px;line-height:1.5}
+.likert-item .li-num{color:#64748b;font-size:.82em}
+.likert-scale{
+  display:flex;gap:0;justify-content:space-between;
+}
+.likert-scale label{
+  flex:1;text-align:center;cursor:pointer;padding:8px 2px;
+  border:1px solid #334155;background:#0f172a;
+  font-size:.78em;color:#94a3b8;transition:all .15s;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.likert-scale label:first-child{border-radius:8px 0 0 8px}
+.likert-scale label:last-child{border-radius:0 8px 8px 0}
+.likert-scale label:hover{background:#172033;border-color:#3b82f6}
+.likert-scale input{display:none}
+.likert-scale label.checked{background:#1e3a5f;border-color:#3b82f6;color:#e2e8f0}
+.likert-scale .scale-num{font-weight:700;font-size:1em}
+
+/* ── Confirmation banner ─────────────────────────────── */
+.confirm-banner{
+  background:#064e3b;border:1px solid #34d399;border-radius:12px;
+  padding:20px;text-align:center;margin-bottom:24px;
+}
+.confirm-banner .check{font-size:2em;margin-bottom:6px}
+.confirm-banner p{color:#a7f3d0}
+
+/* ── Validation error ────────────────────────────────── */
+.validation-msg{
+  background:#7f1d1d;border:1px solid #f87171;border-radius:8px;
+  padding:12px 16px;margin-bottom:16px;color:#fca5a5;
+  display:none;
+}
+.validation-msg.show{display:block;animation:fadeIn .3s ease}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media(max-width:600px){
+  .app{padding:14px 14px 80px}
+  .welcome h1{font-size:1.5em}
+  .likert-scale label{font-size:.7em;padding:6px 1px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ══════════ TOP BAR ══════════ -->
+<div class="top-bar" id="topBar">
+  <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="top-meta">
+    <span id="progressText">Part 1 of 2</span>
+    <span class="timer" id="timer">00:00</span>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN 0: WELCOME ══════════ -->
+<div class="screen active" id="scrWelcome">
+  <div class="welcome">
+    <h1>CS 205 Post-Survey</h1>
+    <p class="sub">Data Structures &mdash; Spring 2026</p>
+
+    <div class="info-box">
+      <h3>What to Expect</h3>
+      <ul>
+        <li><strong>Part 1:</strong> Survey &mdash; same questions as the pre-survey (~5 min)</li>
+        <li><strong>Part 2:</strong> Reflection &mdash; your experience with AI tools this semester (~3 min)</li>
+      </ul>
+      <p style="margin-top:12px;color:#94a3b8">Total: ~8 minutes. This does <strong>not</strong> count toward your grade.</p>
+    </div>
+
+    <div class="info-box">
+      <h3>Enter Your Anonymous ID</h3>
+      <p style="color:#94a3b8;margin-bottom:12px">Use the <strong>same ID</strong> you used on the pre-test: last 4 phone digits + 2-digit birth month.</p>
+
+      <label class="field">
+        <span class="label-text">Last 4 digits of your phone number</span>
+        <input type="text" id="idPhone" maxlength="4" pattern="[0-9]{4}" placeholder="e.g. 5103" inputmode="numeric">
+      </label>
+      <label class="field">
+        <span class="label-text">Birth month (2 digits)</span>
+        <input type="text" id="idMonth" maxlength="2" pattern="[0-9]{1,2}" placeholder="e.g. 03 for March" inputmode="numeric">
+      </label>
+      <label class="field">
+        <span class="label-text">Your section</span>
+        <select id="idSection">
+          <option value="">— Select —</option>
+          <option value="treatment">Section A (Prof. Weihao's section)</option>
+          <option value="control">Section B (Prof. Rolf's section)</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="validation-msg" id="welcomeError"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="startApp()">Begin &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN 1: SURVEY (same as pre-survey) ══════════ -->
+<div class="screen" id="scrSurvey">
+  <div class="section-header">
+    <span class="section-tag tag-green">Part 1 of 2</span>
+    <h2>Survey</h2>
+    <p>Rate each statement on a scale from <strong>Strongly Disagree</strong> to <strong>Strongly Agree</strong>. These are the same questions from the pre-survey.</p>
+  </div>
+  <div id="surveyContainer"></div>
+  <div class="validation-msg" id="surveyError"></div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="goScreen('scrWelcome')">&larr; Back</button>
+    <button class="btn btn-primary" onclick="submitSurvey()">Continue &rarr;</button>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN 2: REFLECTION (post-only) ══════════ -->
+<div class="screen" id="scrReflection">
+  <div class="section-header">
+    <span class="section-tag tag-purple">Part 2 of 2</span>
+    <h2>AI Experience Reflection</h2>
+    <p>Now that the semester is ending, reflect on your experience with AI tools in this course.</p>
+  </div>
+  <div id="reflectionContainer"></div>
+  <div class="validation-msg" id="reflectionError"></div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="goScreen('scrSurvey')">&larr; Back</button>
+    <button class="btn btn-primary" onclick="submitAll()">Submit &rarr;</button>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN 3: CONFIRMATION ══════════ -->
+<div class="screen" id="scrDone">
+  <div class="confirm-banner">
+    <div class="check">&#10003;</div>
+    <p><strong>Responses recorded!</strong> Thank you for completing the post-survey.</p>
+  </div>
+
+  <div class="info-box" style="text-align:center">
+    <h3>Thank you!</h3>
+    <p style="color:#94a3b8">Your responses help us improve how this course is taught. Have a great summer!</p>
+  </div>
+
+  <div class="btn-row" style="margin-top:32px;justify-content:center">
+    <a class="btn btn-secondary" href="index.html">&larr; Back to Home</a>
+  </div>
+</div>
+
+</div><!-- /.app -->
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// DATA — Same survey items as pre-survey for pre/post comparison
+// ══════════════════════════════════════════════════════════════
+
+const SURVEY_GROUPS = [
+  {
+    id:"engagement",
+    title:"Engagement & Motivation",
+    desc:"How do you feel about this course?",
+    items:[
+      {id:"E1",text:"I look forward to attending this class."},
+      {id:"E2",text:"I actively participate in class discussions and activities."},
+      {id:"E3",text:"I find the topics in this course interesting."},
+      {id:"E4",text:"I put effort into understanding the material, not just passing."},
+      {id:"E5",text:"I feel motivated to study for this course outside of class."},
+      {id:"E6",text:"When I don\u2019t understand something, I seek help (office hours, peers, online)."},
+      {id:"E7",text:"I pay attention during the entire lecture, not just parts of it."},
+      {id:"E8",text:"I connect what I learn in this class to real-world applications."}
+    ]
+  },
+  {
+    id:"self-efficacy",
+    title:"Confidence in Data Structures",
+    desc:"\u201CI am confident that I can...\u201D",
+    items:[
+      {id:"S1",text:"...analyze the time complexity (Big-O) of a simple algorithm."},
+      {id:"S2",text:"...trace through a recursive method and predict its output."},
+      {id:"S3",text:"...choose the appropriate data structure for a given problem."},
+      {id:"S4",text:"...succeed in this course overall."}
+    ]
+  },
+  {
+    id:"ai-perceptions",
+    title:"AI in Education",
+    desc:"Your views on AI tools in learning.",
+    items:[
+      {id:"A1",text:"AI tools (like ChatGPT) can help me learn course material more effectively."},
+      {id:"A2",text:"Using AI tools for learning feels like cheating."},
+      {id:"A3",text:"I feel comfortable using AI tools as part of my study routine."},
+      {id:"A4",text:"AI will play an important role in how computer science is taught in the future."}
+    ]
+  }
+];
+
+const REFLECTION_GROUPS = [
+  {
+    id:"ai-experience",
+    title:"AI Tool Usage This Semester",
+    desc:"Think about your actual experience using AI tools (ChatGPT, Copilot, Claude, etc.) this semester.",
+    items:[
+      {id:"X1",text:"I used AI tools to help me understand lecture material."},
+      {id:"X2",text:"I used AI tools to help me complete programming assignments."},
+      {id:"X3",text:"AI tools helped me learn concepts I was struggling with."},
+      {id:"X4",text:"I felt more confident solving problems after using AI tools."},
+      {id:"X5",text:"I sometimes relied on AI tools without fully understanding the output."},
+      {id:"X6",text:"AI-generated learning materials (slides, demos, explanations, etc.) help me understand course topics."},
+      {id:"X7",text:"I would prefer more courses to integrate AI tools into their teaching."},
+      {id:"X8",text:"Overall, AI tools improved my learning experience this semester."}
+    ]
+  }
+];
+
+const LIKERT_LABELS = ["Strongly\nDisagree","Disagree","Neutral","Agree","Strongly\nAgree"];
+
+// ══════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════
+let anonId = "";
+let section = "";
+let surveyAnswers = {};
+let reflectionAnswers = {};
+let timerInterval = null;
+let elapsedSeconds = 0;
+
+// Google Sheets Web App URL — post-survey data goes to the pretest sheet
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbyE-sslQKRlqHQX4KAq0rU5iolFuSYsOSvgpATSi6I-dMqop-SYxeBlGs9_tHUpg0214w/exec";
+
+// ══════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════
+document.addEventListener("DOMContentLoaded",()=>{
+  buildLikertSection("surveyContainer", SURVEY_GROUPS, surveyAnswers);
+  buildLikertSection("reflectionContainer", REFLECTION_GROUPS, reflectionAnswers);
+});
+
+// ══════════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════════
+function goScreen(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+  updateProgress();
+}
+
+function updateProgress(){
+  const bar = document.getElementById("topBar");
+  const fill = document.getElementById("progressFill");
+  const txt = document.getElementById("progressText");
+  const active = document.querySelector(".screen.active");
+  if(!active) return;
+  bar.classList.toggle("visible", active.id!=="scrWelcome");
+  const map = {
+    scrSurvey:[1,2,"Part 1: Survey"],
+    scrReflection:[2,2,"Part 2: Reflection"],
+    scrDone:[2,2,"Complete!"]
+  };
+  const info = map[active.id];
+  if(info){
+    const pct = active.id==="scrSurvey" ? 30 : active.id==="scrReflection" ? 70 : 100;
+    fill.style.width = pct+"%";
+    txt.textContent = info[2];
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// TIMER
+// ══════════════════════════════════════════════════════════════
+function startTimer(){
+  const el = document.getElementById("timer");
+  timerInterval = setInterval(()=>{
+    elapsedSeconds++;
+    const m = String(Math.floor(elapsedSeconds/60)).padStart(2,"0");
+    const s = String(elapsedSeconds%60).padStart(2,"0");
+    el.textContent = m+":"+s;
+  },1000);
+}
+
+// ══════════════════════════════════════════════════════════════
+// WELCOME / START
+// ══════════════════════════════════════════════════════════════
+function startApp(){
+  const phone = document.getElementById("idPhone").value.trim();
+  const month = document.getElementById("idMonth").value.trim();
+  section = document.getElementById("idSection").value;
+  const err = document.getElementById("welcomeError");
+
+  if(phone.length!==4||!/^\d{4}$/.test(phone)){
+    showError(err,"Please enter exactly 4 digits for your phone number.");return;
+  }
+  if(!month||!/^\d{1,2}$/.test(month)||+month<1||+month>12){
+    showError(err,"Please enter a valid birth month (01\u201312).");return;
+  }
+  if(!section){
+    showError(err,"Please select your section.");return;
+  }
+  hideError(err);
+  anonId = phone + month.padStart(2,"0");
+  startTimer();
+  goScreen("scrSurvey");
+}
+
+// ══════════════════════════════════════════════════════════════
+// LIKERT — BUILD (reusable for both survey & reflection)
+// ══════════════════════════════════════════════════════════════
+let globalItemNum = 0;
+
+function buildLikertSection(containerId, groups, store){
+  const c = document.getElementById(containerId);
+  groups.forEach(g=>{
+    const grp = document.createElement("div");
+    grp.className = "likert-group";
+    let html = `<h3>${g.title}</h3><p class="construct-desc">${g.desc}</p>`;
+    g.items.forEach(item=>{
+      globalItemNum++;
+      const storeKey = containerId; // used to route to correct answer store
+      html += `<div class="likert-item">
+        <div class="li-text"><span class="li-num">${globalItemNum}.</span> ${escHtml(item.text)}</div>
+        <div class="likert-scale">`;
+      for(let v=1;v<=5;v++){
+        html += `<label id="lbl_${item.id}_${v}" onclick="pickLikert('${item.id}',${v},'${containerId}')">
+          <input type="radio" name="${item.id}" value="${v}">
+          <span class="scale-num">${v}</span>
+          <span>${LIKERT_LABELS[v-1].replace("\n","<br>")}</span>
+        </label>`;
+      }
+      html += `</div></div>`;
+    });
+    grp.innerHTML = html;
+    c.appendChild(grp);
+  });
+}
+
+function pickLikert(id,val,containerId){
+  // Route to correct answer store
+  const store = containerId==="surveyContainer" ? surveyAnswers : reflectionAnswers;
+  store[id] = val;
+  for(let v=1;v<=5;v++){
+    document.getElementById("lbl_"+id+"_"+v).classList.toggle("checked",v===val);
+  }
+  // Hide any error on the current screen
+  const active = document.querySelector(".screen.active");
+  const errEl = active.querySelector(".validation-msg");
+  if(errEl) hideError(errEl);
+}
+
+// ══════════════════════════════════════════════════════════════
+// SUBMIT SURVEY → go to reflection
+// ══════════════════════════════════════════════════════════════
+function submitSurvey(){
+  const err = document.getElementById("surveyError");
+  const allIds = SURVEY_GROUPS.flatMap(g=>g.items.map(i=>i.id));
+  const missing = allIds.filter(id=>!surveyAnswers[id]);
+  if(missing.length>0){
+    showError(err,`Please answer all survey questions. ${missing.length} remaining.`);return;
+  }
+  hideError(err);
+  goScreen("scrReflection");
+}
+
+// ══════════════════════════════════════════════════════════════
+// SUBMIT ALL
+// ══════════════════════════════════════════════════════════════
+function submitAll(){
+  const err = document.getElementById("reflectionError");
+  const allIds = REFLECTION_GROUPS.flatMap(g=>g.items.map(i=>i.id));
+  const missing = allIds.filter(id=>!reflectionAnswers[id]);
+  if(missing.length>0){
+    showError(err,`Please answer all reflection questions. ${missing.length} remaining.`);return;
+  }
+  hideError(err);
+
+  // Stop timer
+  clearInterval(timerInterval);
+
+  // Build payload
+  const payload = {
+    type: "postsurvey",
+    timestamp: new Date().toISOString(),
+    anonId,
+    section,
+    duration: elapsedSeconds
+  };
+  // Add survey answers (E1-E8, S1-S4, A1-A4)
+  Object.keys(surveyAnswers).forEach(k=>{
+    payload[k] = surveyAnswers[k];
+  });
+  // Add reflection answers (X1-X8)
+  Object.keys(reflectionAnswers).forEach(k=>{
+    payload[k] = reflectionAnswers[k];
+  });
+
+  // Send to Google Sheets
+  sendToSheets(payload);
+
+  // Show confirmation
+  goScreen("scrDone");
+}
+
+function sendToSheets(payload){
+  if(SHEETS_URL==="YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL"){
+    console.log("Sheets URL not configured. Payload:",payload);
+    return;
+  }
+  var iframe = document.createElement("iframe");
+  iframe.name = "sheets-submit";
+  iframe.style.display = "none";
+  document.body.appendChild(iframe);
+
+  var form = document.createElement("form");
+  form.method = "POST";
+  form.action = SHEETS_URL;
+  form.target = "sheets-submit";
+
+  var input = document.createElement("input");
+  input.type = "hidden";
+  input.name = "data";
+  input.value = JSON.stringify(payload);
+  form.appendChild(input);
+
+  document.body.appendChild(form);
+  form.submit();
+  form.remove();
+  setTimeout(function(){ iframe.remove(); }, 15000);
+}
+
+// ══════════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════════
+function escHtml(s){
+  const d=document.createElement("div");d.textContent=s;return d.innerHTML;
+}
+function showError(el,msg){el.textContent=msg;el.classList.add("show")}
+function hideError(el){el.classList.remove("show")}
+</script>
+</body>
+</html>
