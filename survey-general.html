@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Assisted Teaching — Student Survey</title>
+<style>
+/* ── Reset & Base ────────────────────────────────────── */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:#0f172a;color:#e2e8f0;min-height:100vh;
+  padding:0;
+}
+button{font-family:inherit}
+
+/* ── Layout ──────────────────────────────────────────── */
+.app{max-width:720px;margin:0 auto;padding:20px 20px 80px}
+
+/* ── Top Bar ─────────────────────────────────────────── */
+.top-bar{
+  position:sticky;top:0;z-index:100;
+  background:#0f172aee;backdrop-filter:blur(8px);
+  padding:12px 0 8px;margin-bottom:24px;
+  display:none;
+}
+.top-bar.visible{display:block}
+.progress-wrap{
+  background:#1e293b;border-radius:8px;height:8px;overflow:hidden;
+  margin-bottom:8px;
+}
+.progress-fill{
+  height:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);
+  border-radius:8px;transition:width .4s ease;width:0;
+}
+.top-meta{display:flex;justify-content:space-between;font-size:.82em;color:#94a3b8}
+.top-meta .timer{color:#60a5fa}
+
+/* ── Screens ─────────────────────────────────────────── */
+.screen{display:none;animation:fadeIn .3s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── Welcome ─────────────────────────────────────────── */
+.welcome h1{font-size:1.9em;margin-bottom:6px}
+.welcome .sub{color:#94a3b8;margin-bottom:28px;line-height:1.6}
+.info-box{
+  background:#1e293b;border:1px solid #334155;border-radius:12px;
+  padding:20px;margin-bottom:20px;line-height:1.7;
+}
+.info-box h3{color:#60a5fa;margin-bottom:8px}
+.info-box ul{padding-left:20px;color:#cbd5e1}
+.info-box ul li{margin-bottom:4px}
+
+/* ── Form Elements ───────────────────────────────────── */
+label.field{display:block;margin-bottom:18px}
+label.field .label-text{display:block;font-weight:600;margin-bottom:6px;color:#f1f5f9}
+.label-hint{display:block;font-size:.85em;color:#94a3b8;margin-bottom:6px}
+input[type=text],select{
+  width:100%;padding:12px 14px;border-radius:8px;border:1px solid #334155;
+  background:#1e293b;color:#e2e8f0;font-size:1em;
+  transition:border-color .2s;
+}
+input[type=text]:focus,select:focus{outline:none;border-color:#3b82f6}
+
+/* ── Checkboxes ──────────────────────────────────────── */
+.checkbox-group{margin-bottom:18px}
+.checkbox-group .label-text{display:block;font-weight:600;margin-bottom:10px;color:#f1f5f9}
+.cb-option{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;margin-bottom:6px;
+  background:#0f172a;border:1px solid #334155;border-radius:8px;
+  cursor:pointer;transition:all .15s;
+}
+.cb-option:hover{border-color:#3b82f6;background:#172033}
+.cb-option.checked{border-color:#3b82f6;background:#1e3a5f}
+.cb-option input[type=checkbox]{display:none}
+.cb-box{
+  width:20px;height:20px;border-radius:4px;border:2px solid #475569;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .15s;
+}
+.cb-option.checked .cb-box{background:#3b82f6;border-color:#3b82f6}
+.cb-option.checked .cb-box::after{content:"\2713";color:#fff;font-size:.8em;font-weight:700}
+.cb-label{color:#e2e8f0;line-height:1.4}
+
+/* ── Buttons ─────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:12px 28px;border-radius:8px;border:none;
+  font-size:1em;font-weight:600;cursor:pointer;
+  transition:all .2s;
+}
+.btn-primary{background:#3b82f6;color:#fff}
+.btn-primary:hover{background:#2563eb;transform:translateY(-1px)}
+.btn-primary:disabled{background:#334155;color:#64748b;cursor:not-allowed;transform:none}
+.btn-secondary{background:#1e293b;color:#94a3b8;border:1px solid #334155}
+.btn-secondary:hover{border-color:#3b82f6;color:#e2e8f0}
+.btn-row{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+
+/* ── Section Headers ─────────────────────────────────── */
+.section-header{margin-bottom:24px}
+.section-header h2{font-size:1.5em;margin-bottom:4px}
+.section-header p{color:#94a3b8;line-height:1.6}
+.section-tag{
+  display:inline-block;padding:3px 10px;border-radius:12px;
+  font-size:.75em;font-weight:600;margin-bottom:10px;
+}
+.tag-blue{background:#1e3a5f;color:#60a5fa}
+.tag-green{background:#064e3b;color:#34d399}
+.tag-purple{background:#3b1f6e;color:#a78bfa}
+.tag-amber{background:#78350f;color:#fbbf24}
+
+/* ── Likert ──────────────────────────────────────────── */
+.likert-group{margin-bottom:28px}
+.likert-group h3{color:#60a5fa;font-size:1.15em;margin-bottom:4px}
+.likert-group .construct-desc{color:#94a3b8;font-size:.88em;margin-bottom:16px}
+.likert-item{
+  background:#1e293b;border:1px solid #334155;border-radius:12px;
+  padding:18px;margin-bottom:10px;
+}
+.likert-item .li-text{margin-bottom:12px;line-height:1.5}
+.likert-item .li-num{color:#64748b;font-size:.82em}
+.likert-scale{
+  display:flex;gap:0;justify-content:space-between;
+}
+.likert-scale label{
+  flex:1;text-align:center;cursor:pointer;padding:8px 2px;
+  border:1px solid #334155;background:#0f172a;
+  font-size:.78em;color:#94a3b8;transition:all .15s;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.likert-scale label:first-child{border-radius:8px 0 0 8px}
+.likert-scale label:last-child{border-radius:0 8px 8px 0}
+.likert-scale label:hover{background:#172033;border-color:#3b82f6}
+.likert-scale input{display:none}
+.likert-scale label.checked{background:#1e3a5f;border-color:#3b82f6;color:#e2e8f0}
+.likert-scale .scale-num{font-weight:700;font-size:1em}
+
+/* ── Retrospective (before/after) ────────────────────── */
+.retro-item{
+  background:#1e293b;border:1px solid #334155;border-radius:12px;
+  padding:18px;margin-bottom:10px;
+}
+.retro-item .ri-text{margin-bottom:14px;line-height:1.5;font-size:1.02em}
+.retro-item .ri-num{color:#64748b;font-size:.82em}
+.retro-row{margin-bottom:10px}
+.retro-row:last-child{margin-bottom:0}
+.retro-label{
+  font-size:.82em;font-weight:600;margin-bottom:6px;display:block;
+}
+.retro-label.before{color:#fbbf24}
+.retro-label.after{color:#34d399}
+
+/* ── Consent Screen ──────────────────────────────────── */
+.consent-box{
+  background:#1e293b;border:1px solid #334155;border-radius:12px;
+  padding:24px;margin-bottom:20px;line-height:1.7;
+}
+.consent-box h3{color:#60a5fa;margin-bottom:12px;font-size:1.1em}
+.consent-box p{color:#cbd5e1;margin-bottom:12px;font-size:.95em}
+.consent-box .pi-info{color:#94a3b8;font-size:.88em;margin-bottom:12px}
+.consent-box strong{color:#e2e8f0}
+.btn-decline{background:#7f1d1d;color:#fca5a5;border:1px solid #f87171}
+.btn-decline:hover{background:#991b1b}
+
+/* ── Confirmation banner ─────────────────────────────── */
+.confirm-banner{
+  background:#064e3b;border:1px solid #34d399;border-radius:12px;
+  padding:20px;text-align:center;margin-bottom:24px;
+}
+.confirm-banner .check{font-size:2em;margin-bottom:6px}
+.confirm-banner p{color:#a7f3d0}
+
+/* ── Validation error ────────────────────────────────── */
+.validation-msg{
+  background:#7f1d1d;border:1px solid #f87171;border-radius:8px;
+  padding:12px 16px;margin-bottom:16px;color:#fca5a5;
+  display:none;
+}
+.validation-msg.show{display:block;animation:fadeIn .3s ease}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media(max-width:600px){
+  .app{padding:14px 14px 80px}
+  .welcome h1{font-size:1.5em}
+  .likert-scale label{font-size:.7em;padding:6px 1px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ══════════ TOP BAR ══════════ -->
+<div class="top-bar" id="topBar">
+  <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="top-meta">
+    <span id="progressText">Part 1 of 4</span>
+    <span class="timer" id="timer">00:00</span>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN -1: IRB CONSENT ══════════ -->
+<div class="screen active" id="scrConsent">
+  <div class="welcome">
+    <h1>Research Consent</h1>
+    <p class="sub">Please read before continuing</p>
+
+    <div class="consent-box">
+      <h3>INFORMED CONSENT FOR:<br>Improving Efficiency in Higher Education through Customized AI Training</h3>
+
+      <p class="pi-info">
+        <strong>Principal Investigator:</strong> Weihao Qu, phone: 732-263-5396, email: wqu@monmouth.edu<br>
+        <strong>Co-Investigator:</strong> Ling Zheng, phone: 732-571-4459, email: lzheng@monmouth.edu
+      </p>
+
+      <p>You are being asked to be a participant in a research study.</p>
+
+      <p><strong>What is the purpose of this study?</strong><br>
+      The purpose of this study is about how artificial intelligence (AI) tools can be used to improve efficiency in learning, studying, and working at a mid-sized college. The goal of this project is to design and test customized AI training workshops, one-on-one sessions, and online modules for students, staff, and faculty.</p>
+
+      <p><strong>Your participation is voluntary!</strong><br>
+      Your participation in this study is voluntary. You may decide not to participate at all or, if you start the study, you may withdraw at any time without any penalty. Withdrawal or refusing to participate will not affect your relationship with Monmouth University in any way.</p>
+
+      <p>If you click <strong>"I Accept"</strong> below, it means that you have (a) read this consent form, (b) you agree to be a participant in this study, and (c) you are over 18 years old.</p>
+
+      <p>If you click <strong>"I Do Not Agree"</strong>, you will still go through the survey, but your data will <strong>not</strong> be used for research purposes.</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="giveConsent(true)">I Accept</button>
+      <button class="btn btn-decline" onclick="giveConsent(false)">I Do Not Agree</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN 0: WELCOME ══════════ -->
+<div class="screen" id="scrWelcome">
+  <div class="welcome">
+    <h1>AI-Assisted Teaching Survey</h1>
+    <p class="sub">Spring 2026</p>
+
+    <div class="info-box">
+      <h3>What to Expect</h3>
+      <ul>
+        <li><strong>Part 1:</strong> About the AI content in your course (~1 min)</li>
+        <li><strong>Part 2:</strong> Your engagement before vs. after the AI unit (~2 min)</li>
+        <li><strong>Part 3:</strong> Your experience with the AI tools (~2 min)</li>
+        <li><strong>Part 4:</strong> Your preferences going forward (~1 min)</li>
+      </ul>
+      <p style="margin-top:12px;color:#94a3b8">Total: ~6 minutes. Anonymous &mdash; does <strong>not</strong> count toward your grade.</p>
+    </div>
+
+    <div class="info-box">
+      <h3>Your Information</h3>
+      <p style="color:#94a3b8;margin-bottom:12px">Your anonymous ID helps us organize responses without using your name.</p>
+
+      <label class="field">
+        <span class="label-text">Last 4 digits of your phone number</span>
+        <input type="text" id="idPhone" maxlength="4" pattern="[0-9]{4}" placeholder="e.g. 5103" inputmode="numeric">
+      </label>
+      <label class="field">
+        <span class="label-text">Birth month (2 digits)</span>
+        <input type="text" id="idMonth" maxlength="2" pattern="[0-9]{1,2}" placeholder="e.g. 03 for March" inputmode="numeric">
+      </label>
+      <label class="field">
+        <span class="label-text">Your course</span>
+        <select id="idCourse">
+          <option value="">— Select —</option>
+          <option value="CS336">CS 336</option>
+          <option value="CS305">CS 305</option>
+          <option value="CS310">CS 310</option>
+          <option value="SE641">SE 641</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="validation-msg" id="welcomeError"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="startApp()">Begin &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN 1: CONTEXT ══════════ -->
+<div class="screen" id="scrContext">
+  <div class="section-header">
+    <span class="section-tag tag-blue">Part 1 of 4</span>
+    <h2>About the AI Content</h2>
+    <p>Tell us about how AI was used in your course.</p>
+  </div>
+
+  <div class="checkbox-group" id="aiTypesGroup">
+    <span class="label-text">What types of AI-generated content did your instructor use? (Select all that apply)</span>
+    <div class="cb-option" onclick="toggleCb(this,'ai-slides')">
+      <input type="checkbox" value="slides"><span class="cb-box"></span>
+      <span class="cb-label">AI-generated slides or presentations</span>
+    </div>
+    <div class="cb-option" onclick="toggleCb(this,'ai-demos')">
+      <input type="checkbox" value="demos"><span class="cb-box"></span>
+      <span class="cb-label">AI-generated demos or interactive examples</span>
+    </div>
+    <div class="cb-option" onclick="toggleCb(this,'ai-explanations')">
+      <input type="checkbox" value="explanations"><span class="cb-box"></span>
+      <span class="cb-label">AI-generated explanations or study materials</span>
+    </div>
+    <div class="cb-option" onclick="toggleCb(this,'ai-code')">
+      <input type="checkbox" value="code"><span class="cb-box"></span>
+      <span class="cb-label">AI-generated code examples or solutions</span>
+    </div>
+    <div class="cb-option" onclick="toggleCb(this,'ai-chatbot')">
+      <input type="checkbox" value="chatbot"><span class="cb-box"></span>
+      <span class="cb-label">AI chatbot for Q&amp;A or tutoring</span>
+    </div>
+    <div class="cb-option" onclick="toggleCb(this,'ai-exercises')">
+      <input type="checkbox" value="exercises"><span class="cb-box"></span>
+      <span class="cb-label">AI-generated exercises or practice problems</span>
+    </div>
+    <div class="cb-option" onclick="toggleCb(this,'ai-other')">
+      <input type="checkbox" value="other"><span class="cb-box"></span>
+      <span class="cb-label">Other AI-generated content</span>
+    </div>
+  </div>
+
+  <label class="field">
+    <span class="label-text">Roughly how many weeks did the AI-assisted portion last?</span>
+    <select id="aiWeeks">
+      <option value="">— Select —</option>
+      <option value="1-2">1–2 weeks</option>
+      <option value="3-4">3–4 weeks</option>
+      <option value="5-8">5–8 weeks</option>
+      <option value="full">The whole semester</option>
+    </select>
+  </label>
+
+  <div class="validation-msg" id="contextError"></div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="goScreen('scrWelcome')">&larr; Back</button>
+    <button class="btn btn-primary" onclick="submitContext()">Continue &rarr;</button>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN 2: RETROSPECTIVE ══════════ -->
+<div class="screen" id="scrRetro">
+  <div class="section-header">
+    <span class="section-tag tag-amber">Part 2 of 4</span>
+    <h2>Before vs. After</h2>
+    <p>Think about how you felt <strong>before</strong> the AI-assisted portion of your course, and how you feel <strong>now</strong>. Rate each statement twice.</p>
+  </div>
+  <div id="retroContainer"></div>
+  <div class="validation-msg" id="retroError"></div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="goScreen('scrContext')">&larr; Back</button>
+    <button class="btn btn-primary" onclick="submitRetro()">Continue &rarr;</button>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN 3: AI EXPERIENCE ══════════ -->
+<div class="screen" id="scrExperience">
+  <div class="section-header">
+    <span class="section-tag tag-purple">Part 3 of 4</span>
+    <h2>AI Experience</h2>
+    <p>Reflect on your actual experience with AI tools in this course.</p>
+  </div>
+  <div id="experienceContainer"></div>
+  <div class="validation-msg" id="experienceError"></div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="goScreen('scrRetro')">&larr; Back</button>
+    <button class="btn btn-primary" onclick="submitExperience()">Continue &rarr;</button>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN 4: PREFERENCES ══════════ -->
+<div class="screen" id="scrPrefs">
+  <div class="section-header">
+    <span class="section-tag tag-green">Part 4 of 4</span>
+    <h2>Looking Forward</h2>
+    <p>Your preferences for AI in future courses.</p>
+  </div>
+  <div id="prefsContainer"></div>
+  <div class="validation-msg" id="prefsError"></div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="goScreen('scrExperience')">&larr; Back</button>
+    <button class="btn btn-primary" onclick="submitAll()">Submit &rarr;</button>
+  </div>
+</div>
+
+<!-- ══════════ SCREEN 5: CONFIRMATION ══════════ -->
+<div class="screen" id="scrDone">
+  <div class="confirm-banner">
+    <div class="check">&#10003;</div>
+    <p><strong>Responses recorded!</strong> Thank you for completing the survey.</p>
+  </div>
+
+  <div class="info-box" style="text-align:center">
+    <h3>Thank you!</h3>
+    <p style="color:#94a3b8">Your feedback helps us improve how courses are taught.</p>
+  </div>
+
+  <div class="btn-row" style="margin-top:32px;justify-content:center">
+    <a class="btn btn-secondary" href="index.html">&larr; Back to Home</a>
+  </div>
+</div>
+
+</div><!-- /.app -->
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// COURSE LIST — Add new courses here as professors join
+// ══════════════════════════════════════════════════════════════
+// To add a course: add an <option> to the #idCourse dropdown in the HTML.
+
+// ══════════════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════════════
+
+// Part 2: Retrospective before/after items (key engagement + self-efficacy)
+const RETRO_ITEMS = [
+  {id:"R1", text:"I look forward to attending this class."},
+  {id:"R2", text:"I find the topics in this course interesting."},
+  {id:"R3", text:"I feel motivated to study for this course outside of class."},
+  {id:"R4", text:"I connect what I learn in this class to real-world applications."},
+  {id:"R5", text:"I am confident I can apply core concepts from this course to solve problems."},
+  {id:"R6", text:"I am confident I can succeed in this course overall."}
+];
+
+// Part 3: AI experience items
+const EXPERIENCE_ITEMS = [
+  {id:"X1", text:"I used AI tools to help me understand lecture material."},
+  {id:"X2", text:"I used AI tools to help me complete assignments."},
+  {id:"X3", text:"AI tools helped me learn concepts I was struggling with."},
+  {id:"X4", text:"I felt more confident solving problems after using AI tools."},
+  {id:"X5", text:"I sometimes relied on AI tools without fully understanding the output."},
+  {id:"X6", text:"AI-generated learning materials (slides, demos, explanations, etc.) helped me understand course topics."},
+  {id:"X7", text:"The AI content was better at explaining concepts than traditional materials alone."},
+  {id:"X8", text:"Overall, AI tools improved my learning experience in this course."}
+];
+
+// Part 4: Preference items
+const PREF_ITEMS = [
+  {id:"P1", text:"I would prefer more courses to integrate AI tools into their teaching."},
+  {id:"P2", text:"AI tools are most helpful for understanding new concepts (vs. practicing or reviewing)."},
+  {id:"P3", text:"I trust AI-generated content to be accurate and reliable."},
+  {id:"P4", text:"I would recommend AI-assisted teaching to other students."}
+];
+
+const LIKERT_LABELS = ["Strongly\nDisagree","Disagree","Neutral","Agree","Strongly\nAgree"];
+
+// ══════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════
+let consentGiven = false;
+let anonId = "";
+let course = "";
+let aiTypes = {};       // checkbox selections
+let aiWeeks = "";
+let retroAnswers = {};  // R1_before, R1_after, R2_before, R2_after, ...
+let expAnswers = {};    // X1–X8
+let prefAnswers = {};   // P1–P4
+let timerInterval = null;
+let elapsedSeconds = 0;
+
+// Google Sheets Web App URL — replace after deploying Apps Script
+const SHEETS_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
+
+// ══════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════
+document.addEventListener("DOMContentLoaded",()=>{
+  buildRetro();
+  buildLikert("experienceContainer", EXPERIENCE_ITEMS, expAnswers);
+  buildLikert("prefsContainer", PREF_ITEMS, prefAnswers);
+});
+
+// ══════════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════════
+function goScreen(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+  updateProgress();
+}
+
+function updateProgress(){
+  const bar = document.getElementById("topBar");
+  const fill = document.getElementById("progressFill");
+  const txt = document.getElementById("progressText");
+  const active = document.querySelector(".screen.active");
+  if(!active) return;
+  bar.classList.toggle("visible", active.id!=="scrWelcome");
+  const map = {
+    scrContext:  [1,4,"Part 1: AI Content",20],
+    scrRetro:    [2,4,"Part 2: Before vs. After",40],
+    scrExperience:[3,4,"Part 3: AI Experience",65],
+    scrPrefs:    [4,4,"Part 4: Preferences",85],
+    scrDone:     [4,4,"Complete!",100]
+  };
+  const info = map[active.id];
+  if(info){
+    fill.style.width = info[3]+"%";
+    txt.textContent = info[2];
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// TIMER
+// ══════════════════════════════════════════════════════════════
+function startTimer(){
+  const el = document.getElementById("timer");
+  timerInterval = setInterval(()=>{
+    elapsedSeconds++;
+    const m = String(Math.floor(elapsedSeconds/60)).padStart(2,"0");
+    const s = String(elapsedSeconds%60).padStart(2,"0");
+    el.textContent = m+":"+s;
+  },1000);
+}
+
+// ══════════════════════════════════════════════════════════════
+// CONSENT
+// ══════════════════════════════════════════════════════════════
+function giveConsent(accepted){
+  consentGiven = accepted;
+  goScreen("scrWelcome");
+}
+
+// ══════════════════════════════════════════════════════════════
+// WELCOME
+// ══════════════════════════════════════════════════════════════
+function startApp(){
+  const phone = document.getElementById("idPhone").value.trim();
+  const month = document.getElementById("idMonth").value.trim();
+  course = document.getElementById("idCourse").value;
+  const err = document.getElementById("welcomeError");
+
+  if(phone.length!==4||!/^\d{4}$/.test(phone)){
+    showError(err,"Please enter exactly 4 digits for your phone number.");return;
+  }
+  if(!month||!/^\d{1,2}$/.test(month)||+month<1||+month>12){
+    showError(err,"Please enter a valid birth month (01\u201312).");return;
+  }
+  if(!course){
+    showError(err,"Please select your course.");return;
+  }
+  hideError(err);
+  anonId = phone + month.padStart(2,"0");
+  startTimer();
+  goScreen("scrContext");
+}
+
+// ══════════════════════════════════════════════════════════════
+// CONTEXT (checkboxes + dropdown)
+// ══════════════════════════════════════════════════════════════
+function toggleCb(el, key){
+  el.classList.toggle("checked");
+  aiTypes[key] = el.classList.contains("checked");
+}
+
+function submitContext(){
+  const err = document.getElementById("contextError");
+  const anyChecked = Object.values(aiTypes).some(v=>v);
+  aiWeeks = document.getElementById("aiWeeks").value;
+
+  if(!anyChecked){
+    showError(err,"Please select at least one type of AI content.");return;
+  }
+  if(!aiWeeks){
+    showError(err,"Please select how many weeks AI was used.");return;
+  }
+  hideError(err);
+  goScreen("scrRetro");
+}
+
+// ══════════════════════════════════════════════════════════════
+// RETROSPECTIVE — BUILD (before/after dual scales)
+// ══════════════════════════════════════════════════════════════
+function buildRetro(){
+  const c = document.getElementById("retroContainer");
+  RETRO_ITEMS.forEach((item, idx)=>{
+    const div = document.createElement("div");
+    div.className = "retro-item";
+
+    let html = `<div class="ri-text"><span class="ri-num">${idx+1}.</span> ${escHtml(item.text)}</div>`;
+
+    // Before scale
+    html += `<div class="retro-row">`;
+    html += `<span class="retro-label before">Before the AI unit:</span>`;
+    html += `<div class="likert-scale">`;
+    for(let v=1;v<=5;v++){
+      html += `<label id="lbl_${item.id}_B_${v}" onclick="pickRetro('${item.id}','before',${v})">
+        <input type="radio" name="${item.id}_before" value="${v}">
+        <span class="scale-num">${v}</span>
+        <span>${LIKERT_LABELS[v-1].replace("\n","<br>")}</span>
+      </label>`;
+    }
+    html += `</div></div>`;
+
+    // After scale
+    html += `<div class="retro-row">`;
+    html += `<span class="retro-label after">Now (after the AI unit):</span>`;
+    html += `<div class="likert-scale">`;
+    for(let v=1;v<=5;v++){
+      html += `<label id="lbl_${item.id}_A_${v}" onclick="pickRetro('${item.id}','after',${v})">
+        <input type="radio" name="${item.id}_after" value="${v}">
+        <span class="scale-num">${v}</span>
+        <span>${LIKERT_LABELS[v-1].replace("\n","<br>")}</span>
+      </label>`;
+    }
+    html += `</div></div>`;
+
+    div.innerHTML = html;
+    c.appendChild(div);
+  });
+}
+
+function pickRetro(id, phase, val){
+  const key = id + "_" + phase;
+  retroAnswers[key] = val;
+  const prefix = phase==="before" ? "B" : "A";
+  for(let v=1;v<=5;v++){
+    document.getElementById("lbl_"+id+"_"+prefix+"_"+v).classList.toggle("checked",v===val);
+  }
+  hideError(document.getElementById("retroError"));
+}
+
+function submitRetro(){
+  const err = document.getElementById("retroError");
+  const needed = RETRO_ITEMS.length * 2; // before + after for each
+  const answered = Object.keys(retroAnswers).length;
+  if(answered < needed){
+    showError(err,`Please rate all items (both before and after). ${needed - answered} remaining.`);return;
+  }
+  hideError(err);
+  goScreen("scrExperience");
+}
+
+// ══════════════════════════════════════════════════════════════
+// STANDARD LIKERT — BUILD (for experience + preferences)
+// ══════════════════════════════════════════════════════════════
+let globalItemNum = 0;
+
+function buildLikert(containerId, items, store){
+  const c = document.getElementById(containerId);
+  items.forEach(item=>{
+    globalItemNum++;
+    const div = document.createElement("div");
+    div.className = "likert-item";
+    let html = `<div class="li-text"><span class="li-num">${globalItemNum}.</span> ${escHtml(item.text)}</div>`;
+    html += `<div class="likert-scale">`;
+    for(let v=1;v<=5;v++){
+      html += `<label id="lbl_${item.id}_${v}" onclick="pickLikert('${item.id}',${v},'${containerId}')">
+        <input type="radio" name="${item.id}" value="${v}">
+        <span class="scale-num">${v}</span>
+        <span>${LIKERT_LABELS[v-1].replace("\n","<br>")}</span>
+      </label>`;
+    }
+    html += `</div>`;
+    div.innerHTML = html;
+    c.appendChild(div);
+  });
+}
+
+function pickLikert(id, val, containerId){
+  const store = containerId==="experienceContainer" ? expAnswers : prefAnswers;
+  store[id] = val;
+  for(let v=1;v<=5;v++){
+    document.getElementById("lbl_"+id+"_"+v).classList.toggle("checked",v===val);
+  }
+  const active = document.querySelector(".screen.active");
+  const errEl = active.querySelector(".validation-msg");
+  if(errEl) hideError(errEl);
+}
+
+function submitExperience(){
+  const err = document.getElementById("experienceError");
+  const missing = EXPERIENCE_ITEMS.filter(i=>!expAnswers[i.id]);
+  if(missing.length>0){
+    showError(err,`Please answer all questions. ${missing.length} remaining.`);return;
+  }
+  hideError(err);
+  goScreen("scrPrefs");
+}
+
+// ══════════════════════════════════════════════════════════════
+// SUBMIT ALL
+// ══════════════════════════════════════════════════════════════
+function submitAll(){
+  const err = document.getElementById("prefsError");
+  const missing = PREF_ITEMS.filter(i=>!prefAnswers[i.id]);
+  if(missing.length>0){
+    showError(err,`Please answer all questions. ${missing.length} remaining.`);return;
+  }
+  hideError(err);
+
+  clearInterval(timerInterval);
+
+  // Build payload
+  const payload = {
+    type: "general-survey",
+    timestamp: new Date().toISOString(),
+    consent: consentGiven ? "yes" : "no",
+    anonId,
+    course,
+    duration: elapsedSeconds,
+    aiWeeks,
+    aiTypes: Object.keys(aiTypes).filter(k=>aiTypes[k]).join(",")
+  };
+
+  // Retrospective items: R1_before, R1_after, etc.
+  Object.keys(retroAnswers).forEach(k=>{
+    payload[k] = retroAnswers[k];
+  });
+
+  // Experience items: X1–X8
+  Object.keys(expAnswers).forEach(k=>{
+    payload[k] = expAnswers[k];
+  });
+
+  // Preference items: P1–P4
+  Object.keys(prefAnswers).forEach(k=>{
+    payload[k] = prefAnswers[k];
+  });
+
+  sendToSheets(payload);
+  goScreen("scrDone");
+}
+
+function sendToSheets(payload){
+  if(SHEETS_URL==="YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL"){
+    console.log("Sheets URL not configured. Payload:",payload);
+    return;
+  }
+  var iframe = document.createElement("iframe");
+  iframe.name = "sheets-submit";
+  iframe.style.display = "none";
+  document.body.appendChild(iframe);
+
+  var form = document.createElement("form");
+  form.method = "POST";
+  form.action = SHEETS_URL;
+  form.target = "sheets-submit";
+
+  var input = document.createElement("input");
+  input.type = "hidden";
+  input.name = "data";
+  input.value = JSON.stringify(payload);
+  form.appendChild(input);
+
+  document.body.appendChild(form);
+  form.submit();
+  form.remove();
+  setTimeout(function(){ iframe.remove(); }, 15000);
+}
+
+// ══════════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════════
+function escHtml(s){
+  const d=document.createElement("div");d.textContent=s;return d.innerHTML;
+}
+function showError(el,msg){el.textContent=msg;el.classList.add("show")}
+function hideError(el){el.classList.remove("show")}
+</script>
+</body>
+</html>
